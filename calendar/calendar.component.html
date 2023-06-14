@@ -1,3 +1,40 @@
-<p>
-  calendar works!
-</p>
+<!-- <div class="navigation-container">
+  <p>2023.6</p>
+</div>
+
+<div class="table">
+  <div class="days">
+    <p>일요일</p>
+    <p>월요일</p>
+    <p>화요일</p>
+    <p>수요일</p>
+    <p>목요일</p>
+    <p>금요일</p>
+    <p>토요일</p>
+  </div>
+  <div class="dates">
+    <div *ngFor="let week "></div>
+  </div>
+</div> -->
+
+<div class="calendar">
+  <div class="month-info">
+    <button (click)="previousMonth()">&lt;</button>
+    <span>{{ currentYear }}.{{ currentMonth }}</span>
+    <button (click)="nextMonth()">&gt;</button>
+  </div>
+  <div class="week" style="border-bottom: 1px solid #ddd;">
+    <p>일</p>
+    <p>월</p>
+    <p>화</p>
+    <p>수</p>
+    <p>목</p>
+    <p>금</p>
+    <p>토</p>
+  </div>
+  <div class="week" *ngFor="let week of calendar">
+    <p class="day" *ngFor="let day of week" [class.disabled]="isPast(day)">
+      <span *ngIf="day !== 0">{{ day }}</span>
+    </p>
+  </div>
+</div>
