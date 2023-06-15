@@ -6,14 +6,11 @@
 .week {
     display: flex;
     justify-content: space-around;
-
-    .date-container{
-        // width:max-content;
-    }
+    border-bottom: 1px solid #ddd;
 
     p {
         text-align: center;
-        width:100%;
+        // width:100%;
     
         &:first-of-type {
             color: #e34c4c;
@@ -24,7 +21,32 @@
     }
 }
 
+.date-table{
+    display: flex;
+    justify-content: space-around;
+
+    .date-box{
+        width: 100%;
+    }
+
+    p {
+        text-align: center;
+    }
+}
+
 .disabled {
     pointer-events: none;
     opacity: 0.3;
-  }
+}
+
+.red{
+    color:#e34c4c;
+}
+
+.blue{
+    color: #3f52b5;
+}
+
+.black{
+    color:black;
+}

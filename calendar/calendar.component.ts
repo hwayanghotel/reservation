@@ -6,15 +6,30 @@ import { Component } from "@angular/core";
   styleUrls: ["./calendar.component.scss"],
 })
 export class CalendarComponent {
-  date = new Date();
-  currentYear: number = this.date.getFullYear();
-  currentMonth: number = this.date.getMonth() + 1;
+  selectedDate = new Date();
+
+  get currentYear(): number {
+    return this.selectedDate.getFullYear();
+  }
+  get currentMonth(): number {
+    return this.selectedDate.getMonth() + 1;
+  }
   calendar: number[][] = this.getCalendar(this.currentYear, this.currentMonth);
+  week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 
   constructor() {}
 
   isPast(date: number): boolean {
-    return date < this.date.getDate();
+    return date < this.selectedDate.getDate();
+  }
+
+  getDateColor(date: number): "red" | "blue" | "black" {
+    const getDay = new Date(
+      this.currentYear,
+      this.currentMonth - 1,
+      date
+    ).getDay();
+    return getDay === 0 ? "red" : getDay === 6 ? "blue" : "black";
   }
 
   getCalendar(year: number, month: number): number[][] {
@@ -53,25 +68,29 @@ export class CalendarComponent {
   }
 
   previousMonth() {
-    if (this.currentMonth === 1) {
-      this.currentMonth = 12;
-      this.currentYear--;
-    } else {
-      this.currentMonth--;
-    }
-
-    this.calendar = this.getCalendar(this.currentYear, this.currentMonth);
+    // this.selectedDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() -1);
+    // this.calendar = this.getCalendar(this.currentYear, this.currentMonth);
   }
 
   nextMonth() {
-    if (this.currentMonth === 12) {
-      this.currentMonth = 1;
-      this.currentYear++;
-    } else {
-      this.currentMonth++;
-    }
+    // if (this.currentMonth === 12) {
+    //   this.currentMonth = 1;
+    //   this.currentYear++;
+    // } else {
+    //   this.currentMonth++;
+    // }
+    // this.calendar = this.getCalendar(this.currentYear, this.currentMonth);
+  }
 
-    this.calendar = this.getCalendar(this.currentYear, this.currentMonth);
+  getCurrentMonthlyData() {
+    for (let data of MonthlyData) {
+      if (this.currentYear > data.date.getFullYear()) continue;
+      if (this.currentMonth > data.date.getMonth()) continue;
+      if (this.currentYear < data.date.getFullYear()) break;
+      if (this.currentMonth < data.date.getMonth()) break;
+      if (this.selectedDate.getDate() > data.date.getDate()) {
+      }
+    }
   }
 }
 
