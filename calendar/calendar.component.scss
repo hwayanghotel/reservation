@@ -16,14 +16,24 @@
             color: #e34c4c;
         }
         &:last-of-type {
-            color: #3f52b5;
+            color: #e34c4c;
         }
+    }
+}
+
+.date-content{
+    p{
+        color:#5eb917;        
+    }
+    p.expired {
+        color:#e34c4c;
     }
 }
 
 .date-table{
     display: flex;
     justify-content: space-around;
+    min-height: 5rem;
 
     .date-box{
         width: 100%;
@@ -39,14 +49,6 @@
     opacity: 0.3;
 }
 
-.red{
+.holiday{
     color:#e34c4c;
-}
-
-.blue{
-    color: #3f52b5;
-}
-
-.black{
-    color:black;
 }

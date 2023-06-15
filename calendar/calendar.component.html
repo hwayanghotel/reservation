@@ -1,18 +1,20 @@
 <div class="calendar">
   <div class="month-info">
-    <button (click)="previousMonth()">&lt;</button>
+    <button [class.disabled]="disabled(-1)" (click)="moveMonth(-1)">&lt;</button>
     <span>{{ currentYear }}.{{ currentMonth }}</span>
-    <button (click)="nextMonth()">&gt;</button>
+    <button (click)="moveMonth(+1)">&gt;</button>
   </div>
   <div class="week">
     <p *ngFor="let day of week">{{day}}</p>
   </div>
   <div class="date-table" *ngFor="let week of calendar">
-    <div class="date-box" *ngFor="let date of week" [class.disabled]="isPast(date)">
-      <p *ngIf="date !== 0" [ngClass]="getDateColor(date)">
-        {{ date }}
+    <div class="date-box" *ngFor="let date of week" [class.disabled]="disabled(date.date)">
+      <p *ngIf="date.date !== 0" [class.holiday]="date.isHoliday">
+        {{ date.date }}
       </p>
-      <p *ngIf="!isPast(date)" class="date-content">이제 좀 되나</p>
+      <div class="date-content">
+        <p *ngFor="let text of date.content" [class.expired]="text.expired">{{text.text}}</p>
+      </div>
     </div>
   </div>
 </div>

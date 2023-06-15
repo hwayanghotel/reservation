@@ -1,4 +1,12 @@
 import { Component } from "@angular/core";
+import { DBService } from "reservation/service/DB.service";
+import { HolidayService } from "reservation/service/holiday.service";
+
+interface ICalendar {
+  date: number;
+  isHoliday?: boolean;
+  content?: { text: string; expired: boolean }[];
+}
 
 @Component({
   selector: "calendar",
@@ -7,6 +15,17 @@ import { Component } from "@angular/core";
 })
 export class CalendarComponent {
   selectedDate = new Date();
+  private today = new Date();
+  calendar: ICalendar[][] = [];
+
+  week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
+
+  constructor(
+    private holidayService: HolidayService,
+    private DBService: DBService
+  ) {
+    this.setCalendar();
+  }
 
   get currentYear(): number {
     return this.selectedDate.getFullYear();
@@ -14,46 +33,82 @@ export class CalendarComponent {
   get currentMonth(): number {
     return this.selectedDate.getMonth() + 1;
   }
-  calendar: number[][] = this.getCalendar(this.currentYear, this.currentMonth);
-  week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 
-  constructor() {}
-
-  isPast(date: number): boolean {
-    return date < this.selectedDate.getDate();
+  moveMonth(direction: -1 | 1) {
+    const date = new Date(
+      this.selectedDate.getFullYear(),
+      this.selectedDate.getMonth() + direction
+    );
+    if (
+      date.getFullYear() === this.today.getFullYear() &&
+      date.getMonth() === this.today.getMonth()
+    ) {
+      this.selectedDate = this.today;
+    } else {
+      this.selectedDate = date;
+    }
+    this.setCalendar();
   }
 
-  getDateColor(date: number): "red" | "blue" | "black" {
-    const getDay = new Date(
-      this.currentYear,
-      this.currentMonth - 1,
-      date
-    ).getDay();
-    return getDay === 0 ? "red" : getDay === 6 ? "blue" : "black";
+  private async setCalendar() {
+    let calendar: ICalendar[][] = this.initCalendar();
+    const holidays = await this.holidayService.getHolidays(this.selectedDate);
+    const monthlyData = await this.DBService.getMonthlyData(this.selectedDate);
+    for (let i = 0; i < calendar.length; i++) {
+      for (let j = 0; j < calendar[i].length; j++) {
+        calendar[i][j].isHoliday = holidays.includes(calendar[i][j].date);
+        if (
+          monthlyData.filter((v) => v.date.getDate() === calendar[i][j].date)
+            .length > 0
+        ) {
+          calendar[i][j].content = monthlyData.filter(
+            (v) => v.date.getDate() === calendar[i][j].date
+          )[0].content;
+        }
+        calendar[i][j].date;
+      }
+    }
+    this.calendar = calendar;
   }
 
-  getCalendar(year: number, month: number): number[][] {
-    const calendar: number[][] = [];
+  disabled(date: number): boolean {
+    if (
+      this.selectedDate.getFullYear() === this.today.getFullYear() &&
+      this.selectedDate.getMonth() === this.today.getMonth()
+    ) {
+      return this.today.getDate() > date;
+    }
+    return (
+      this.selectedDate.getFullYear() < this.today.getFullYear() ||
+      this.selectedDate.getMonth() < this.today.getMonth()
+    );
+  }
 
-    const daysInMonth = new Date(year, month, 0).getDate();
-    const firstDayOfWeek = new Date(year, month - 1, 1).getDay();
+  private initCalendar() {
+    const calendar: ICalendar[][] = [];
+
+    const year: number = this.selectedDate.getFullYear();
+    const month: number = this.selectedDate.getMonth();
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfWeek = new Date(year, month, 1).getDay();
 
     let currentDate = 1;
-    for (let i = 0; i < 6; i++) {
-      const week: number[] = [];
+    for (let date = 0; date < 6; date++) {
+      const week: ICalendar[] = [];
 
-      if (i === 0) {
-        for (let j = 0; j < firstDayOfWeek; j++) {
-          week.push(0);
+      if (date === 0) {
+        for (let i = 0; i < firstDayOfWeek; i++) {
+          week.push({ date: 0 });
         }
       }
 
       for (let j = week.length; j < 7; j++) {
         if (currentDate <= daysInMonth) {
-          week.push(currentDate);
+          week.push({ date: currentDate });
           currentDate++;
         } else {
-          week.push(0);
+          week.push({ date: 0 });
         }
       }
 
@@ -66,61 +121,4 @@ export class CalendarComponent {
 
     return calendar;
   }
-
-  previousMonth() {
-    // this.selectedDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() -1);
-    // this.calendar = this.getCalendar(this.currentYear, this.currentMonth);
-  }
-
-  nextMonth() {
-    // if (this.currentMonth === 12) {
-    //   this.currentMonth = 1;
-    //   this.currentYear++;
-    // } else {
-    //   this.currentMonth++;
-    // }
-    // this.calendar = this.getCalendar(this.currentYear, this.currentMonth);
-  }
-
-  getCurrentMonthlyData() {
-    for (let data of MonthlyData) {
-      if (this.currentYear > data.date.getFullYear()) continue;
-      if (this.currentMonth > data.date.getMonth()) continue;
-      if (this.currentYear < data.date.getFullYear()) break;
-      if (this.currentMonth < data.date.getMonth()) break;
-      if (this.selectedDate.getDate() > data.date.getDate()) {
-      }
-    }
-  }
 }
-
-const MonthlyData = [
-  {
-    date: new Date("2023/6/20"),
-    contents: [
-      { name: "평상 마감(6/6)", expired: true },
-      { name: "테이블 마감(6/6)", expired: true },
-    ],
-  },
-  {
-    date: new Date("2023/6/21"),
-    contents: [
-      { name: "평상 마감(6/6)", expired: true },
-      { name: "테이블 가능(2/6)", expired: false },
-    ],
-  },
-  {
-    date: new Date("2023/6/22"),
-    contents: [
-      { name: "평상 가능(3/6)", expired: false },
-      { name: "테이블 마감(6/6)", expired: true },
-    ],
-  },
-  {
-    date: new Date("2023/7/5"),
-    contents: [
-      { name: "평상 가능(0/6)", expired: false },
-      { name: "테이블 가능(1/6)", expired: false },
-    ],
-  },
-];

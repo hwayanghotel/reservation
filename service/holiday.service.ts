@@ -14,7 +14,11 @@ export class HolidayService {
     return new Promise((resolve) => {
       this.getHolidaysFromServer(date).subscribe(
         (response) => {
-          resolve(Array.from(new Set([...weekEnds, ...response])));
+          resolve(
+            Array.from(new Set([...weekEnds, ...response])).sort(
+              (a, b) => a - b
+            )
+          );
         },
         (error) => {
           console.error("getHolidys error", error);
@@ -46,6 +50,7 @@ export class HolidayService {
   }
 
   private getHolidaysFromServer(date: Date): Observable<number[]> {
+    // date = new Date("2023/5/1");
     const solYear = date.getFullYear().toString();
     const solMonth: string =
       date.getMonth() < 9
@@ -63,10 +68,14 @@ export class HolidayService {
 
     return this.http.get(url).pipe(
       map((data: any) => {
-        const items: [] = data.response.body.items.item;
-        return items.map((item: any) =>
-          Number(item.locdate.toString().substring(6))
-        );
+        const items = data.response.body.items.item;
+        if (Array.isArray(items)) {
+          return items.map((item: any) =>
+            Number(item.locdate.toString().substring(6))
+          );
+        } else {
+          return [Number(items.locdate.toString().substring(6))];
+        }
       })
     );
   }
