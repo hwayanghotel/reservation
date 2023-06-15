@@ -1,16 +1,51 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { map } from "rxjs";
+import { Observable, map } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class HolidayService {
-  constructor(private http: HttpClient) {
-    this.getHolidays(new Date("2023/5/1"));
+  constructor(private http: HttpClient) {}
+
+  getHolidays(date: Date): Promise<number[]> {
+    const weekEnds: number[] = this.getWeekendDates(date);
+
+    return new Promise((resolve) => {
+      this.getHolidaysFromServer(date).subscribe(
+        (response) => {
+          resolve(Array.from(new Set([...weekEnds, ...response])));
+        },
+        (error) => {
+          console.error("getHolidys error", error);
+          resolve(weekEnds);
+        }
+      );
+    });
   }
 
-  getHolidays(date: Date) {
+  private getWeekendDates(date: Date): number[] {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const weekendDates: number[] = [];
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0);
+
+    for (
+      let date = startDate;
+      date <= endDate;
+      date.setDate(date.getDate() + 1)
+    ) {
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        weekendDates.push(date.getDate());
+      }
+    }
+
+    return weekendDates;
+  }
+
+  private getHolidaysFromServer(date: Date): Observable<number[]> {
     const solYear = date.getFullYear().toString();
     const solMonth: string =
       date.getMonth() < 9
