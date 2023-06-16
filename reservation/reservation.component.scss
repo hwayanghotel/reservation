@@ -1,0 +1,33 @@
+.tab{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid #ddd;
+
+    button {
+        width: calc(100%/3);
+        height: 5rem;
+        background-color: transparent;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+
+        &.selected{
+            border-bottom: 2px solid #5eb917;
+            color: #5eb917;
+        }
+    }
+}
+
+a{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+a:visited {
+    color: inherit;
+}
