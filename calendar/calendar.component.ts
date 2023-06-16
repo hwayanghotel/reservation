@@ -1,124 +1,113 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { DBService } from "reservation/service/DB.service";
 import { HolidayService } from "reservation/service/holiday.service";
 
 interface ICalendar {
-  date: number;
-  isHoliday?: boolean;
-  content?: { text: string; expired: boolean }[];
+    date: number;
+    isHoliday?: boolean;
 }
 
 @Component({
-  selector: "calendar",
-  templateUrl: "./calendar.component.html",
-  styleUrls: ["./calendar.component.scss"],
+    selector: "calendar",
+    templateUrl: "./calendar.component.html",
+    styleUrls: ["./calendar.component.scss"],
 })
 export class CalendarComponent {
-  selectedDate = new Date();
-  private today = new Date();
-  calendar: ICalendar[][] = [];
+    @Input() type: "food" | "flat-bench" = "food";
+    selectedDate: Date = new Date();
+    calendar: ICalendar[][] = [];
+    week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 
-  week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
-
-  constructor(
-    private holidayService: HolidayService,
-    private DBService: DBService
-  ) {
-    this.setCalendar();
-  }
-
-  get currentYear(): number {
-    return this.selectedDate.getFullYear();
-  }
-  get currentMonth(): number {
-    return this.selectedDate.getMonth() + 1;
-  }
-
-  moveMonth(direction: -1 | 1) {
-    const date = new Date(
-      this.selectedDate.getFullYear(),
-      this.selectedDate.getMonth() + direction
-    );
-    if (
-      date.getFullYear() === this.today.getFullYear() &&
-      date.getMonth() === this.today.getMonth()
-    ) {
-      this.selectedDate = this.today;
-    } else {
-      this.selectedDate = date;
+    private _today = new Date();
+    constructor(private holidayService: HolidayService, private DBService: DBService) {
+        this._setCalendar();
     }
-    this.setCalendar();
-  }
 
-  private async setCalendar() {
-    let calendar: ICalendar[][] = this.initCalendar();
-    const holidays = await this.holidayService.getHolidays(this.selectedDate);
-    const monthlyData = await this.DBService.getMonthlyData(this.selectedDate);
-    for (let i = 0; i < calendar.length; i++) {
-      for (let j = 0; j < calendar[i].length; j++) {
-        calendar[i][j].isHoliday = holidays.includes(calendar[i][j].date);
+    getDate(date: number): Date {
+        return new Date(this.currentYear, this.currentMonth - 1, date);
+    }
+
+    get currentYear(): number {
+        return this.selectedDate.getFullYear();
+    }
+    get currentMonth(): number {
+        return this.selectedDate.getMonth() + 1;
+    }
+
+    isPassed(date: number): boolean {
         if (
-          monthlyData.filter((v) => v.date.getDate() === calendar[i][j].date)
-            .length > 0
+            this.selectedDate.getFullYear() === this._today.getFullYear() &&
+            this.selectedDate.getMonth() === this._today.getMonth()
         ) {
-          calendar[i][j].content = monthlyData.filter(
-            (v) => v.date.getDate() === calendar[i][j].date
-          )[0].content;
+            return this._today.getDate() > date;
         }
-        calendar[i][j].date;
-      }
-    }
-    this.calendar = calendar;
-  }
 
-  disabled(date: number): boolean {
-    if (
-      this.selectedDate.getFullYear() === this.today.getFullYear() &&
-      this.selectedDate.getMonth() === this.today.getMonth()
-    ) {
-      return this.today.getDate() > date;
-    }
-    return (
-      this.selectedDate.getFullYear() < this.today.getFullYear() ||
-      this.selectedDate.getMonth() < this.today.getMonth()
-    );
-  }
-
-  private initCalendar() {
-    const calendar: ICalendar[][] = [];
-
-    const year: number = this.selectedDate.getFullYear();
-    const month: number = this.selectedDate.getMonth();
-
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOfWeek = new Date(year, month, 1).getDay();
-
-    let currentDate = 1;
-    for (let date = 0; date < 6; date++) {
-      const week: ICalendar[] = [];
-
-      if (date === 0) {
-        for (let i = 0; i < firstDayOfWeek; i++) {
-          week.push({ date: 0 });
+        if (this.selectedDate.getFullYear() < this._today.getFullYear()) {
+            return true;
         }
-      }
+        if (this.selectedDate.getFullYear() > this._today.getFullYear()) {
+            return false;
+        }
+        return this.selectedDate.getMonth() < this._today.getMonth();
+    }
 
-      for (let j = week.length; j < 7; j++) {
-        if (currentDate <= daysInMonth) {
-          week.push({ date: currentDate });
-          currentDate++;
+    moveMonth(direction: -1 | 1) {
+        const date = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() + direction);
+        if (date.getFullYear() === this._today.getFullYear() && date.getMonth() === this._today.getMonth()) {
+            this.selectedDate = this._today;
         } else {
-          week.push({ date: 0 });
+            this.selectedDate = date;
         }
-      }
-
-      calendar.push(week);
-
-      if (currentDate > daysInMonth) {
-        break;
-      }
+        this._setCalendar();
     }
 
-    return calendar;
-  }
+    private async _setCalendar() {
+        let calendar: ICalendar[][] = this._initCalendar();
+        const holidays = await this.holidayService.getHolidays(this.selectedDate);
+        for (let i = 0; i < calendar.length; i++) {
+            for (let j = 0; j < calendar[i].length; j++) {
+                calendar[i][j].isHoliday = holidays.includes(calendar[i][j].date);
+                calendar[i][j].date;
+            }
+        }
+        this.calendar = calendar;
+    }
+
+    private _initCalendar() {
+        const calendar: ICalendar[][] = [];
+
+        const year: number = this.selectedDate.getFullYear();
+        const month: number = this.selectedDate.getMonth();
+
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDayOfWeek = new Date(year, month, 1).getDay();
+
+        let currentDate = 1;
+        for (let date = 0; date < 6; date++) {
+            const week: ICalendar[] = [];
+
+            if (date === 0) {
+                for (let i = 0; i < firstDayOfWeek; i++) {
+                    week.push({ date: 0 });
+                }
+            }
+
+            for (let j = week.length; j < 7; j++) {
+                if (currentDate <= daysInMonth) {
+                    week.push({ date: currentDate });
+                    currentDate++;
+                } else {
+                    week.push({ date: 0 });
+                }
+            }
+
+            calendar.push(week);
+
+            if (currentDate > daysInMonth) {
+                break;
+            }
+        }
+
+        return calendar;
+    }
 }

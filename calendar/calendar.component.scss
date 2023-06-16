@@ -1,54 +1,60 @@
 .calendar {
+    width: 100%;
     display: flex;
     flex-direction: column;
-}
 
-.week {
-    display: flex;
-    justify-content: space-around;
-    border-bottom: 1px solid #ddd;
+    .month-info{
+        display: flex;
+        justify-content: center;
+        button {
+            background-color: transparent;
+            border: none;
+            font-size: 1.2rem;
+        }
 
-    p {
-        text-align: center;
-        // width:100%;
+        p{
+            font-size: 2rem;
+            margin: 1rem;
+        }
+    }
+
+    .week {
+        display: flex;
+        justify-content: space-around;
+        border-bottom: 1px solid #ddd;
     
-        &:first-of-type {
-            color: #e34c4c;
+        p {
+            text-align: center;
+        
+            &:first-of-type {
+                color: #e34c4c;
+            }
+            &:last-of-type {
+                color: #e34c4c;
+            }
         }
-        &:last-of-type {
-            color: #e34c4c;
+    }
+
+    .date-table{
+        display: flex;
+        justify-content: space-around;
+        min-height: 5rem;
+    
+        .date-box{
+            width: 100%;
+
+            .holiday{
+                color:#e34c4c;
+            }
+        }
+    
+        p {
+            text-align: center;
         }
     }
-}
 
-.date-content{
-    p{
-        color:#5eb917;        
+    .disabled {
+        pointer-events: none;
+        opacity: 0.3;
     }
-    p.expired {
-        color:#e34c4c;
-    }
-}
-
-.date-table{
-    display: flex;
-    justify-content: space-around;
-    min-height: 5rem;
-
-    .date-box{
-        width: 100%;
-    }
-
-    p {
-        text-align: center;
-    }
-}
-
-.disabled {
-    pointer-events: none;
-    opacity: 0.3;
-}
-
-.holiday{
-    color:#e34c4c;
 }

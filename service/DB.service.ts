@@ -1,70 +1,35 @@
+import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, map, shareReplay } from "rxjs";
 
 interface IMonthlyData {
-  date: Date;
-  content: { text: string; expired: boolean }[];
+    date: Date;
+    content: { text: string; expired: boolean }[];
 }
 
 @Injectable({
-  providedIn: "root",
+    providedIn: "root",
 })
 export class DBService {
-  constructor() {}
-  getMonthlyData(date: Date): Promise<IMonthlyData[]> {
-    return new Promise((resolve) => {
-      resolve(
-        MonthlyData.filter(
-          (data) =>
-            data.date.getFullYear() === date.getFullYear() &&
-            data.date.getMonth() === date.getMonth() &&
-            data.date.getDate() >= date.getDate()
-        )
-      );
-    });
-  }
-}
+    private data$!: Observable<any>;
+    constructor(private datePipe: DatePipe, private http: HttpClient) {}
 
-const MonthlyData = [
-  {
-    date: new Date("2023/5/3"),
-    content: [
-      { text: "평상 마감(6/6)", expired: true },
-      { text: "테이블 마감(6/6)", expired: true },
-    ],
-  },
-  {
-    date: new Date("2023/6/1"),
-    content: [
-      { text: "평상 마감(6/6)", expired: true },
-      { text: "테이블 마감(6/6)", expired: true },
-    ],
-  },
-  {
-    date: new Date("2023/6/20"),
-    content: [
-      { text: "평상 마감(6/6)", expired: true },
-      { text: "테이블 마감(6/6)", expired: true },
-    ],
-  },
-  {
-    date: new Date("2023/6/21"),
-    content: [
-      { text: "평상 마감(6/6)", expired: true },
-      { text: "테이블 가능(2/6)", expired: false },
-    ],
-  },
-  {
-    date: new Date("2023/6/22"),
-    content: [
-      { text: "평상 가능(3/6)", expired: false },
-      { text: "테이블 마감(6/6)", expired: true },
-    ],
-  },
-  {
-    date: new Date("2023/7/1"),
-    content: [
-      { text: "평상 가능(0/6)", expired: false },
-      { text: "테이블 가능(1/6)", expired: false },
-    ],
-  },
-];
+    async getFoodData(date: Date): Promise<any[]> {
+        const formatedDate = this.datePipe.transform(date, "yyyy-MM-dd");
+        const data = await this._getData();
+        return data.filter((v) => v[0] === formatedDate);
+    }
+
+    private _getData(): Promise<[]> {
+        return new Promise((resolve) => {
+            if (!this.data$) {
+                this.data$ = this.http.get("assets/food.json").pipe(
+                    map((v: any) => v.GoogleSheetData),
+                    shareReplay(1)
+                );
+            }
+            this.data$.subscribe((v) => resolve(v));
+        });
+    }
+}
