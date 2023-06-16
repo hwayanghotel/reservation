@@ -5,6 +5,8 @@
     <button (click)="moveMonth(+1)">&gt;</button>
   </div>
 
+  <ng-content></ng-content>
+
   <div class="week">
     <p *ngFor="let day of week">{{day}}</p>
   </div>
@@ -14,7 +16,10 @@
       <p *ngIf="date.date !== 0" [class.holiday]="date.isHoliday">
         {{ date.date }}
       </p>
-      <content-food *ngIf="!isPassed(date.date) && date.date !== 0 && type === 'food'" [date]="getDate(date.date)"></content-food>
+      <ng-container *ngIf="!isPassed(date.date) && date.date !== 0">
+        <content-food *ngIf="type === 'food'" [date]="getDate(date.date)"></content-food>
+        <content-flat-bench *ngIf="type === 'flat-bench'" [date]="getDate(date.date)"></content-flat-bench>
+      </ng-container>
     </div>
   </div>
 </div>

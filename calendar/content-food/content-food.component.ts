@@ -1,26 +1,11 @@
 import { DatePipe } from "@angular/common";
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { DBService } from "reservation/service/DB.service";
+import { DBService, DB_CONTENT } from "reservation/service/DB.service";
 
 interface IData {
     text: string;
     ratio: string;
     expired: boolean;
-}
-
-enum Food {
-    "date",
-    "time",
-    "link",
-    "name",
-    "person",
-    "A",
-    "B",
-    "C",
-    "D",
-    "tel",
-    "car",
-    "note",
 }
 
 @Component({
@@ -45,13 +30,18 @@ export class ContentFoodComponent implements OnChanges {
         const MAX_COOK = 14;
         const dataList = await this.DBService.getFoodData(this.date);
 
+        this.data = [];
+
         for (let time of [12, 15]) {
             let cooks: number = 0;
             dataList
-                .filter((value) => value[Food.time] === `${time}:00`)
+                .filter((value) => value[DB_CONTENT.time] === `${time}:00`)
                 .forEach((value) => {
                     cooks +=
-                        Number(value[Food.A]) + Number(value[Food.B]) + Number(value[Food.C]) + Number(value[Food.D]);
+                        Number(value[DB_CONTENT.A]) +
+                        Number(value[DB_CONTENT.B]) +
+                        Number(value[DB_CONTENT.C]) +
+                        Number(value[DB_CONTENT.D]);
                 });
             this.data.push({
                 expired: cooks >= MAX_COOK,

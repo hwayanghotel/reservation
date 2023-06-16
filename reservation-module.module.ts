@@ -7,6 +7,7 @@ import { HolidayService } from "./service/holiday.service";
 import { HttpClientModule } from "@angular/common/http";
 import { DBService } from "./service/DB.service";
 import { ContentFoodComponent } from "./calendar/content-food/content-food.component";
+import { ContentFlatBenchComponent } from "./calendar/content-flat-bench/content-flat-bench.component";
 
 const routes: Routes = [{ path: "reservation", component: ReservationComponent }];
 
@@ -20,6 +21,6 @@ const routes: Routes = [{ path: "reservation", component: ReservationComponent }
         HttpClientModule,
     ],
     exports: [],
-    declarations: [ReservationComponent, CalendarComponent, ContentFoodComponent],
+    declarations: [ReservationComponent, CalendarComponent, ContentFoodComponent, ContentFlatBenchComponent],
 })
 export class ReservationModuleModule {}

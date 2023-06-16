@@ -4,4 +4,7 @@
     <button (click)="type = 'flat-bench'" [class.selected]="type==='flat-bench'">평상 예약</button>
     <button (click)="type = 'food'" [class.selected]="type==='food'">식사 예약</button>
 </div>
-<calendar [type]="'food'"></calendar>
+<calendar [type]="type">
+    <p *ngIf="type === 'food'">식사 예약</p>
+    <p *ngIf="type === 'flat-bench'">평상/테이블 예약</p>
+</calendar>
