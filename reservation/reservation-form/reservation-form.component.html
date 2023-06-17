@@ -1,0 +1,7 @@
+<div *ngIf="isOpen" class="background" (click)="closeDialog()">
+  <div class="dialog" (click)="$event.stopPropagation();">
+    <h2>능운대펜션 {{type}} 예약</h2>
+    <p>{{data.date}} {{data.time}}</p>
+    <div class="divider"></div>
+  </div>
+</div>

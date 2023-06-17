@@ -1,6 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { DBService, DB_CONTENT } from "reservation/service/DB.service";
+import { ReservationService } from "reservation/service/reservation.service";
 
 interface IData {
     text: string;
@@ -16,7 +17,11 @@ interface IData {
 export class ContentFlatBenchComponent implements OnChanges {
     @Input() date!: Date;
     data: IData[] = [];
-    constructor(private DBService: DBService, private datePipe: DatePipe) {}
+    constructor(
+        private DBService: DBService,
+        private datePipe: DatePipe,
+        private reservationService: ReservationService
+    ) {}
 
     ngOnChanges(changes: SimpleChanges) {
         const previousValue = this.datePipe.transform(changes["date"].previousValue, "yyyy-MM-dd");
@@ -48,5 +53,13 @@ export class ContentFlatBenchComponent implements OnChanges {
             text: `데크 ${table >= MAX_NUM ? "마감" : "가능"}`,
             ratio: `(${table}/${MAX_NUM})`,
         });
+    }
+
+    openDialog() {
+        this.reservationService.setReservationFormPreData({
+            type: "flat-bench",
+            date: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
+        });
+        this.reservationService.isOpen$.next(true);
     }
 }

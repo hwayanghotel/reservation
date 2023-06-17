@@ -8,19 +8,29 @@ import { HttpClientModule } from "@angular/common/http";
 import { DBService } from "./service/DB.service";
 import { ContentFoodComponent } from "./calendar/content-food/content-food.component";
 import { ContentFlatBenchComponent } from "./calendar/content-flat-bench/content-flat-bench.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { ReservationFormComponent } from "./reservation/reservation-form/reservation-form.component";
+import { ReservationService } from "./service/reservation.service";
 
 const routes: Routes = [{ path: "reservation", component: ReservationComponent }];
 
 @NgModule({
-    providers: [HolidayService, DBService, DatePipe],
+    providers: [HolidayService, DBService, ReservationService, DatePipe],
     imports: [
         RouterModule.forRoot(routes, {
             useHash: true,
         }),
         CommonModule,
         HttpClientModule,
+        MatDialogModule,
     ],
     exports: [],
-    declarations: [ReservationComponent, CalendarComponent, ContentFoodComponent, ContentFlatBenchComponent],
+    declarations: [
+        ReservationComponent,
+        ReservationFormComponent,
+        CalendarComponent,
+        ContentFoodComponent,
+        ContentFlatBenchComponent,
+    ],
 })
 export class ReservationModuleModule {}
