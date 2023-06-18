@@ -1,7 +1,31 @@
 <div *ngIf="isOpen" class="background" (click)="closeDialog()">
   <div class="dialog" (click)="$event.stopPropagation();">
     <h2>능운대펜션 {{type}} 예약</h2>
-    <p>{{data.date}} {{data.time}}</p>
+    <p>{{model.date}} {{model.time}}</p>
     <div class="divider"></div>
+	<!-- <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+		<h4>1. 예약자 성함</h4>
+		<input type="text" class="form-control" id="name"
+				required [(ngModel)]="model.name" name="name" #name="ngModel">
+		<p [hidden]="name.valid || name.pristine" class="alert">
+			Name is required
+		</p>
+	</form> -->
+	<p>
+		<mat-form-field appearance="fill">
+		  <mat-label>Fill form field</mat-label>
+		  <input matInput placeholder="Placeholder">
+		  <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+		  <mat-hint>Hint</mat-hint>
+		</mat-form-field>
+	  </p>
+	  <p>
+		<mat-form-field appearance="outline">
+		  <mat-label>Outline form field</mat-label>
+		  <input matInput placeholder="Placeholder">
+		  <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+		  <mat-hint>Hint</mat-hint>
+		</mat-form-field>
+	  </p>
   </div>
 </div>

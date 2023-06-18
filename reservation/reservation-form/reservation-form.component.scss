@@ -31,3 +31,15 @@ h2{
     border-bottom: 1px solid rgba(1, 1, 1, 0.3);
     width: 100%;
 }
+
+form{
+    width: 100%;
+
+    input{
+        width: 100%;
+    }
+    p.alert{
+        margin-top:0.2rem;
+        color:#e34c4c;
+    }
+}

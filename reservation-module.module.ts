@@ -11,6 +11,10 @@ import { ContentFlatBenchComponent } from "./calendar/content-flat-bench/content
 import { MatDialogModule } from "@angular/material/dialog";
 import { ReservationFormComponent } from "./reservation/reservation-form/reservation-form.component";
 import { ReservationService } from "./service/reservation.service";
+import { FormsModule } from "@angular/forms";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
 
 const routes: Routes = [{ path: "reservation", component: ReservationComponent }];
 
@@ -23,6 +27,10 @@ const routes: Routes = [{ path: "reservation", component: ReservationComponent }
         CommonModule,
         HttpClientModule,
         MatDialogModule,
+        FormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatIconModule,
     ],
     exports: [],
     declarations: [

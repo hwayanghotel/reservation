@@ -14,18 +14,18 @@ export interface IReservationFormPreData {
 })
 export class ReservationFormComponent implements OnInit {
     isOpen: boolean;
-    data: IReservationForm;
+    model: IReservationForm;
     constructor(private reservationService: ReservationService) {
         this.reservationService.isOpen$.subscribe((isOpen) => {
             this.isOpen = isOpen;
         });
         this.reservationService.formData$.subscribe((data) => {
-            this.data = data;
+            this.model = data;
         });
     }
 
     get type(): "식사" | "평상" {
-        return this.data.type === "food" ? "식사" : "평상";
+        return this.model.type === "food" ? "식사" : "평상";
     }
 
     ngOnInit() {}
@@ -33,4 +33,6 @@ export class ReservationFormComponent implements OnInit {
     closeDialog() {
         this.reservationService.isOpen$.next(false);
     }
+
+    onSubmit() {}
 }

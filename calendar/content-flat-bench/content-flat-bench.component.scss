@@ -7,6 +7,7 @@ p{
 
     &.expired {
         color:#e34c4c;
+        pointer-events: none;
     }
 }
 
