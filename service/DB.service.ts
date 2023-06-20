@@ -1,7 +1,6 @@
-import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, map, shareReplay } from "rxjs";
+import { Observable } from "rxjs";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 
 export interface IDBService {
@@ -27,7 +26,7 @@ export interface IDBService {
 })
 export class DBService {
     private firebaseStore$: Observable<any[]>;
-    constructor(private datePipe: DatePipe, private http: HttpClient, private store: AngularFirestore) {
+    constructor(private http: HttpClient, private store: AngularFirestore) {
         // this.firebaseStore$ = this.store.collection("hwayanghotel").valueChanges({ idField: "id" }) as Observable<any[]>;
         this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
     }
