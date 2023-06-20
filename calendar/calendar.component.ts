@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { DBService } from "reservation/service/DB.service";
 import { HolidayService } from "reservation/service/holiday.service";
 
 interface ICalendar {
@@ -19,7 +18,7 @@ export class CalendarComponent {
     week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
 
     private _today = new Date();
-    constructor(private holidayService: HolidayService, private DBService: DBService) {
+    constructor(private holidayService: HolidayService) {
         this._setCalendar();
     }
 

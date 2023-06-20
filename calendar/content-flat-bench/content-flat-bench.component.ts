@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { DBService, DB_CONTENT } from "reservation/service/DB.service";
+import { DBService } from "reservation/service/DB.service";
 import { ReservationService } from "reservation/service/reservation.service";
 
 interface IData {
@@ -33,15 +33,15 @@ export class ContentFlatBenchComponent implements OnChanges {
 
     private async _setData() {
         const MAX_NUM = 6;
-        const dataList = await this.DBService.getFlatBenchData(this.date);
+        const dataList = await this.DBService.getDailyData("평상", this.datePipe.transform(this.date, "yyyy-MM-dd"));
 
         this.data = [];
 
         let flatBench: number = 0;
         let table: number = 0;
         dataList.forEach((value) => {
-            flatBench += Number(value[DB_CONTENT.A]);
-            table += Number(value[DB_CONTENT.B]);
+            flatBench += value["평상"];
+            table += value["테이블"];
         });
         this.data.push({
             expired: flatBench >= MAX_NUM,

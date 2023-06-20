@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { DBService, DB_CONTENT } from "reservation/service/DB.service";
+import { DBService } from "reservation/service/DB.service";
 import { ReservationService } from "reservation/service/reservation.service";
 
 interface IData {
@@ -39,20 +39,20 @@ export class ContentFoodComponent implements OnChanges {
 
     private async _setData() {
         const MAX_COOK = 14;
-        const dataList = await this.DBService.getFoodData(this.date);
+        const dataList = await this.DBService.getDailyData("식사", this.datePipe.transform(this.date, "yyyy-MM-dd"));
 
         this.data = [];
 
         for (let time of [12, 15]) {
             let cooks: number = 0;
             dataList
-                .filter((value) => value[DB_CONTENT.time] === `${time}:00`)
+                .filter((value) => value["시간"] === time)
                 .forEach((value) => {
                     cooks +=
-                        Number(value[DB_CONTENT.A]) +
-                        Number(value[DB_CONTENT.B]) +
-                        Number(value[DB_CONTENT.C]) +
-                        Number(value[DB_CONTENT.D]);
+                        Number(value["능이백숙"]) +
+                        Number(value["백숙"]) +
+                        Number(value["버섯찌개"]) +
+                        Number(value["버섯찌개2"]);
                 });
             this.data.push({
                 expired: cooks >= MAX_COOK,
