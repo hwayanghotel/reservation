@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { IReservationForm, ReservationService } from "reservation/service/reservation.service";
 
 export interface IReservationFormPreData {
@@ -12,15 +13,19 @@ export interface IReservationFormPreData {
     templateUrl: "./reservation-form.component.html",
     styleUrls: ["./reservation-form.component.scss"],
 })
-export class ReservationFormComponent implements OnInit {
+export class ReservationFormComponent {
     isOpen: boolean;
     model: IReservationForm;
-    constructor(private reservationService: ReservationService) {
+    step: number = 1;
+    isFoodReserved: boolean;
+
+    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
         this.reservationService.isOpen$.subscribe((isOpen) => {
             this.isOpen = isOpen;
         });
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
+            this.isFoodReserved = this.model.type === "food";
         });
     }
 
@@ -28,11 +33,29 @@ export class ReservationFormComponent implements OnInit {
         return this.model.type === "food" ? "식사" : "평상";
     }
 
-    ngOnInit() {}
-
     closeDialog() {
         this.reservationService.isOpen$.next(false);
     }
 
-    onSubmit() {}
+    onClickNextButton() {
+        if (!this._checkStep()) {
+            this._snackBar.open("예약 내용을 정확히 입력해주세요.", null, { duration: 2000 });
+        } else {
+            this.step++;
+        }
+    }
+
+    private _checkStep(): boolean {
+        if (this.step === 1) {
+            return Boolean(this.model.name && this.model.tel && this.model.guests);
+        }
+        return false;
+    }
+
+    reserve() {
+        console.warn("reserve");
+        this.closeDialog();
+    }
+
+    onClickFlatBench(i: number) {}
 }

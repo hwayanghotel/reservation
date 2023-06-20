@@ -3,29 +3,124 @@
     <h2>능운대펜션 {{type}} 예약</h2>
     <p>{{model.date}} {{model.time}}</p>
     <div class="divider"></div>
-	<!-- <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
-		<h4>1. 예약자 성함</h4>
-		<input type="text" class="form-control" id="name"
-				required [(ngModel)]="model.name" name="name" #name="ngModel">
-		<p [hidden]="name.valid || name.pristine" class="alert">
-			Name is required
-		</p>
-	</form> -->
-	<p>
-		<mat-form-field appearance="fill">
-		  <mat-label>Fill form field</mat-label>
-		  <input matInput placeholder="Placeholder">
-		  <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-		  <mat-hint>Hint</mat-hint>
+
+	<!-- Step 1 -->
+	<div *ngIf="step === 1">
+		<div class="form">
+			<div class="question">
+				<h3>1. 예약자 :</h3>
+			</div>
+			<div class="answer">
+				<input type="text" placeholder="홍길동" [(ngModel)]="model.name">
+			</div>
+		</div>
+
+		<div class="form">
+			<div class="question">
+				<h3>2. 인원 :</h3>
+			</div>
+			<div class="answer number-form">
+				<button (click)="model.guests = model.guests - 1" [class.disabled]="model.guests < 2"> - </button>
+				<input type="number" [(ngModel)]="model.guests">
+				<button (click)="model.guests = model.guests + 1"> + </button>
+			</div>
+		</div>
+
+		<div class="form">
+			<div class="question">
+				<h3>3. 연락처 :</h3>
+			</div>
+			<div class="answer">
+				<input type="tel" placeholder="010-0000-0000" [(ngModel)]="model.tel">
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Step 2 -->
+
+
+
+
+
+
+	<div *ngIf="step === 2">
+		<ng-container *ngIf="type === '평상'">
+			<h3>3. 평상 대여</h3>
+			* 평상은 인원을 4로 나누어 계산, 7명부터는 2개 필요
+			* 평상 남은 개수가 인원보다 부족한 경우, 평상/테이블 모두 표시
+			* 두개 합쳐도 인원보다 부족할 경우, 전화나 문자하라고 안내.
+			* 둘 중 하나 만석인 경우, 미표시
+
+
+			
+			<div style="flex-direction:column">
+				<div class="flat-bench-container">
+					<button mat-flat-button [class.disabled]="model.service['평상'] === 0" (click)="onClickFlatBench(-1)">-</button>
+					{{model.service["평상"]}}
+					<button mat-flat-button (click)="onClickFlatBench(1)">+</button>	
+				</div>
+				<!-- <mat-form-field>
+					<mat-label>평상 자리(4인 기준, 5만원)</mat-label>
+					<input matInput placeholder="평상 수" type="number" [(ngModel)]="model.service['평상']">
+				</mat-form-field>	
+				<mat-form-field>
+					<mat-label>테이블 자리(4인석, 4만원)</mat-label>
+					<input matInput placeholder="테이블 수" type="number" [(ngModel)]="model.service['테이블']">
+				</mat-form-field> -->
+			</div>
+
+			<h3> 4. 식사 예약
+				<mat-slide-toggle [(ngModel)]="isFoodReserved" [color]="'Primary'"></mat-slide-toggle>
+			</h3>
+		</ng-container>
+
+		<ng-container *ngIf="isFoodReserved">
+			<h4>3. 식사 예약</h4>			
+		</ng-container>
+		<!-- <mat-form-field>
+			<mat-label>능이백숙(4인, 9만원)</mat-label>
+			<input matInput>
 		</mat-form-field>
-	  </p>
-	  <p>
-		<mat-form-field appearance="outline">
-		  <mat-label>Outline form field</mat-label>
-		  <input matInput placeholder="Placeholder">
-		  <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-		  <mat-hint>Hint</mat-hint>
+		<mat-form-field>
+			<mat-label>한방백숙(4인, 7만원)</mat-label>
+			<input matInput>
 		</mat-form-field>
-	  </p>
+		<mat-form-field>
+			<mat-label>버섯찌개(4인, 6만원)</mat-label>
+			<input matInput>
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>버섯찌개(2인, 4만원)</mat-label>
+			<input matInput>
+		</mat-form-field> -->
+	</div>
+
+	<div *ngIf="step === 3">
+		<h4>4. 전화번호</h4>
+		<mat-form-field>
+			<mat-label>예: 010-0000-0000</mat-label>
+			<input matInput>
+		</mat-form-field>
+	
+		<h4>5. 차량번호</h4>
+		<mat-form-field>
+			<mat-label>예: 00가0000</mat-label>
+			<input matInput>
+		</mat-form-field>
+	
+		<h4>6. 메모</h4>
+		<mat-form-field>
+				<mat-label>Textarea</mat-label>
+				<textarea matInput></textarea>
+		  </mat-form-field>
+	</div>
+
+	<div class="bottom">
+		<button *ngIf="step === 1" mat-button (click)="closeDialog()">취소</button>
+		<button *ngIf="step > 1" mat-button (click)="step = step - 1">이전</button>
+		<button *ngIf="step < 3" mat-button (click)="onClickNextButton()">다음</button>
+		<button *ngIf="step === 3" mat-button (click)="reserve()">확인</button>
+	</div>
   </div>
 </div>

@@ -5,16 +5,22 @@ export interface IReservationFormPreData {
     type: "food" | "flat-bench";
     date: string;
     time?: "12:00" | "15:00";
-    service?: number[];
 }
 
 export interface IReservationForm extends IReservationFormPreData {
-    link?: "food" | "flat-bench";
     name: string;
     guests: number;
-    tel: number;
+    tel: string;
     car: string;
     note: string;
+    service: {
+        능이백숙?: number;
+        백숙?: number;
+        버섯찌개?: number;
+        버섯찌개2?: number;
+        평상?: number;
+        테이블?: number;
+    };
 }
 
 @Injectable({
@@ -27,8 +33,15 @@ export class ReservationService {
         date: undefined,
         time: undefined,
         name: undefined,
-        guests: undefined,
-        service: undefined,
+        guests: 4,
+        service: {
+            능이백숙: undefined,
+            백숙: undefined,
+            버섯찌개: undefined,
+            버섯찌개2: undefined,
+            평상: undefined,
+            테이블: undefined,
+        },
         tel: undefined,
         car: undefined,
         note: undefined,

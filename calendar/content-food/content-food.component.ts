@@ -21,7 +21,13 @@ export class ContentFoodComponent implements OnChanges {
         private DBService: DBService,
         private datePipe: DatePipe,
         private reservationService: ReservationService
-    ) {}
+    ) {
+        this.reservationService.setReservationFormPreData({
+            type: "flat-bench",
+            date: this.datePipe.transform(new Date(), "yyyy-MM-dd") as string,
+        });
+        this.reservationService.isOpen$.next(true);
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         const previousValue = this.datePipe.transform(changes["date"].previousValue, "yyyy-MM-dd");
