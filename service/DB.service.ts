@@ -3,10 +3,18 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 
+export interface IPreData {
+    예약유형: "식사" | "평상";
+    날짜: string;
+    시간?: 12 | 15 | 0;
+    상태: "대기중" | "취소" | "예약완료";
+}
+
 export interface IDBService {
     예약유형: "식사" | "평상";
     날짜: string;
     시간?: 12 | 15 | 0;
+    상태: "대기중" | "취소" | "예약완료";
     성함: string;
     인원: number;
     전화번호: string;
@@ -18,7 +26,6 @@ export interface IDBService {
     백숙?: number;
     버섯찌개?: number;
     버섯찌개2?: number;
-    상태: "대기중" | "취소" | "예약완료";
 }
 
 @Injectable({

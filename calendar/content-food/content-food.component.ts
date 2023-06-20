@@ -23,8 +23,9 @@ export class ContentFoodComponent implements OnChanges {
         private reservationService: ReservationService
     ) {
         this.reservationService.setReservationFormPreData({
-            type: "flat-bench",
-            date: this.datePipe.transform(new Date(), "yyyy-MM-dd") as string,
+            예약유형: "평상",
+            날짜: this.datePipe.transform(new Date(), "yyyy-MM-dd") as string,
+            상태: "대기중",
         });
         this.reservationService.isOpen$.next(true);
     }
@@ -64,9 +65,10 @@ export class ContentFoodComponent implements OnChanges {
 
     openDialog(index: number) {
         this.reservationService.setReservationFormPreData({
-            type: "food",
-            date: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
-            time: index === 0 ? "12:00" : "15:00",
+            예약유형: "식사",
+            날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
+            시간: index === 0 ? 12 : 15,
+            상태: "대기중",
         });
         this.reservationService.isOpen$.next(true);
     }

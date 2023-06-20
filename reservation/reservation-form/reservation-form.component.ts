@@ -25,12 +25,12 @@ export class ReservationFormComponent {
         });
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
-            this.isFoodReserved = this.model.type === "food";
+            this.isFoodReserved = this.model["예약유형"] === "식사";
         });
     }
 
     get type(): "식사" | "평상" {
-        return this.model.type === "food" ? "식사" : "평상";
+        return this.model["예약유형"];
     }
 
     closeDialog() {
@@ -47,7 +47,7 @@ export class ReservationFormComponent {
 
     private _checkStep(): boolean {
         if (this.step === 1) {
-            return Boolean(this.model.name && this.model.tel && this.model.guests);
+            return Boolean(this.model["성함"] && this.model["전화번호"] && this.model["인원"]);
         }
         return false;
     }
