@@ -6,6 +6,6 @@ import { Component } from "@angular/core";
     styleUrls: ["./reservation.component.scss"],
 })
 export class ReservationComponent {
-    type: "flat-bench" | "food" = "food";
+    type: "평상" | "식사" = "식사";
     constructor() {}
 }

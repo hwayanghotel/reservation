@@ -17,8 +17,8 @@
         {{ date.date }}
       </p>
       <ng-container *ngIf="!isPassed(date.date) && date.date !== 0">
-        <content-food *ngIf="type === 'food'" [date]="getDate(date.date)"></content-food>
-        <content-flat-bench *ngIf="type === 'flat-bench'" [date]="getDate(date.date)"></content-flat-bench>
+        <content-food *ngIf="type === '식사'" [date]="getDate(date.date)"></content-food>
+        <content-flat-bench *ngIf="type === '평상'" [date]="getDate(date.date)"></content-flat-bench>
       </ng-container>
     </div>
   </div>

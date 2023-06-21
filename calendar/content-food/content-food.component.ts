@@ -21,14 +21,7 @@ export class ContentFoodComponent implements OnChanges {
         private DBService: DBService,
         private datePipe: DatePipe,
         private reservationService: ReservationService
-    ) {
-        this.reservationService.setReservationFormPreData({
-            예약유형: "평상",
-            날짜: this.datePipe.transform(new Date(), "yyyy-MM-dd") as string,
-            상태: "대기중",
-        });
-        this.reservationService.isOpen$.next(true);
-    }
+    ) {}
 
     ngOnChanges(changes: SimpleChanges) {
         const previousValue = this.datePipe.transform(changes["date"].previousValue, "yyyy-MM-dd");
@@ -64,7 +57,7 @@ export class ContentFoodComponent implements OnChanges {
     }
 
     openDialog(index: number) {
-        this.reservationService.setReservationFormPreData({
+        this.reservationService.setReservationForm({
             예약유형: "식사",
             날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
             시간: index === 0 ? 12 : 15,

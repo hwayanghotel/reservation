@@ -18,7 +18,7 @@ export interface IDBService {
     성함: string;
     인원: number;
     전화번호: string;
-    차량번호: string;
+    차량번호: string[];
     메모: string;
     평상?: number;
     테이블?: number;

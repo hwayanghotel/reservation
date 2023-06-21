@@ -12,7 +12,7 @@ interface ICalendar {
     styleUrls: ["./calendar.component.scss"],
 })
 export class CalendarComponent {
-    @Input() type: "food" | "flat-bench" = "food";
+    @Input() type: "평상" | "식사";
     selectedDate: Date = new Date();
     calendar: ICalendar[][] = [];
     week: string[] = ["일", "월", "화", "수", "목", "금", "토"];

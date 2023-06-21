@@ -1,18 +1,16 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subject } from "rxjs";
+import { IDBService, DBService } from "./DB.service";
 
-export interface IReservationFormPreData {
+export interface IReservationForm extends IDBService {
     예약유형: "식사" | "평상";
     날짜: string;
     시간?: 12 | 15 | 0;
     상태: "대기중" | "취소" | "예약완료";
-}
-
-export interface IReservationForm extends IReservationFormPreData {
     성함: string;
     인원: number;
     전화번호: string;
-    차량번호: string;
+    차량번호: string[];
     메모: string;
     평상?: number;
     테이블?: number;
@@ -21,6 +19,24 @@ export interface IReservationForm extends IReservationFormPreData {
     버섯찌개?: number;
     버섯찌개2?: number;
 }
+
+export interface IBookingAvailable {
+    잔여백숙: number;
+    잔여버섯: number;
+    잔여12시식사: number;
+    잔여15시식사: number;
+    잔여평상: number;
+    잔여테이블: number;
+    잔여주차: number;
+}
+
+export const StandardNumberOfPeople = {
+    식사좌석: 4,
+    평상: { 적정인원: 4, 최대인원: 7 },
+    테이블: 4,
+    평상주차: 2,
+    식사주차: 1,
+};
 
 @Injectable({
     providedIn: "root",
@@ -33,29 +49,80 @@ export class ReservationService {
         시간: undefined,
         상태: "대기중",
         성함: undefined,
-        인원: 4,
+        인원: 30,
         전화번호: undefined,
-        차량번호: undefined,
+        차량번호: [undefined],
         메모: undefined,
-        평상: undefined,
-        테이블: undefined,
-        능이백숙: undefined,
-        백숙: undefined,
-        버섯찌개: undefined,
-        버섯찌개2: undefined,
+        평상: 0,
+        테이블: 0,
+        능이백숙: 0,
+        백숙: 0,
+        버섯찌개: 0,
+        버섯찌개2: 0,
     });
 
-    constructor() {}
+    bookingAvailable$: Subject<IBookingAvailable> = new Subject();
 
-    setReservationFormPreData(data: IReservationFormPreData) {
+    constructor(private DBService: DBService) {
+        this.isOpen$.subscribe((isOpen) => {
+            if (isOpen) {
+                this._updateBookingAvailable();
+            }
+        });
+
+        //TEST
+        this._test();
+    }
+
+    private async _updateBookingAvailable() {
+        let bookingAvailable: IBookingAvailable = {
+            잔여백숙: 30,
+            잔여버섯: 10,
+            잔여12시식사: 14,
+            잔여15시식사: 14,
+            잔여평상: 6,
+            잔여테이블: 6,
+            잔여주차: 30,
+        };
+        const dailyData = await this.DBService.getDailyData(
+            this.formData$.getValue()["예약유형"],
+            this.formData$.getValue()["날짜"]
+        );
+        dailyData.forEach((data) => {
+            const numberOfChicken: number = data["능이백숙"] + data["백숙"];
+            const numberOfMushroom: number = data["버섯찌개"] + data["버섯찌개2"];
+            bookingAvailable["잔여백숙"] -= numberOfChicken;
+            bookingAvailable["잔여버섯"] -= numberOfMushroom;
+            bookingAvailable[data["시간"] === 12 ? "잔여12시식사" : "잔여15시식사"] -=
+                numberOfChicken + numberOfMushroom;
+            bookingAvailable["잔여평상"] -= data["평상"];
+            bookingAvailable["잔여테이블"] -= data["테이블"];
+            bookingAvailable["잔여주차"] -= data["차량번호"].length;
+        });
+        this.bookingAvailable$.next(bookingAvailable);
+    }
+
+    setReservationForm(data: any) {
         this.formData$.next({
             ...this.formData$.getValue(),
-            예약유형: data["예약유형"],
-            시간: data["시간"],
-            날짜: data["날짜"],
+            ...data,
         });
     }
-    setReservationForm(data: IReservationForm) {
-        this.formData$.next(data);
+
+    //TEST
+    private _test() {
+        setTimeout(() => {
+            this.setReservationForm({
+                예약유형: "평상",
+                날짜: "2023-06-21",
+                성함: "박성수",
+                전화번호: "010-9999-9999",
+            });
+            this.isOpen$.next(true);
+        }, 1000);
+
+        this.formData$.subscribe((v) => {
+            console.warn("formData update", v);
+        });
     }
 }
