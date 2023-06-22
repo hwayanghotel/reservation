@@ -61,6 +61,6 @@ export class ContentFlatBenchComponent implements OnChanges {
             날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
             상태: "대기중",
         });
-        this.reservationService.isOpen$.next(true);
+        this.reservationService.bookingStep$.next(1);
     }
 }

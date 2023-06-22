@@ -42,7 +42,7 @@ export const StandardNumberOfPeople = {
     providedIn: "root",
 })
 export class ReservationService {
-    isOpen$: Subject<boolean> = new Subject<boolean>();
+    bookingStep$: Subject<number> = new Subject<number>();
     formData$: BehaviorSubject<IReservationForm> = new BehaviorSubject<IReservationForm>({
         예약유형: undefined,
         날짜: undefined,
@@ -64,8 +64,8 @@ export class ReservationService {
     bookingAvailable$: Subject<IBookingAvailable> = new Subject();
 
     constructor(private DBService: DBService) {
-        this.isOpen$.subscribe((isOpen) => {
-            if (isOpen) {
+        this.bookingStep$.subscribe((isOpen) => {
+            if (isOpen > 0) {
                 this._updateBookingAvailable();
             }
         });
@@ -109,6 +109,10 @@ export class ReservationService {
         });
     }
 
+    reserve() {
+        console.warn("DB를 firebase로 전송", this.formData$.getValue());
+    }
+
     //TEST
     private _test() {
         setTimeout(() => {
@@ -118,7 +122,7 @@ export class ReservationService {
                 성함: "박성수",
                 전화번호: "010-9999-9999",
             });
-            this.isOpen$.next(true);
+            this.bookingStep$.next(1);
         }, 1000);
 
         this.formData$.subscribe((v) => {

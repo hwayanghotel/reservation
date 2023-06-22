@@ -1,11 +1,9 @@
 .background{
     position: fixed;
     top:0;
-    left: 0;
     height: -webkit-fill-available;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.3);
-    z-index: 9;
     display: flex;
     justify-content: center;
     align-items: center;   
@@ -14,10 +12,8 @@
 .dialog{
     background-color: white;
     padding: 2rem 2rem 0 2rem;
-    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     margin: 5%;
 
@@ -31,16 +27,22 @@
         border: 1px solid rgba(1,1,1,0.3);
         color: #e34c4c;
     }
+}
 
-    .bottom {
-        width: 100%;
-        margin: 1rem;
+.bottom {
+    margin: 1rem;
 
-        button {
-            width: 50%;
-            font-weight: 800;
-        }
+    button {
+        width: 50%;
+        font-weight: 800;
     }
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 h2,h3,h4{

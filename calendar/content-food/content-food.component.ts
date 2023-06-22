@@ -63,6 +63,6 @@ export class ContentFoodComponent implements OnChanges {
             시간: index === 0 ? 12 : 15,
             상태: "대기중",
         });
-        this.reservationService.isOpen$.next(true);
+        this.reservationService.bookingStep$.next(1);
     }
 }

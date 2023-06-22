@@ -19,6 +19,11 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { Step1Component } from "./reservation/reservation-form/step1/step1.component";
+import { Step2Component } from "./reservation/reservation-form/step2/step2.component";
+import { Step3Component } from "./reservation/reservation-form/step3/step3.component";
+import { Step4Component } from "./reservation/reservation-form/step4/step4.component";
+import { Step5Component } from "./reservation/reservation-form/step5/step5.component";
 
 const routes: Routes = [{ path: "reservation", component: ReservationComponent }];
 
@@ -47,6 +52,11 @@ const routes: Routes = [{ path: "reservation", component: ReservationComponent }
         CalendarComponent,
         ContentFoodComponent,
         ContentFlatBenchComponent,
+        Step1Component,
+        Step2Component,
+        Step3Component,
+        Step4Component,
+        Step5Component,
     ],
 })
 export class ReservationModuleModule {}
