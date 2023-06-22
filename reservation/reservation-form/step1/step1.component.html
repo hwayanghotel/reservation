@@ -1,37 +1,37 @@
 <div class="step">
-  <h4>- 기본 정보 -</h4>
-  <div class="divider"></div>
-  
-  <div class="form">
-    <div class="question">
-      <h3>1. 예약자 :</h3>
-    </div>
-    <div class="answer">
-      <input type="text" placeholder="홍길동" [(ngModel)]="model['성함']">
-    </div>
-  </div>
-  
-  <div class="form">
-    <div class="question">
-      <h3>2. 인원 :</h3>
-    </div>
-    <div class="answer number-form">
-      <button (click)="model['인원'] = model['인원'] - 1" [class.disabled]="model['인원'] === 1"> - </button>
-      <input type="number" [(ngModel)]="model['인원']">
-      <button (click)="model['인원'] = model['인원'] + 1"> + </button>
-    </div>
-  </div>
-  
-  <div class="form">
-    <div class="question">
-      <h3>3. 연락처 :</h3>
-    </div>
-    <div class="answer">
-      <input type="tel" placeholder="010-0000-0000" [(ngModel)]="model['전화번호']">
-    </div>
-  </div>
+	<h4>- 기본 정보 -</h4>
+	<div class="divider"></div>
+
+	<div class="form">
+		<div class="question">
+			<h3>1. 예약자 :</h3>
+		</div>
+		<div class="answer">
+			<input type="text" placeholder="홍길동" [(ngModel)]="model['성함']">
+		</div>
+	</div>
+
+	<div class="form">
+		<div class="question">
+			<h3>2. 인원 :</h3>
+		</div>
+		<div class="answer number-form">
+			<button (click)="model['인원'] = model['인원'] - 1" [class.disabled]="model['인원'] === 1">-</button>
+			<input type="number" [(ngModel)]="model['인원']">
+			<button (click)="model['인원'] = model['인원'] + 1">+</button>
+		</div>
+	</div>
+
+	<div class="form">
+		<div class="question">
+			<h3>3. 연락처 :</h3>
+		</div>
+		<div class="answer">
+			<input type="string" placeholder="010-0000-0000" [(ngModel)]="model['전화번호']">
+		</div>
+	</div>
 </div>
 <div class="bottom">
-  <button mat-button (click)="closeDialog()">취소</button>
-  <button mat-button (click)="onClickNextButton()">다음</button>
+	<button mat-button (click)="closeDialog()">취소</button>
+	<button mat-button (click)="onClickNextButton()">다음</button>
 </div>

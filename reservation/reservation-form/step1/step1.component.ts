@@ -14,14 +14,14 @@ import {
 })
 export class Step1Component {
     model: IReservationForm;
-    bookingAvailable: IBookingAvailable;
+    private _bookingAvailable: IBookingAvailable;
 
     constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
         });
         this.reservationService.bookingAvailable$.subscribe((data) => {
-            this.bookingAvailable = data;
+            this._bookingAvailable = data;
         });
     }
 
@@ -54,12 +54,12 @@ export class Step1Component {
     private _setRecommandFlatTable() {
         let person: number = this.model["인원"];
         this.model["평상"] = Math.round(person / StandardNumberOfPeople["평상"]["적정인원"]);
-        if (this.model["평상"] > this.bookingAvailable["잔여평상"]) {
-            this.model["평상"] = this.bookingAvailable["잔여평상"];
+        if (this.model["평상"] > this._bookingAvailable["잔여평상"]) {
+            this.model["평상"] = this._bookingAvailable["잔여평상"];
             person -= this.model["평상"] * StandardNumberOfPeople["평상"]["적정인원"];
             this.model["테이블"] = Math.round(person / StandardNumberOfPeople["테이블"]);
-            if (this.model["테이블"] > this.bookingAvailable["잔여테이블"]) {
-                this.model["테이블"] = this.bookingAvailable["잔여테이블"];
+            if (this.model["테이블"] > this._bookingAvailable["잔여테이블"]) {
+                this.model["테이블"] = this._bookingAvailable["잔여테이블"];
                 person -= this.model["테이블"] * StandardNumberOfPeople["테이블"];
                 console.warn("적정 인원 대비 평상이 부족합니다", person);
             }
@@ -69,12 +69,12 @@ export class Step1Component {
     private _setRecommandFood() {
         let person: number = this.model["인원"];
         this.model["능이백숙"] = Math.round(person / StandardNumberOfPeople["식사좌석"]);
-        if (this.model["능이백숙"] > this.bookingAvailable["잔여백숙"]) {
-            this.model["능이백숙"] = this.bookingAvailable["잔여백숙"];
+        if (this.model["능이백숙"] > this._bookingAvailable["잔여백숙"]) {
+            this.model["능이백숙"] = this._bookingAvailable["잔여백숙"];
             person -= this.model["능이백숙"] * StandardNumberOfPeople["식사좌석"];
             this.model["버섯찌개"] = Math.round(person / StandardNumberOfPeople["식사좌석"]);
-            if (this.model["버섯찌개"] > this.bookingAvailable["잔여버섯"]) {
-                this.model["버섯찌개"] = this.bookingAvailable["잔여버섯"];
+            if (this.model["버섯찌개"] > this._bookingAvailable["잔여버섯"]) {
+                this.model["버섯찌개"] = this._bookingAvailable["잔여버섯"];
                 person -= this.model["버섯찌개"] * StandardNumberOfPeople["식사좌석"];
                 console.warn("적정 인원 대비 평상이 부족합니다", person);
             }

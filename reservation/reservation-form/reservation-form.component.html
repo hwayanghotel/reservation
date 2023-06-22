@@ -1,12 +1,12 @@
 <div *ngIf="step > 0" class="background" (click)="closeDialog()">
-  <div class="dialog" (click)="$event.stopPropagation();">
-    <h2>능운대펜션 {{model["예약유형"]}} 예약</h2>
-    <p>{{model["날짜"]}} {{model["시간"]}}</p>
+	<div class="dialog" (click)="$event.stopPropagation();">
+		<h2>능운대펜션 {{model["예약유형"]}} 예약</h2>
+		<p>{{model["날짜"]}} {{model["시간"]}}</p>
 
-	<step1 *ngIf="step === 1"></step1>
-	<step2 *ngIf="step === 2"></step2>
-	<step3 *ngIf="step === 3"></step3>
-	<step4 *ngIf="step === 4"></step4>
-	<step5 *ngIf="step === 5"></step5>
-  </div>
+		<step1 *ngIf="step === 1"></step1>
+		<step2 *ngIf="step === 2"></step2>
+		<step3 *ngIf="step === 3"></step3>
+		<step4 *ngIf="step === 4"></step4>
+		<step5 *ngIf="step === 5"></step5>
+	</div>
 </div>

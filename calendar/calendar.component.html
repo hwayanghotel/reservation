@@ -1,25 +1,25 @@
 <div class="calendar">
-  <div class="month-info">
-    <button [class.disabled]="isPassed(-1)" (click)="moveMonth(-1)">&lt;</button>
-    <p>{{ currentYear }}.{{ currentMonth }}</p>
-    <button (click)="moveMonth(+1)">&gt;</button>
-  </div>
+	<div class="month-info">
+		<button [class.disabled]="isPassed(-1)" (click)="moveMonth(-1)">&lt;</button>
+		<p>{{ currentYear }}.{{ currentMonth }}</p>
+		<button (click)="moveMonth(+1)">&gt;</button>
+	</div>
 
-  <ng-content></ng-content>
+	<ng-content></ng-content>
 
-  <div class="week">
-    <p *ngFor="let day of week">{{day}}</p>
-  </div>
-  
-  <div class="date-table" *ngFor="let week of calendar">
-    <div class="date-box" *ngFor="let date of week" [class.disabled]="isPassed(date.date)">
-      <p *ngIf="date.date !== 0" [class.holiday]="date.isHoliday">
-        {{ date.date }}
-      </p>
-      <ng-container *ngIf="!isPassed(date.date) && date.date !== 0">
-        <content-food *ngIf="type === '식사'" [date]="getDate(date.date)"></content-food>
-        <content-flat-bench *ngIf="type === '평상'" [date]="getDate(date.date)"></content-flat-bench>
-      </ng-container>
-    </div>
-  </div>
+	<div class="week">
+		<p *ngFor="let day of week">{{day}}</p>
+	</div>
+
+	<div class="date-table" *ngFor="let week of calendar">
+		<div class="date-box" *ngFor="let date of week" [class.disabled]="isPassed(date.date)">
+			<p *ngIf="date.date !== 0" [class.holiday]="date.isHoliday">
+				{{ date.date }}
+			</p>
+			<ng-container *ngIf="!isPassed(date.date) && date.date !== 0">
+				<content-food *ngIf="type === '식사'" [date]="getDate(date.date)"></content-food>
+				<content-flat-bench *ngIf="type === '평상'" [date]="getDate(date.date)"></content-flat-bench>
+			</ng-container>
+		</div>
+	</div>
 </div>
