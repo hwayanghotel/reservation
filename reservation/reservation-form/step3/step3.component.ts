@@ -26,10 +26,11 @@ export class Step3Component {
     }
 
     get warningFood(): boolean {
-        const reservationPerson =
-            (this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"]) *
-            StandardNumberOfPeople["식사좌석"];
-        return this.model["예약유형"] !== "평상" && this.model["인원"] > reservationPerson;
+        const foods = this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
+        return (
+            this.model["예약유형"] !== "평상" &&
+            Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]) > foods
+        );
     }
 
     previousStep() {
