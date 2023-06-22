@@ -6,6 +6,7 @@ import {
     ReservationService,
     StandardNumberOfPeople,
 } from "reservation/service/reservation.service";
+import { Price } from "src/assets/price";
 
 @Component({
     selector: "step3",
@@ -15,6 +16,7 @@ import {
 export class Step3Component {
     model: IReservationForm;
     bookingAvailable: IBookingAvailable;
+    Price = Price;
 
     constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
         this.reservationService.formData$.subscribe((data) => {
@@ -25,7 +27,7 @@ export class Step3Component {
         });
     }
 
-    get warningFood(): boolean {
+    get warning(): boolean {
         const foods = this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
         return (
             this.model["예약유형"] !== "평상" &&
@@ -47,6 +49,6 @@ export class Step3Component {
     }
 
     private _checkStep(): boolean {
-        return this.model["예약유형"] === "평상" || !this.warningFood;
+        return this.model["예약유형"] === "평상" || !this.warning;
     }
 }
