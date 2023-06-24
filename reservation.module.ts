@@ -59,4 +59,4 @@ const routes: Routes = [{ path: "reservation", component: ReservationComponent }
         Step5Component,
     ],
 })
-export class ReservationModuleModule {}
+export class ReservationModule {}
