@@ -42,7 +42,6 @@ export class HolidayService {
     }
 
     private getHolidaysFromServer(date: Date): Observable<number[]> {
-        // date = new Date("2023/5/1");
         const solYear = date.getFullYear().toString();
         const solMonth: string = date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1).toString();
         const ServiceKey =
