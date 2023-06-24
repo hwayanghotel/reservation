@@ -21,6 +21,6 @@ export class ReservationFormComponent {
     }
 
     closeDialog() {
-        this.reservationService.bookingStep$.next(0);
+        this.reservationService.bookingStep$.next(undefined);
     }
 }

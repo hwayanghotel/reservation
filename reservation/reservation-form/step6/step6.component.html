@@ -1,0 +1,37 @@
+<div class="step">
+	<h3 *ngIf="!reservationCheckUser"> - 예약 완료 -</h3>
+	<h3 *ngIf="reservationCheckUser"> - 예약 확인 -</h3>
+	<div class="divider"></div>
+	<div [style.text-align]="'center'">
+		<h5 *ngIf="!reservationCheckUser">예약 등록을 완료했습니다.</h5>
+		<h5 *ngIf="model['예약유형']==='식사' && model['상태']==='대기중'">
+			현재 예약 대기중이며,<br />관리자 확인 후 예약이 확정됩니다.<br />(평균 1일 소요)
+		</h5>
+
+		<ng-container *ngIf="model['예약유형']==='평상' && model['상태']==='대기중'">
+			<h5>현재 예약 대기중이며,<br />입금 확인 후 예약이 확정됩니다.</h5>
+			<h5>문의: 010-6717-4045</h5>
+
+			<div class="bank-info">
+				<h5>- 계좌: 신협 132-0687-4547-6 (정경미)</h5>
+				<h5>- 예약금: {{reservationCost | number}}원</h5>
+			</div>
+		</ng-container>
+
+		<ng-container *ngIf="model['상태']==='예약완료'">
+			<h5>{{model["성함"]}}님 안녕하세요.</h5>
+			<h5>{{model["예약유형"]}} 예약 확정 상태입니다.</h5>
+			<h5>친절하게 모시겠습니다.</h5>
+		</ng-container>
+	</div>
+</div>
+
+<div class="bottom" *ngIf="!reservationCheckUser">
+	<button mat-button (click)="okButton()">확인</button>
+</div>
+
+<div class="button-container" *ngIf="reservationCheckUser">
+	<button mat-raised-button (click)="okButton()">완료하기</button>
+	<button mat-raised-button (click)="editButton()">수정하기</button>
+	<button mat-raised-button (click)="cancelButton()">취소하기</button>
+</div>

@@ -25,6 +25,10 @@ export class Step2Component {
         });
     }
 
+    get reservationCost(): number {
+        return this.reservationService.getReservationCost(this.model);
+    }
+
     get warningFlatTable(): boolean {
         const reservationPerson =
             this.model["평상"] * StandardNumberOfPeople["평상"]["최대인원"] +

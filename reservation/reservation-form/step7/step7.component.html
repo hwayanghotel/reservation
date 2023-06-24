@@ -1,0 +1,42 @@
+<div class="step">
+	<h3>- 고객 검색 -</h3>
+	<div class="divider"></div>
+
+	<div class="form">
+		<div class="question">
+			<h3>1. 예약 유형 :</h3>
+		</div>
+		<div class="answer">
+			<button [style.margin-right]="'0.3rem'">평상</button>
+			<button>식사</button>
+		</div>
+	</div>
+
+	<div class="form">
+		<div class="question">
+			<h3>2. 예약자 :</h3>
+		</div>
+		<div class="answer">
+			<input type="text" placeholder="홍길동" [(ngModel)]="model['성함']">
+		</div>
+	</div>
+
+	<div class="form">
+		<div class="question">
+			<h3>3. 연락처 :</h3>
+		</div>
+		<div class="answer">
+			<input type="string" placeholder="010-0000-0000" [(ngModel)]="model['전화번호']">
+		</div>
+	</div>
+
+
+	<div class="info">
+		<h6>※ 예약 유형과 성함, 연락처를 적어주세요.</h6>
+	</div>
+</div>
+
+<div class="bottom">
+	<button mat-button (click)="closeDialog()">취소</button>
+	<button mat-button (click)="onSearchButton()">검색</button>
+</div>

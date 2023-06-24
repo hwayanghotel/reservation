@@ -1,0 +1,9 @@
+.answer {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+        width: inherit !important;
+        padding: 0.5rem;
+    }
+}

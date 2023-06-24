@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subject } from "rxjs";
 import { IDBService, DBService } from "./DB.service";
+import { Price } from "src/assets/price";
 
 export interface IReservationForm extends IDBService {
     예약유형: "식사" | "평상";
@@ -43,6 +44,7 @@ export const StandardNumberOfPeople = {
 })
 export class ReservationService {
     bookingStep$: Subject<number> = new Subject<number>();
+    reservationCheckUser: boolean;
     formData$: BehaviorSubject<IReservationForm> = new BehaviorSubject<IReservationForm>({
         예약유형: undefined,
         날짜: undefined,
@@ -110,7 +112,24 @@ export class ReservationService {
     }
 
     reserve() {
-        console.warn("DB를 firebase로 전송", this.formData$.getValue());
+        console.warn("ReservationService reserve", this.formData$.getValue());
+    }
+
+    edit() {
+        console.warn("ReservationService edit", this.formData$.getValue());
+    }
+
+    cancel() {
+        console.warn("ReservationService cancel", this.formData$.getValue());
+    }
+
+    getReservationCost(model: IReservationForm): number {
+        const flatTableCost: number = model["평상"] * Price["평상"] + model["테이블"] * Price["테이블"];
+        const addedGuests: number =
+            model["인원"] -
+            model["평상"] * StandardNumberOfPeople["평상"].적정인원 -
+            model["테이블"] * StandardNumberOfPeople["테이블"];
+        return flatTableCost + (addedGuests > 0 ? addedGuests * Price["평상추가인원"] : 0);
     }
 
     //TEST
@@ -118,11 +137,23 @@ export class ReservationService {
         setTimeout(() => {
             this.setReservationForm({
                 예약유형: "평상",
-                날짜: "2023-06-21",
+                날짜: "2023-06-25",
                 성함: "박성수",
                 전화번호: "010-9999-9999",
+                시간: undefined,
+                상태: "예약완료",
+                인원: 7,
+                차량번호: ["01수0123", "02수2345"],
+                메모: "아이가 한 명 있어요",
+                평상: 1,
+                테이블: 0,
+                능이백숙: 0,
+                백숙: 1,
+                버섯찌개: 0,
+                버섯찌개2: 0,
             });
-            this.bookingStep$.next(1);
+            this.reservationCheckUser = true;
+            this.bookingStep$.next(6);
         }, 1000);
 
         this.formData$.subscribe((v) => {

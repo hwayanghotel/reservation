@@ -1,20 +1,30 @@
-<div class="step">
-  <h4>- 차량 등록 -</h4>
-  <div class="divider"></div>
+<div class="step" *ngIf="bookingAvailable">
+	<h4>- 차량 등록 -</h4>
+	<div class="divider"></div>
 
-		<div class="question" [style.margin-bottom]="'0.8rem'">
-			<h3 [style.margin-bottom]="'0.5rem'">1. 차량번호 등록</h3>
-			<h6>공원 내 입차를 도와드립니다.</h6>
-			<h6>등록할 차량번호를 적어주세요.</h6>
+	<div class="answer">
+		<div class="row-align sub-title">
+			<h3>1. 차량번호 등록</h3>
+			<button (click)="addForm()" [class.disabled]="cannotAddForm()">
+				<mat-icon class="add-button">add_Circle_outline</mat-icon>
+			</button>
 		</div>
-		<button (click)="updateCarList(1)">추가</button>
-		<button (click)="updateCarList(-1)">삭제</button>
-		<div class="answer">
-			<input *ngFor="let index of carIndexList" placeholder="01가01234" [(ngModel)]="model['차량번호'][index]">
+
+		<div class="row-align" *ngFor="let index of carIndexList">
+			<input placeholder="01가01234" [(ngModel)]="model['차량번호'][index]">
+			<button (click)="deleteForm(index)">
+				<mat-icon>close</mat-icon>
+			</button>
 		</div>
+	</div>
+
+	<h6 *ngIf="cannotAddForm()" [style.margin]="'0.5rem'">주차 상황에 따라 차량 대수가 제한될 수 있습니다.</h6>
+	<h6>공원 내 입차를 도와드립니다.</h6>
+	<h6>등록할 차량번호를 적어주세요.</h6>
+	<h6 [style.margin-top]="'0.3rem'">(예약 2일 전까지 입력 가능합니다.)</h6>
 </div>
 
 <div class="bottom">
-  <button mat-button (click)="previousStep()">이전</button>
-  <button mat-button (click)="onClickNextButton()">다음</button>
+	<button mat-button (click)="previousStep()">이전</button>
+	<button mat-button (click)="onClickNextButton()">다음</button>
 </div>
