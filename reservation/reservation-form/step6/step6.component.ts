@@ -23,13 +23,6 @@ export class Step6Component {
 
     okButton() {
         this.reservationService.bookingStep$.next(undefined);
-
-        if (this.reservationService.reservationCheckUser) {
-            this.reservationService.reservationCheckUser = false;
-            this.reservationService.edit();
-        } else {
-            this.reservationService.reserve();
-        }
     }
 
     editButton() {

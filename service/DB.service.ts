@@ -11,6 +11,7 @@ export interface IPreData {
 }
 
 export interface IDBService {
+    id?: string;
     예약유형: "식사" | "평상";
     날짜: string;
     시간?: 12 | 15 | 0;
@@ -32,7 +33,7 @@ export interface IDBService {
     providedIn: "root",
 })
 export class DBService {
-    private firebaseStore$: Observable<any[]>;
+    firebaseStore$: Observable<any[]>;
     constructor(private http: HttpClient, private store: AngularFirestore) {
         // this.firebaseStore$ = this.store.collection("hwayanghotel").valueChanges({ idField: "id" }) as Observable<any[]>;
         this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
@@ -42,6 +43,37 @@ export class DBService {
         return new Promise((resolve) => {
             this.firebaseStore$.subscribe((db) => {
                 resolve(db.filter((v) => v["예약유형"] === type && v["날짜"] === date));
+            });
+        });
+    }
+
+    add(model: IDBService) {
+        this.store.collection("hwayanghotel").add(model);
+    }
+
+    edit(model: IDBService) {
+        console.warn("edit", model.id);
+        this.store.collection("hwayanghotel").doc(model.id);
+    }
+
+    delete(model: IDBService) {}
+
+    search(model: { 예약유형: "평상" | "식사"; 성함: string; 전화번호: string }): Promise<IDBService[]> {
+        return new Promise((resolve) => {
+            this.firebaseStore$.subscribe((db) => {
+                const today = new Date();
+                let data = db.filter((v) => new Date(v["날짜"]) > today && v["상태"] !== "취소");
+
+                if (model["예약유형"]) {
+                    data = data.filter((v) => v["예약유형"] === model["예약유형"]);
+                }
+                if (model["성함"]) {
+                    data = data.filter((v) => v["성함"] === model["성함"]);
+                }
+                if (model["전화번호"]) {
+                    data = data.filter((v) => v["식사"] === model["전화번호"]);
+                }
+                return data;
             });
         });
     }

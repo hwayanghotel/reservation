@@ -19,6 +19,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { Step1Component } from "./reservation/reservation-form/step1/step1.component";
 import { Step2Component } from "./reservation/reservation-form/step2/step2.component";
 import { Step3Component } from "./reservation/reservation-form/step3/step3.component";
@@ -26,6 +27,8 @@ import { Step4Component } from "./reservation/reservation-form/step4/step4.compo
 import { Step5Component } from "./reservation/reservation-form/step5/step5.component";
 import { Step6Component } from "./reservation/reservation-form/step6/step6.component";
 import { Step7Component } from "./reservation/reservation-form/step7/step7.component";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatCardModule } from "@angular/material/card";
 
 const routes: Routes = [{ path: "reservation", component: ReservationComponent }];
 
@@ -46,6 +49,9 @@ const routes: Routes = [{ path: "reservation", component: ReservationComponent }
         MatButtonModule,
         MatSlideToggleModule,
         MatSnackBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatCardModule,
     ],
     exports: [],
     declarations: [

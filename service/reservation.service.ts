@@ -4,6 +4,7 @@ import { IDBService, DBService } from "./DB.service";
 import { Price } from "src/assets/price";
 
 export interface IReservationForm extends IDBService {
+    id?: string;
     예약유형: "식사" | "평상";
     날짜: string;
     시간?: 12 | 15 | 0;
@@ -113,6 +114,7 @@ export class ReservationService {
 
     reserve() {
         console.warn("ReservationService reserve", this.formData$.getValue());
+        this.DBService.add(this.formData$.getValue());
     }
 
     edit() {
@@ -121,6 +123,10 @@ export class ReservationService {
 
     cancel() {
         console.warn("ReservationService cancel", this.formData$.getValue());
+    }
+
+    search(model: { 예약유형: "평상" | "식사"; 성함: string; 전화번호: string }): Promise<IReservationForm[]> {
+        return this.DBService.search(model);
     }
 
     getReservationCost(model: IReservationForm): number {
@@ -135,29 +141,33 @@ export class ReservationService {
     //TEST
     private _test() {
         setTimeout(() => {
-            this.setReservationForm({
-                예약유형: "평상",
-                날짜: "2023-06-25",
-                성함: "박성수",
-                전화번호: "010-9999-9999",
-                시간: undefined,
-                상태: "예약완료",
-                인원: 7,
-                차량번호: ["01수0123", "02수2345"],
-                메모: "아이가 한 명 있어요",
-                평상: 1,
-                테이블: 0,
-                능이백숙: 0,
-                백숙: 1,
-                버섯찌개: 0,
-                버섯찌개2: 0,
-            });
-            this.reservationCheckUser = true;
-            this.bookingStep$.next(6);
+            // this.setReservationForm({
+            //     예약유형: "평상",
+            //     날짜: "2023-06-25",
+            //     성함: "박성수",
+            //     전화번호: "010-9999-9999",
+            //     시간: undefined,
+            //     상태: "예약완료",
+            //     인원: 7,
+            //     차량번호: ["01수0123", "02수2345"],
+            //     메모: "아이가 한 명 있어요",
+            //     평상: 1,
+            //     테이블: 0,
+            //     능이백숙: 0,
+            //     백숙: 1,
+            //     버섯찌개: 0,
+            //     버섯찌개2: 0,
+            // });
+            // this.reservationCheckUser = true;
+            // this.bookingStep$.next(7);
         }, 1000);
 
         this.formData$.subscribe((v) => {
             console.warn("formData update", v);
         });
+
+        // this.DBService.firebaseStore$.subscribe((v) => {
+        //     console.warn("DBService update", JSON.stringify(v));
+        // });
     }
 }

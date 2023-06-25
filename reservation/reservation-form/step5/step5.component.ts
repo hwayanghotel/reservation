@@ -1,5 +1,4 @@
 import { Component } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { IReservationForm, ReservationService } from "reservation/service/reservation.service";
 
 @Component({
@@ -10,7 +9,7 @@ import { IReservationForm, ReservationService } from "reservation/service/reserv
 export class Step5Component {
     model: IReservationForm;
 
-    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
+    constructor(private reservationService: ReservationService) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
         });
@@ -22,7 +21,12 @@ export class Step5Component {
 
     reserve() {
         this.reservationService.setReservationForm(this.model);
-        this.reservationService.reserve();
-        this.reservationService.bookingStep$.next(undefined);
+        if (this.reservationService.reservationCheckUser) {
+            this.reservationService.reservationCheckUser = false;
+            this.reservationService.edit();
+        } else {
+            this.reservationService.reserve();
+        }
+        this.reservationService.bookingStep$.next(6);
     }
 }
