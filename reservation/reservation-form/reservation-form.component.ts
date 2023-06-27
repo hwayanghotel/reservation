@@ -12,7 +12,6 @@ export class ReservationFormComponent {
 
     constructor(private reservationService: ReservationService) {
         this.reservationService.bookingStep$.subscribe((step) => {
-            console.warn("??", step);
             this.step = step;
         });
         this.reservationService.formData$.subscribe((data) => {
