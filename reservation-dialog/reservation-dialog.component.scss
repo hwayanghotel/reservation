@@ -1,0 +1,98 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-weight: 700 !important;
+}
+
+mat-form-field {
+    width: -webkit-fill-available;
+}
+
+mat-dialog-actions {
+    button {
+        font-weight: 700 !important;
+    }
+}
+
+.field {
+    --input-bottom-height: 16px;
+
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    .question {
+        width: 40%;
+        margin-right: 5%;
+        margin-bottom: var(--input-bottom-height);
+        color: black;
+
+        span {
+            font-size: 0.5rem;
+            margin: 0 0.2rem;
+        }
+    }
+
+    .answer {
+        width: 55%;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.3;
+    }
+}
+
+.info {
+    width: 100%;
+
+    h5 {
+        margin: 0;
+    }
+}
+
+.warning {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid rgba(1, 1, 1, 0.3);
+    color: #e34c4c;
+}
+
+@media only screen and (max-width: 520px) {
+    .tel-field {
+        flex-direction: column;
+
+        .question {
+            width: 100%;
+            margin-right: 0;
+        }
+
+        .answer {
+            width: 100%;
+        }
+    }
+}
+
+
+
+@media only screen and (max-width: 360px) {
+    .field {
+        flex-direction: column;
+
+        .question {
+            width: 100%;
+            margin-right: 0;
+        }
+
+        .answer {
+            width: 100%;
+        }
+    }
+}
