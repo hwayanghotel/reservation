@@ -11,6 +11,8 @@
 			<h5>- 계좌: 신협 132-0687-4547-6 (정경미)</h5>
 			<h5>- 예약금: {{reservationCost | number}}원</h5>
 			<h5>- 문의: 010-6717-4045</h5>
+			<h5 [style.margin-top]="'1rem'">※ 입금 순서로 평상 예약이 완료됩니다.</h5>
+			<h5>※ 평상 예약금은 환불이 불가합니다. 신중하게 예약해주세요.</h5>
 		</ng-container>
 	</ng-container>
 
@@ -23,7 +25,7 @@
 </div>
 
 <mat-dialog-actions [align]="'center'">
-	<button mat-button mat-dialog-close (click)="okButton()">종료하기</button>
+	<button mat-button mat-dialog-close (click)="okButton()">예약완료</button>
 	<button mat-button (click)="editButton()">예약수정</button>
 	<button mat-button (click)="cancelButton()" class="cancel-button">예약취소</button>
 </mat-dialog-actions>

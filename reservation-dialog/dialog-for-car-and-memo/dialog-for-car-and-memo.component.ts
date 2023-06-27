@@ -52,7 +52,6 @@ export class DialogForCarAndMemoComponent {
 
     updateCarList(value: number) {
         this.model["차량번호"].length += value;
-        console.warn("updateCarList", value, this.model["차량번호"]);
     }
 
     previousStep() {

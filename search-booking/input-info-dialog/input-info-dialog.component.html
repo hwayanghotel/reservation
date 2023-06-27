@@ -1,0 +1,51 @@
+<div mat-dialog-content>
+  <div class="field">
+    <h4 class="question">
+      1. 예약자<span>(필수)</span>
+    </h4>
+    <div class="answer">
+      <mat-form-field>
+        <mat-label>예약자 성함</mat-label>
+        <input matInput placeholder="홍길동" [formControl]="formControlName" required [(ngModel)]="model['성함']">
+        <mat-error *ngIf="formControlName.invalid">성함을 입력하세요</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="field tel-field">
+    <h4 class="question">
+      2. 전화번호<span>(필수)</span>
+    </h4>
+    <form-field-custom-control-example class="answer"></form-field-custom-control-example>
+  </div>
+
+  <div class="field">
+    <h4 class="question">3. 예약 유형<span>(선택)</span></h4>
+    <div class="answer">
+      <mat-form-field>
+        <mat-label>예약유형</mat-label>
+        <mat-select [(value)]="model['예약유형']">
+          <mat-option value="평상">평상</mat-option>
+          <mat-option value="식사">식사</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="field">
+    <h4 class="question">4. 예약일<span>(선택)</span></h4>
+    <div class="answer">
+      <mat-form-field>
+        <mat-label>예약일</mat-label>
+        <input matInput [matDatepicker]="picker" [matDatepickerFilter]="dateFilter" [(ngModel)]="date">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<mat-dialog-actions [align]="'center'">
+  <button mat-button mat-dialog-close>취소</button>
+  <button mat-button (click)="search()">검색</button>
+</mat-dialog-actions>

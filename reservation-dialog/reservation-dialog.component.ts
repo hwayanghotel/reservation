@@ -10,7 +10,6 @@ export class ReservationDialogComponent {
     step: number;
     constructor(private reservationService: ReservationService) {
         this.reservationService.bookingStep$.subscribe((step) => {
-            console.warn("ReservationDialogComponent step", step);
             this.step = step;
         });
     }

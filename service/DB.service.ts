@@ -51,12 +51,15 @@ export class DBService {
 
     delete(model: IDBService) {}
 
-    search(model: { 예약유형: "평상" | "식사"; 성함: string; 전화번호: string }): Promise<IDBService[]> {
+    search(id: string, model: IDBService): Promise<IDBService[]> {
         return new Promise((resolve) => {
             this.firebaseStore$.subscribe((db) => {
-                const today = new Date();
-                let data = db.filter((v) => new Date(v["날짜"]) > today && v["상태"] !== "취소");
+                if (id) {
+                    resolve(db.filter((v) => v.id === id));
+                }
 
+                const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+                let data = db.filter((v) => new Date(v["날짜"]) >= today && v["상태"] !== "취소");
                 if (model["예약유형"]) {
                     data = data.filter((v) => v["예약유형"] === model["예약유형"]);
                 }
@@ -64,9 +67,12 @@ export class DBService {
                     data = data.filter((v) => v["성함"] === model["성함"]);
                 }
                 if (model["전화번호"]) {
-                    data = data.filter((v) => v["식사"] === model["전화번호"]);
+                    data = data.filter((v) => v["전화번호"] === model["전화번호"]);
                 }
-                return data;
+                if (model["날짜"]) {
+                    data = data.filter((v) => v["날짜"] === model["날짜"]);
+                }
+                resolve(data);
             });
         });
     }

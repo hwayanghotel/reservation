@@ -22,7 +22,7 @@
 				<mat-icon matPrefix class="pointer" (click)="model['인원'] = model['인원'] - 1"
 						  [class.disabled]="model['인원'] === 1">keyboard_arrow_left</mat-icon>
 				<input [style.text-align]="'center'"
-					   matInput placeholder="홍길동"
+					   matInput placeholder="예: 4"
 					   [formControl]="formControlPerson"
 					   required [(ngModel)]="model['인원']">
 				<span matTextSuffix>명</span>

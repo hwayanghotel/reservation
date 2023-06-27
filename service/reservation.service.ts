@@ -112,8 +112,7 @@ export class ReservationService {
         });
     }
 
-    reserve() {
-        console.warn("ReservationService reserve", this.formData$.getValue());
+    add() {
         this.DBService.add(this.formData$.getValue());
     }
 
@@ -125,8 +124,8 @@ export class ReservationService {
         console.warn("ReservationService cancel", this.formData$.getValue());
     }
 
-    search(model: { 예약유형: "평상" | "식사"; 성함: string; 전화번호: string }): Promise<IReservationForm[]> {
-        return this.DBService.search(model);
+    search(id?: string): Promise<IReservationForm[]> {
+        return this.DBService.search(id, this.formData$.getValue());
     }
 
     getReservationCost(model: IReservationForm): number {
