@@ -14,12 +14,11 @@ export class ReservationComponent implements OnInit {
     ngOnInit() {
         this.route.queryParams.subscribe((params) => {
             const step = params["step"];
-            console.warn("step", step);
-            if (step) {
-                setTimeout(() => {
-                    this.reservationService.bookingStep$.next(Number(step));
-                }, 3000);
-            }
+            // if (step) {
+            //     setTimeout(() => {
+            //         this.reservationService.bookingStep$.next(Number(step));
+            //     }, 3000);
+            // }
         });
     }
 }
