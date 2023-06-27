@@ -1,0 +1,47 @@
+<div mat-dialog-content>
+	<div class="field">
+		<h4 class="question">
+			1. 예약자
+		</h4>
+		<div class="answer">
+			<mat-form-field>
+				<mat-label>예약자 성함</mat-label>
+				<input matInput placeholder="홍길동" [formControl]="formControlName" required [(ngModel)]="model['성함']">
+				<mat-error *ngIf="formControlName.invalid">성함을 입력하세요</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div class="field">
+		<h4 class="question">
+			2. 예약 인원
+		</h4>
+		<div class="answer">
+			<mat-form-field>
+				<mat-label>예약 인원</mat-label>
+				<mat-icon matPrefix class="pointer" (click)="model['인원'] = model['인원'] - 1"
+						  [class.disabled]="model['인원'] === 1">keyboard_arrow_left</mat-icon>
+				<input [style.text-align]="'center'"
+					   matInput placeholder="홍길동"
+					   [formControl]="formControlPerson"
+					   required [(ngModel)]="model['인원']">
+				<span matTextSuffix>명</span>
+				<mat-icon matSuffix class="pointer"
+						  (click)="model['인원'] = model['인원'] + 1">keyboard_arrow_right</mat-icon>
+				<mat-error *ngIf="formControlPerson.invalid">인원을 입력하세요</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div class="field tel-field">
+		<h4 class="question">
+			3. 전화번호
+		</h4>
+		<form-field-custom-control-example class="answer"></form-field-custom-control-example>
+	</div>
+</div>
+
+<mat-dialog-actions [align]="'center'">
+	<button mat-button (click)="previousStep()">이전</button>
+	<button mat-button (click)="onClickNextButton()">다음</button>
+</mat-dialog-actions>
