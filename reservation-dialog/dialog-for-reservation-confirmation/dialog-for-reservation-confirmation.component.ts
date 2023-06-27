@@ -27,6 +27,10 @@ export class DialogForReservationConfirmationComponent {
         this.reservationService.bookingStep$.next(undefined);
     }
 
+    moveToCarNum() {
+        this.reservationService.bookingStep$.next(5);
+    }
+
     editButton() {
         this.reservationService.bookingStep$.next(1);
     }

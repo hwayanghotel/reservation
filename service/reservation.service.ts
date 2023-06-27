@@ -117,11 +117,18 @@ export class ReservationService {
     }
 
     edit() {
-        console.warn("ReservationService edit", this.formData$.getValue());
+        this.DBService.edit(this.formData$.getValue());
     }
 
     cancel() {
-        console.warn("ReservationService cancel", this.formData$.getValue());
+        // this.DBService.delete(this.formData$.getValue());
+        this.DBService.edit({
+            ...this.formData$.getValue(),
+            상태: "취소",
+            메모:
+                this.formData$.getValue()["메모"] +
+                `/온라인 취소/${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+        });
     }
 
     search(id?: string): Promise<IReservationForm[]> {

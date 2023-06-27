@@ -28,8 +28,10 @@ export interface IDBService {
 export class DBService {
     firebaseStore$: Observable<any[]>;
     constructor(private http: HttpClient, private store: AngularFirestore) {
-        // this.firebaseStore$ = this.store.collection("hwayanghotel").valueChanges({ idField: "id" }) as Observable<any[]>;
-        this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
+        this.firebaseStore$ = this.store.collection("hwayanghotel").valueChanges({ idField: "id" }) as Observable<
+            any[]
+        >;
+        // this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
     }
 
     async getDailyData(type: "식사" | "평상", date: string): Promise<IDBService[]> {
@@ -45,11 +47,12 @@ export class DBService {
     }
 
     edit(model: IDBService) {
-        console.warn("edit", model.id);
-        this.store.collection("hwayanghotel").doc(model.id);
+        this.store.collection("hwayanghotel").doc(model.id).update(model);
     }
 
-    delete(model: IDBService) {}
+    delete(model: IDBService) {
+        this.store.collection("hwayanghotel").doc(model.id).delete();
+    }
 
     search(id: string, model: IDBService): Promise<IDBService[]> {
         return new Promise((resolve) => {

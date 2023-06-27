@@ -61,6 +61,11 @@ export class DialogForCarAndMemoComponent {
     onClickNextButton() {
         this.model["차량번호"] = this.model["차량번호"].filter((v) => v);
         this.reservationService.setReservationForm(this.model);
+        if (this.model.id) {
+            this.reservationService.edit();
+        } else {
+            this.reservationService.add();
+        }
         this.reservationService.bookingStep$.next(6);
     }
 }
