@@ -17,6 +17,6 @@ export class DialogReservationCancelComponent {
     cancelButton() {
         this.reservationService.cancel();
         this.dialog.closeAll();
-        this._snackBar.open("예약이 취소되었습니다.", null, { duration: 2000 });
+        this._snackBar.open("예약이 취소되었습니다. 다음에 이용해주세요!", null, { duration: 2000 });
     }
 }

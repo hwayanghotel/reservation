@@ -93,7 +93,7 @@ export class DialogForFoodComponent {
 
     onClickNextButton() {
         if (!this._checkStep()) {
-            this._snackBar.open("예약 내용을 확인해주세요", null, { duration: 2000 });
+            this._snackBar.open("입력된 식사 정보를 확인해주세요", null, { duration: 2000 });
         } else {
             this.reservationService.setReservationForm(this.model);
             this.reservationService.bookingStep$.next(5);

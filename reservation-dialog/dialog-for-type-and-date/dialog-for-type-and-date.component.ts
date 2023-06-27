@@ -29,7 +29,7 @@ export class DialogForTypeAndDateComponent {
         this.model["날짜"] = this.date.format("YYYY-MM-DD");
 
         if (!this._checkStep()) {
-            this._snackBar.open("입력된 정보가 올바른지 확인해주세요.", null, { duration: 2000 });
+            this._snackBar.open("빈칸이 있는지 확인해주세요.", null, { duration: 2000 });
         } else {
             this.reservationService.setReservationForm(this.model);
             this.reservationService.bookingStep$.next(2);
@@ -37,6 +37,9 @@ export class DialogForTypeAndDateComponent {
     }
 
     private _checkStep(): boolean {
-        return Boolean(this.model["예약유형"] && this.model["날짜"] && this.model["시간"]);
+        if (this.model["예약유형"] === "식사") {
+            return Boolean(this.model["예약유형"] && this.model["날짜"] && this.model["시간"]);
+        }
+        return Boolean(this.model["예약유형"] && this.model["날짜"]);
     }
 }

@@ -25,7 +25,7 @@ export class DialogForCustomerInfoComponent {
 
     onClickNextButton() {
         if (!this._checkStep()) {
-            this._snackBar.open("입력된 정보가 올바른지 확인해주세요.", null, { duration: 2000 });
+            this._snackBar.open("예약 필수 정보를 적어주세요.", null, { duration: 2000 });
         } else {
             let step: number;
             if (this.model["예약유형"] === "평상") {
