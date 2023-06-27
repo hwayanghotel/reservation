@@ -1,5 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
 import { DBService } from "reservation/service/DB.service";
 import { ReservationService } from "reservation/service/reservation.service";
 
@@ -20,7 +22,8 @@ export class ContentFoodComponent implements OnChanges {
     constructor(
         private DBService: DBService,
         private datePipe: DatePipe,
-        private reservationService: ReservationService
+        private reservationService: ReservationService,
+        private dialog: MatDialog
     ) {}
 
     ngOnChanges(changes: SimpleChanges) {
@@ -64,5 +67,6 @@ export class ContentFoodComponent implements OnChanges {
             상태: "대기중",
         });
         this.reservationService.bookingStep$.next(1);
+        this.dialog.open(ReservationDialogComponent);
     }
 }
