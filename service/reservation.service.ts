@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { IDBService, DBService } from "./DB.service";
 import { Price } from "src/assets/price";
 
@@ -7,7 +7,7 @@ export interface IReservationForm extends IDBService {
     id?: string;
     예약유형: "식사" | "평상";
     날짜: string;
-    시간?: 12 | 15 | 0;
+    시간?: number;
     상태: "대기중" | "취소" | "예약완료";
     성함: string;
     인원: number;
@@ -44,7 +44,7 @@ export const StandardNumberOfPeople = {
     providedIn: "root",
 })
 export class ReservationService {
-    bookingStep$: Subject<number> = new Subject<number>();
+    bookingStep$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
     reservationCheckUser: boolean;
     formData$: BehaviorSubject<IReservationForm> = new BehaviorSubject<IReservationForm>({
         예약유형: undefined,
@@ -64,7 +64,7 @@ export class ReservationService {
         버섯찌개2: 0,
     });
 
-    bookingAvailable$: Subject<IBookingAvailable> = new Subject();
+    bookingAvailable$: BehaviorSubject<IBookingAvailable> = new BehaviorSubject(undefined);
 
     constructor(private DBService: DBService) {
         this.bookingStep$.subscribe((isOpen) => {
@@ -143,13 +143,14 @@ export class ReservationService {
         setTimeout(() => {
             // this.setReservationForm({
             //     예약유형: "평상",
-            //     날짜: "2023-06-25",
+            //     날짜: "2023-06-30",
             //     성함: "박성수",
             //     전화번호: "010-9999-9999",
             //     시간: undefined,
             //     상태: "예약완료",
             //     인원: 7,
-            //     차량번호: ["01수0123", "02수2345"],
+            //     차량번호: [],
+            //     // 차량번호: ["01수0123", "02수2345"],
             //     메모: "아이가 한 명 있어요",
             //     평상: 1,
             //     테이블: 0,
@@ -159,7 +160,7 @@ export class ReservationService {
             //     버섯찌개2: 0,
             // });
             // this.reservationCheckUser = true;
-            // this.bookingStep$.next(7);
+            // this.bookingStep$.next(5);
         }, 1000);
 
         this.formData$.subscribe((v) => {
