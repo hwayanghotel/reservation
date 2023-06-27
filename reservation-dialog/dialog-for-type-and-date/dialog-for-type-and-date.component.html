@@ -1,0 +1,43 @@
+<div mat-dialog-content>
+	<div class="field">
+		<h4 class="question">1. 예약 유형</h4>
+		<div class="answer">
+			<mat-form-field>
+				<mat-label>예약유형</mat-label>
+				<mat-select [(value)]="model['예약유형']">
+					<mat-option value="평상">평상</mat-option>
+					<mat-option value="식사">식사</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div class="field">
+		<h4 class="question">2. 예약일</h4>
+		<div class="answer">
+			<mat-form-field>
+				<mat-label>예약일</mat-label>
+				<input matInput [matDatepicker]="picker" [matDatepickerFilter]="dateFilter" [(ngModel)]="date">
+				<mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+				<mat-datepicker touchUi #picker></mat-datepicker>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div class="field" *ngIf="model['예약유형'] === '식사'">
+		<h4 class="question">3. 시간 예약</h4>
+		<div class="answer">
+			<mat-form-field>
+				<mat-label>시간예약</mat-label>
+				<mat-select [(value)]="model['시간']">
+					<mat-option *ngFor="let time of [10,11,12,13,14,15,16]" [value]="time">{{time}}시</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+</div>
+
+<mat-dialog-actions [align]="'center'">
+	<button mat-button mat-dialog-close (click)="closeDialog()">취소</button>
+	<button mat-button (click)="onClickNextButton()">다음</button>
+</mat-dialog-actions>
