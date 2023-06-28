@@ -3,7 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
 import { IReservationForm, ReservationService } from "reservation/service/reservation.service";
 
-export interface Table {
+interface Table {
     id: string;
     info: string;
     status: string;
