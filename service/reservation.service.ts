@@ -46,23 +46,9 @@ export const StandardNumberOfPeople = {
 export class ReservationService {
     bookingStep$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
     reservationCheckUser: boolean;
-    formData$: BehaviorSubject<IReservationForm> = new BehaviorSubject<IReservationForm>({
-        예약유형: undefined,
-        날짜: undefined,
-        시간: undefined,
-        상태: "대기중",
-        성함: undefined,
-        인원: 30,
-        전화번호: undefined,
-        차량번호: [undefined],
-        메모: undefined,
-        평상: 0,
-        테이블: 0,
-        능이백숙: 0,
-        백숙: 0,
-        버섯찌개: 0,
-        버섯찌개2: 0,
-    });
+    formData$: BehaviorSubject<IReservationForm> = new BehaviorSubject<IReservationForm>(
+        JSON.parse(JSON.stringify(initForm))
+    );
 
     bookingAvailable$: BehaviorSubject<IBookingAvailable> = new BehaviorSubject(undefined);
 
@@ -105,11 +91,13 @@ export class ReservationService {
         this.bookingAvailable$.next(bookingAvailable);
     }
 
-    setReservationForm(data: any) {
-        this.formData$.next({
-            ...this.formData$.getValue(),
-            ...data,
-        });
+    setReservationForm(data: any, init?: boolean) {
+        if (init) {
+            this.formData$.next({
+                ...JSON.parse(JSON.stringify(initForm)),
+                ...data,
+            });
+        }
     }
 
     add() {
@@ -131,8 +119,8 @@ export class ReservationService {
         });
     }
 
-    search(id?: string): Promise<IReservationForm[]> {
-        return this.DBService.search(id, this.formData$.getValue());
+    search(id?: string, excludes?: string[]): Promise<IReservationForm[]> {
+        return this.DBService.search(id, this.formData$.getValue(), excludes);
     }
 
     getReservationCost(model: IReservationForm): number {
@@ -178,3 +166,21 @@ export class ReservationService {
         // });
     }
 }
+
+const initForm: IReservationForm = {
+    예약유형: undefined,
+    날짜: undefined,
+    시간: undefined,
+    상태: undefined,
+    성함: undefined,
+    인원: 0,
+    전화번호: undefined,
+    차량번호: [undefined],
+    메모: undefined,
+    평상: 0,
+    테이블: 0,
+    능이백숙: 0,
+    백숙: 0,
+    버섯찌개: 0,
+    버섯찌개2: 0,
+};

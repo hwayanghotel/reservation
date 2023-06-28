@@ -28,10 +28,10 @@ export interface IDBService {
 export class DBService {
     firebaseStore$: Observable<any[]>;
     constructor(private http: HttpClient, private store: AngularFirestore) {
-        this.firebaseStore$ = this.store.collection("hwayanghotel").valueChanges({ idField: "id" }) as Observable<
-            any[]
-        >;
-        // this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
+        // this.firebaseStore$ = this.store.collection("hwayanghotel").valueChanges({ idField: "id" }) as Observable<
+        //     any[]
+        // >;
+        this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
     }
 
     async getDailyData(type: "식사" | "평상", date: string): Promise<IDBService[]> {
@@ -54,15 +54,19 @@ export class DBService {
         this.store.collection("hwayanghotel").doc(model.id).delete();
     }
 
-    search(id: string, model: IDBService): Promise<IDBService[]> {
+    search(id: string, model: IDBService, excludes?: string[]): Promise<IDBService[]> {
         return new Promise((resolve) => {
-            this.firebaseStore$.subscribe((db) => {
+            this.firebaseStore$.subscribe((data) => {
                 if (id) {
-                    resolve(db.filter((v) => v.id === id));
+                    resolve(data.filter((v) => v.id === id));
                 }
-
-                const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-                let data = db.filter((v) => new Date(v["날짜"]) >= today && v["상태"] !== "취소");
+                if (!excludes || !excludes.includes("날짜")) {
+                    const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+                    data = data.filter((v) => new Date(v["날짜"]) >= today);
+                }
+                if (!excludes || !excludes.includes("상태")) {
+                    data = data.filter((v) => v["상태"] !== "취소");
+                }
                 if (model["예약유형"]) {
                     data = data.filter((v) => v["예약유형"] === model["예약유형"]);
                 }
