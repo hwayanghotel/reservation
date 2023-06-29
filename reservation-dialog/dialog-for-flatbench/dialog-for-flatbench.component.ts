@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ManagerService } from "manager/manager.service";
 import {
     IBookingAvailable,
     IReservationForm,
@@ -16,13 +17,22 @@ export class DialogForFlatbenchComponent {
     model: IReservationForm;
     bookingAvailable: IBookingAvailable;
 
-    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
+    constructor(
+        private reservationService: ReservationService,
+        private _snackBar: MatSnackBar,
+        private managerService: ManagerService
+    ) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
-            this._setRecommandFlatTable();
+            if (this.bookingAvailable) {
+                this._setRecommandFlatTable();
+            }
         });
         this.reservationService.bookingAvailable$.subscribe((data) => {
             this.bookingAvailable = data;
+            if (this.model) {
+                this._setRecommandFlatTable();
+            }
         });
     }
 
@@ -62,6 +72,9 @@ export class DialogForFlatbenchComponent {
     }
 
     get warning(): boolean {
+        if (this.managerService.permission) {
+            return false;
+        }
         const reservationPerson =
             this.model["평상"] * StandardNumberOfPeople["평상"]["최대인원"] +
             this.model["테이블"] * StandardNumberOfPeople["테이블"];

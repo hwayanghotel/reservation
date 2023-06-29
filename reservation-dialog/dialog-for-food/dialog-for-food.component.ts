@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ManagerService } from "manager/manager.service";
 import {
     IBookingAvailable,
     IReservationForm,
@@ -18,17 +19,27 @@ export class DialogForFoodComponent {
     bookingAvailable: IBookingAvailable;
     Price = Price;
 
-    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
+    constructor(
+        private reservationService: ReservationService,
+        private _snackBar: MatSnackBar,
+        private managerService: ManagerService
+    ) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
-            this._setRecommandFood();
+            if (this.bookingAvailable) {
+                this._setRecommandFood();
+            }
         });
         this.reservationService.bookingAvailable$.subscribe((data) => {
             this.bookingAvailable = data;
+            if (this.model) {
+                this._setRecommandFood();
+            }
         });
     }
 
     private _setRecommandFood() {
+        if (this.model["예약유형"] === "평상") return;
         const foods: number =
             this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
         if (!foods) {
@@ -101,6 +112,9 @@ export class DialogForFoodComponent {
     }
 
     private _checkStep(): boolean {
+        if (this.managerService.permission || this.model["예약유형"] === "객실") {
+            return true;
+        }
         return this.model["예약유형"] === "평상" || !this.warning;
     }
 }

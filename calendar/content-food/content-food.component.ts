@@ -18,7 +18,11 @@ interface IData {
 })
 export class ContentFoodComponent implements OnChanges {
     @Input() date!: Date;
-    data: IData[] = [];
+    data: IData = {
+        text: "",
+        ratio: "",
+        expired: false,
+    };
     constructor(
         private DBService: DBService,
         private datePipe: DatePipe,
@@ -38,33 +42,28 @@ export class ContentFoodComponent implements OnChanges {
         const MAX_COOK = 14;
         const dataList = await this.DBService.getDailyData("식사", this.datePipe.transform(this.date, "yyyy-MM-dd"));
 
-        this.data = [];
-
-        for (let time of [12, 15]) {
-            let cooks: number = 0;
-            dataList
-                .filter((value) => value["시간"] === time)
-                .forEach((value) => {
-                    cooks +=
-                        Number(value["능이백숙"]) +
-                        Number(value["백숙"]) +
-                        Number(value["버섯찌개"]) +
-                        Number(value["버섯찌개2"]);
-                });
-            this.data.push({
-                expired: cooks >= MAX_COOK,
-                text: `${time}시 ${cooks >= MAX_COOK ? "마감" : "가능"}`,
-                ratio: `(${cooks}/${MAX_COOK})`,
+        let cooks: number = 0;
+        dataList
+            .filter((value) => !["대기", "수정", "취소"].includes(value["상태"]))
+            .forEach((value) => {
+                cooks +=
+                    Number(value["능이백숙"]) +
+                    Number(value["백숙"]) +
+                    Number(value["버섯찌개"]) +
+                    Number(value["버섯찌개2"]);
             });
-        }
+        this.data = {
+            expired: cooks >= MAX_COOK,
+            text: `식사 ${cooks >= MAX_COOK ? "마감" : "가능"}`,
+            ratio: `(${cooks}/${MAX_COOK})`,
+        };
     }
 
-    openDialog(index: number) {
+    openDialog() {
         this.reservationService.setReservationForm({
             예약유형: "식사",
             날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
-            시간: index === 0 ? 12 : 15,
-            상태: "대기중",
+            상태: "대기",
         });
         this.reservationService.bookingStep$.next(1);
         this.dialog.open(ReservationDialogComponent);

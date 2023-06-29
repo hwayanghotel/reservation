@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { IBookingAvailable, IReservationForm, ReservationService } from "reservation/service/reservation.service";
+import * as Moment from "moment";
 
 @Component({
     selector: "dialog-for-car-and-memo",
@@ -59,12 +60,16 @@ export class DialogForCarAndMemoComponent {
     }
 
     onClickNextButton() {
+        this.model["예약시점"] = Moment().format("YYYY-MM-DD");
         this.model["차량번호"] = this.model["차량번호"].filter((v) => v);
-        this.reservationService.setReservationForm(this.model);
-        if (this.model.id) {
-            this.reservationService.edit();
+        if (this.model["상태"] === "예약") {
+            this.model["상태"] = "수정";
+            this.model["id"] = "edit" + this.model["id"].substring(4);
+            this.reservationService.add(this.model);
+        } else if (this.model["상태"] === "대기" && this.model.id) {
+            this.reservationService.edit(this.model);
         } else {
-            this.reservationService.add();
+            this.reservationService.add(this.model);
         }
         this.reservationService.bookingStep$.next(6);
     }

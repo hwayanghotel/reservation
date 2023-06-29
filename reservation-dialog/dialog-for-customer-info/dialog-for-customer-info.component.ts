@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ManagerService } from "manager/manager.service";
 import { IReservationForm, ReservationService } from "reservation/service/reservation.service";
 
 @Component({
@@ -13,7 +14,11 @@ export class DialogForCustomerInfoComponent {
     formControlName = new FormControl("", [Validators.required]);
     formControlPerson = new FormControl("", [Validators.required]);
 
-    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
+    constructor(
+        private reservationService: ReservationService,
+        private _snackBar: MatSnackBar,
+        private managerService: ManagerService
+    ) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
         });
@@ -27,19 +32,15 @@ export class DialogForCustomerInfoComponent {
         if (!this._checkStep()) {
             this._snackBar.open("예약 필수 정보를 적어주세요.", null, { duration: 2000 });
         } else {
-            let step: number;
-            if (this.model["예약유형"] === "평상") {
-                step = 3;
-            }
-            if (this.model["예약유형"] === "식사") {
-                step = 4;
-            }
             this.reservationService.setReservationForm(this.model);
-            this.reservationService.bookingStep$.next(step);
+            this.reservationService.bookingStep$.next(3 + Number(["식사", "객실"].includes(this.model["예약유형"])));
         }
     }
 
     private _checkStep(): boolean {
+        if (this.managerService.permission) {
+            return true;
+        }
         return Boolean(this.model["성함"] && this.model["전화번호"] && this.model["인원"]);
     }
 }

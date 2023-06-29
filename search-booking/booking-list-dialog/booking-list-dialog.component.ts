@@ -69,11 +69,13 @@ export class BookingListDialogComponent {
             return 1;
         }
 
-        // 2) "상태"가 "대기중" > "예약완료" > "취소" 순서로 정렬
+        // 2) "상태"가 "대기" > "수정" > "예약" > "방문" > "취소" 순서로 정렬
         const statusOrder = {
-            대기중: 0,
-            예약완료: 1,
-            취소: 2,
+            대기: 0,
+            수정: 1,
+            예약: 2,
+            방문: 3,
+            취소: 4,
         };
         const statusA = statusOrder[a["상태"]];
         const statusB = statusOrder[b["상태"]];

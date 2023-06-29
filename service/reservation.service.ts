@@ -5,10 +5,10 @@ import { Price } from "src/assets/price";
 
 export interface IReservationForm extends IDBService {
     id?: string;
-    예약유형: "식사" | "평상";
+    예약유형: "식사" | "평상" | "객실";
     날짜: string;
     시간?: number;
-    상태: "대기중" | "취소" | "예약완료";
+    상태: "대기" | "예약" | "방문" | "수정" | "취소";
     성함: string;
     인원: number;
     전화번호: string;
@@ -20,13 +20,14 @@ export interface IReservationForm extends IDBService {
     백숙?: number;
     버섯찌개?: number;
     버섯찌개2?: number;
+    예약시점: string;
+    입금확인: boolean;
 }
 
 export interface IBookingAvailable {
     잔여백숙: number;
     잔여버섯: number;
-    잔여12시식사: number;
-    잔여15시식사: number;
+    잔여식사: number;
     잔여평상: number;
     잔여테이블: number;
     잔여주차: number;
@@ -67,8 +68,7 @@ export class ReservationService {
         let bookingAvailable: IBookingAvailable = {
             잔여백숙: 30,
             잔여버섯: 10,
-            잔여12시식사: 14,
-            잔여15시식사: 14,
+            잔여식사: 14,
             잔여평상: 6,
             잔여테이블: 6,
             잔여주차: 30,
@@ -82,8 +82,7 @@ export class ReservationService {
             const numberOfMushroom: number = data["버섯찌개"] + data["버섯찌개2"];
             bookingAvailable["잔여백숙"] -= numberOfChicken;
             bookingAvailable["잔여버섯"] -= numberOfMushroom;
-            bookingAvailable[data["시간"] === 12 ? "잔여12시식사" : "잔여15시식사"] -=
-                numberOfChicken + numberOfMushroom;
+            bookingAvailable["잔여식사"] -= numberOfChicken + numberOfMushroom;
             bookingAvailable["잔여평상"] -= data["평상"];
             bookingAvailable["잔여테이블"] -= data["테이블"];
             bookingAvailable["잔여주차"] -= data["차량번호"].length;
@@ -97,25 +96,28 @@ export class ReservationService {
                 ...JSON.parse(JSON.stringify(initForm)),
                 ...data,
             });
+        } else {
+            this.formData$.next({
+                ...this.formData$.getValue(),
+                ...data,
+            });
         }
     }
 
-    add() {
-        this.DBService.add(this.formData$.getValue());
+    add(model?: IReservationForm) {
+        this.DBService.add(model ? model : this.formData$.getValue());
     }
 
-    edit() {
-        this.DBService.edit(this.formData$.getValue());
+    edit(model?: IReservationForm) {
+        this.DBService.edit(model ? model : this.formData$.getValue());
     }
 
-    cancel() {
-        // this.DBService.delete(this.formData$.getValue());
+    cancel(model?: IReservationForm) {
+        // this.DBService.delete(this.formData$.getValue().id);
         this.DBService.edit({
-            ...this.formData$.getValue(),
+            ...(model ? model : this.formData$.getValue()),
             상태: "취소",
-            메모:
-                this.formData$.getValue()["메모"] +
-                `/온라인 취소/${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+            메모: `취소일:${new Date().getMonth() + 1}-${new Date().getDate()}, ` + this.formData$.getValue()["메모"],
         });
     }
 
@@ -141,7 +143,7 @@ export class ReservationService {
             //     성함: "박성수",
             //     전화번호: "010-9999-9999",
             //     시간: undefined,
-            //     상태: "예약완료",
+            //     상태: "예약",
             //     인원: 7,
             //     차량번호: [],
             //     // 차량번호: ["01수0123", "02수2345"],
@@ -160,10 +162,9 @@ export class ReservationService {
         this.formData$.subscribe((v) => {
             console.warn("formData update", v);
         });
-
-        // this.DBService.firebaseStore$.subscribe((v) => {
-        //     console.warn("DBService update", JSON.stringify(v));
-        // });
+        this.DBService.firebaseStore$.subscribe((v) => {
+            console.warn("firebaseStore$ update", v);
+        });
     }
 }
 
@@ -183,4 +184,6 @@ const initForm: IReservationForm = {
     백숙: 0,
     버섯찌개: 0,
     버섯찌개2: 0,
+    예약시점: undefined,
+    입금확인: undefined,
 };

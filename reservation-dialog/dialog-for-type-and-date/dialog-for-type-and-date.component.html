@@ -5,8 +5,9 @@
 			<mat-form-field>
 				<mat-label>예약유형</mat-label>
 				<mat-select [(value)]="model['예약유형']">
-					<mat-option value="평상">평상</mat-option>
-					<mat-option value="식사">식사</mat-option>
+					<mat-option value="평상" *ngIf="permission || model['예약유형']!=='객실'">평상</mat-option>
+					<mat-option value="식사" *ngIf="permission || model['예약유형']!=='객실'">식사</mat-option>
+					<mat-option value="객실" *ngIf="permission || model['예약유형']==='객실'">객실</mat-option>
 				</mat-select>
 			</mat-form-field>
 		</div>

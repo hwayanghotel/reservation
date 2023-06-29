@@ -42,10 +42,12 @@ export class ContentFlatBenchComponent implements OnChanges {
 
         let flatBench: number = 0;
         let table: number = 0;
-        dataList.forEach((value) => {
-            flatBench += value["평상"];
-            table += value["테이블"];
-        });
+        dataList
+            .filter((value) => !["대기", "수정", "취소"].includes(value["상태"]))
+            .forEach((value) => {
+                flatBench += value["평상"];
+                table += value["테이블"];
+            });
         this.data.push({
             expired: flatBench >= MAX_NUM,
             text: `평상 ${flatBench >= MAX_NUM ? "마감" : "가능"}`,
@@ -62,7 +64,7 @@ export class ContentFlatBenchComponent implements OnChanges {
         this.reservationService.setReservationForm({
             예약유형: "평상",
             날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
-            상태: "대기중",
+            상태: "대기",
         });
         this.reservationService.bookingStep$.next(1);
         this.dialog.open(ReservationDialogComponent);

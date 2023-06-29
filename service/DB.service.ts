@@ -5,10 +5,10 @@ import { AngularFirestore } from "@angular/fire/compat/firestore";
 
 export interface IDBService {
     id?: string;
-    예약유형: "식사" | "평상";
+    예약유형: "식사" | "평상" | "객실";
     날짜: string;
     시간?: number;
-    상태: "대기중" | "취소" | "예약완료";
+    상태: "대기" | "예약" | "방문" | "수정" | "취소";
     성함: string;
     인원: number;
     전화번호: string;
@@ -20,7 +20,11 @@ export interface IDBService {
     백숙?: number;
     버섯찌개?: number;
     버섯찌개2?: number;
+    예약시점: string;
+    입금확인: boolean;
 }
+
+const COLLECTION = "hwayanghotel";
 
 @Injectable({
     providedIn: "root",
@@ -28,13 +32,11 @@ export interface IDBService {
 export class DBService {
     firebaseStore$: Observable<any[]>;
     constructor(private http: HttpClient, private store: AngularFirestore) {
-        // this.firebaseStore$ = this.store.collection("hwayanghotel").valueChanges({ idField: "id" }) as Observable<
-        //     any[]
-        // >;
-        this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
+        this.firebaseStore$ = this.store.collection(COLLECTION).valueChanges({ idField: "id" }) as Observable<any[]>;
+        // this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
     }
 
-    async getDailyData(type: "식사" | "평상", date: string): Promise<IDBService[]> {
+    async getDailyData(type: "식사" | "평상" | "객실", date: string): Promise<IDBService[]> {
         return new Promise((resolve) => {
             this.firebaseStore$.subscribe((db) => {
                 resolve(db.filter((v) => v["예약유형"] === type && v["날짜"] === date));
@@ -43,15 +45,15 @@ export class DBService {
     }
 
     add(model: IDBService) {
-        this.store.collection("hwayanghotel").add(model);
+        this.store.collection(COLLECTION).add(model);
     }
 
     edit(model: IDBService) {
-        this.store.collection("hwayanghotel").doc(model.id).update(model);
+        this.store.collection(COLLECTION).doc(model.id).update(model);
     }
 
-    delete(model: IDBService) {
-        this.store.collection("hwayanghotel").doc(model.id).delete();
+    delete(id: string) {
+        this.store.collection(COLLECTION).doc(id).delete();
     }
 
     search(id: string, model: IDBService, excludes?: string[]): Promise<IDBService[]> {
@@ -104,6 +106,6 @@ export class DBService {
 //   console.warn(resultList);
 
 //   for (let result of resultList) {
-//       this.store.collection("hwayanghotel").add(result);
+//       this.store.collection(COLLECTION).add(result);
 //   }
 // });

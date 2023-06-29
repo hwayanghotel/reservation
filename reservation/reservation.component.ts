@@ -21,17 +21,23 @@ export class ReservationComponent implements OnInit {
     ngOnInit() {
         this.route.queryParams.subscribe((params) => {
             const id = params["id"];
-            if (id) {
-                this._openCustomerInfoDialog(id);
+            const type = params["type"];
+            if (id || type) {
+                this._openCustomerInfoDialog(id, type);
             }
         });
     }
 
-    private async _openCustomerInfoDialog(id: string) {
-        console.warn("고객 직접 검색", id);
-        const forms = await this.reseravationService.search(id);
-        this.reseravationService.setReservationForm(forms[0]);
-        this.reseravationService.bookingStep$.next(6);
+    private async _openCustomerInfoDialog(id: string, type: string) {
+        console.warn("고객 직접 검색", id, type);
+        if (id) {
+            const forms = await this.reseravationService.search(id);
+            this.reseravationService.setReservationForm(forms[0]);
+            this.reseravationService.bookingStep$.next(6);
+        } else if (type === "room") {
+            this.reseravationService.setReservationForm({ 예약유형: "객실", 상태: "수정" }, true);
+            this.reseravationService.bookingStep$.next(1);
+        }
         this.dialog.open(ReservationDialogComponent);
     }
 }
