@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { IBookingAvailable, IReservationForm, ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
+import { ManagerService } from "manager/manager.service";
 
 @Component({
     selector: "dialog-for-car-and-memo",
@@ -13,7 +13,7 @@ export class DialogForCarAndMemoComponent {
     bookingAvailable: IBookingAvailable;
     nextTime: boolean;
 
-    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar) {
+    constructor(private reservationService: ReservationService, private managerService: ManagerService) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
             if (data["차량번호"].length === 0) {
@@ -32,6 +32,9 @@ export class DialogForCarAndMemoComponent {
     cannotAddForm(): boolean {
         //조건1: 총 주차대수 여유있어야 함
         //조건2: 주문 한도를 넘으면 안 됌
+        if (this.managerService.permission) {
+            return false;
+        }
         const availableCars =
             this.model["능이백숙"] +
             this.model["백숙"] +

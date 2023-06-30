@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
+import { SearchBookingComponent } from "reservation/search-booking/search-booking.component";
 import { ReservationService } from "reservation/service/reservation.service";
 
 @Component({
@@ -34,10 +35,13 @@ export class ReservationComponent implements OnInit {
             const forms = await this.reseravationService.search(id);
             this.reseravationService.setReservationForm(forms[0]);
             this.reseravationService.bookingStep$.next(6);
+            this.dialog.open(ReservationDialogComponent);
         } else if (type === "room") {
             this.reseravationService.setReservationForm({ 예약유형: "객실", 상태: "수정" }, true);
             this.reseravationService.bookingStep$.next(1);
+            this.dialog.open(ReservationDialogComponent);
+        } else if (type === "search") {
+            this.dialog.open(SearchBookingComponent);
         }
-        this.dialog.open(ReservationDialogComponent);
     }
 }
