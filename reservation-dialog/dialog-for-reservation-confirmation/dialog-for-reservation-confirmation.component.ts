@@ -38,4 +38,19 @@ export class DialogForReservationConfirmationComponent {
     cancelButton() {
         this.dialog.open(DialogReservationCancelComponent);
     }
+
+    showReservationRule(): boolean {
+        return ["대기", "예약", "수정"].includes(this.model["상태"]);
+    }
+
+    serviceLink(): string {
+        let uri = "https://hwayanghotel.github.io/#/";
+        if (this.model["예약유형"] === "평상") {
+            return "https://hwayanghotel.github.io/#/flat-bench";
+        }
+        if (this.model["예약유형"] === "식사") {
+            return "https://hwayanghotel.github.io/#/food";
+        }
+        return (uri += "room");
+    }
 }
