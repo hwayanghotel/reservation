@@ -58,6 +58,13 @@ mat-dialog-actions {
     }
 }
 
+a {
+    font: 400 calc(14px * 0.83)/20px Roboto, sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--mdc-dialog-supporting-text-color, rgba(0, 0, 0, 0.6))
+}
+
 .warning {
     margin: 0.5rem;
     padding: 0.5rem;
