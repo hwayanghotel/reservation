@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
 import { DBService } from "reservation/service/DB.service";
-import { ReservationService } from "reservation/service/reservation.service";
+import { MAX_RESERVATION, ReservationService } from "reservation/service/reservation.service";
 
 interface IData {
     text: string;
@@ -35,7 +35,6 @@ export class ContentFlatBenchComponent implements OnChanges {
     }
 
     private async _setData() {
-        const MAX_NUM = 6;
         const dataList = await this.DBService.getDailyData("평상", this.datePipe.transform(this.date, "yyyy-MM-dd"));
 
         this.data = [];
@@ -49,14 +48,14 @@ export class ContentFlatBenchComponent implements OnChanges {
                 table += value["테이블"];
             });
         this.data.push({
-            expired: flatBench >= MAX_NUM,
-            text: `평상 ${flatBench >= MAX_NUM ? "마감" : "가능"}`,
-            ratio: `(${flatBench}/${MAX_NUM})`,
+            expired: flatBench >= MAX_RESERVATION["평상"],
+            text: `평상 ${flatBench >= MAX_RESERVATION["평상"] ? "마감" : "가능"}`,
+            ratio: `(${flatBench}/${MAX_RESERVATION["평상"]})`,
         });
         this.data.push({
-            expired: table >= MAX_NUM,
-            text: `데크 ${table >= MAX_NUM ? "마감" : "가능"}`,
-            ratio: `(${table}/${MAX_NUM})`,
+            expired: table >= MAX_RESERVATION["테이블"],
+            text: `데크 ${table >= MAX_RESERVATION["테이블"] ? "마감" : "가능"}`,
+            ratio: `(${table}/${MAX_RESERVATION["테이블"]})`,
         });
     }
 

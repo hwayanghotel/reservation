@@ -3,6 +3,15 @@ import { BehaviorSubject } from "rxjs";
 import { IDBService, DBService } from "./DB.service";
 import { Price } from "src/assets/price";
 
+export const MAX_RESERVATION = {
+    백숙: 30,
+    버섯: 10,
+    식사: 14,
+    평상: 6,
+    테이블: 6,
+    주차: 30,
+};
+
 export interface IReservationForm extends IDBService {
     id?: string;
     예약유형: "식사" | "평상" | "객실";
@@ -66,12 +75,12 @@ export class ReservationService {
 
     private async _updateBookingAvailable() {
         let bookingAvailable: IBookingAvailable = {
-            잔여백숙: 30,
-            잔여버섯: 10,
-            잔여식사: 14,
-            잔여평상: 6,
-            잔여테이블: 6,
-            잔여주차: 30,
+            잔여백숙: MAX_RESERVATION["백숙"],
+            잔여버섯: MAX_RESERVATION["버섯"],
+            잔여식사: MAX_RESERVATION["식사"],
+            잔여평상: MAX_RESERVATION["평상"],
+            잔여테이블: MAX_RESERVATION["테이블"],
+            잔여주차: MAX_RESERVATION["주차"],
         };
         const dailyData = await this.DBService.getDailyData(
             this.formData$.getValue()["예약유형"],

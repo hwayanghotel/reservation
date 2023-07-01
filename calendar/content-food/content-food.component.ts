@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
 import { DBService } from "reservation/service/DB.service";
-import { ReservationService } from "reservation/service/reservation.service";
+import { MAX_RESERVATION, ReservationService } from "reservation/service/reservation.service";
 
 interface IData {
     text: string;
@@ -39,7 +39,6 @@ export class ContentFoodComponent implements OnChanges {
     }
 
     private async _setData() {
-        const MAX_COOK = 14;
         const dataList = await this.DBService.getDailyData("식사", this.datePipe.transform(this.date, "yyyy-MM-dd"));
 
         let cooks: number = 0;
@@ -53,9 +52,9 @@ export class ContentFoodComponent implements OnChanges {
                     Number(value["버섯찌개2"]);
             });
         this.data = {
-            expired: cooks >= MAX_COOK,
-            text: `식사 ${cooks >= MAX_COOK ? "마감" : "가능"}`,
-            ratio: `(${cooks}/${MAX_COOK})`,
+            expired: cooks >= MAX_RESERVATION["식사"],
+            text: `식사 ${cooks >= MAX_RESERVATION["식사"] ? "마감" : "가능"}`,
+            ratio: `(${cooks}/${MAX_RESERVATION["식사"]})`,
         };
     }
 
