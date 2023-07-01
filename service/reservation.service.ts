@@ -9,7 +9,7 @@ export const MAX_RESERVATION = {
     식사: 14,
     평상: 6,
     테이블: 6,
-    주차: 30,
+    주차: 35,
 };
 
 export interface IReservationForm extends IDBService {

@@ -69,7 +69,7 @@ export class DialogForCarAndMemoComponent {
             this.model["상태"] = "수정";
             this.model["id"] = "edit" + this.model["id"].substring(4);
             this.reservationService.add(this.model);
-        } else if (this.model["상태"] === "대기" && this.model.id) {
+        } else if (["대기", "방문", "수정"].includes(this.model["상태"]) && this.model.id) {
             this.reservationService.edit(this.model);
         } else {
             this.reservationService.add(this.model);
