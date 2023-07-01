@@ -1,12 +1,8 @@
 import { Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
-import {
-    IBookingAvailable,
-    IReservationForm,
-    ReservationService,
-    StandardNumberOfPeople,
-} from "reservation/service/reservation.service";
+import { IDBService } from "reservation/service/DB.service";
+import { IBookingAvailable, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
 import { Price } from "src/assets/price";
 
 @Component({
@@ -15,7 +11,7 @@ import { Price } from "src/assets/price";
     styleUrls: ["../reservation-dialog.component.scss"],
 })
 export class DialogForFoodComponent {
-    model: IReservationForm;
+    model: IDBService;
     bookingAvailable: IBookingAvailable;
     Price = Price;
 

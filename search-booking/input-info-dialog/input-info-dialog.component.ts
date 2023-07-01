@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
-import { IReservationForm, ReservationService } from "reservation/service/reservation.service";
+import { ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FormControl, Validators } from "@angular/forms";
+import { IDBService } from "reservation/service/DB.service";
 
 @Component({
     selector: "input-info-dialog",
@@ -10,7 +11,7 @@ import { FormControl, Validators } from "@angular/forms";
     styleUrls: ["../../reservation-dialog/reservation-dialog.component.scss"],
 })
 export class InputInfoDialogComponent {
-    model: IReservationForm;
+    model: IDBService;
     formControlName = new FormControl("", [Validators.required]);
     date: Moment.Moment;
     dateFilter = (date: Date | null): boolean => date >= this._today;

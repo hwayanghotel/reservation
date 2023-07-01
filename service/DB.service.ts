@@ -13,7 +13,6 @@ export interface IDBService {
     인원: number;
     전화번호: string;
     차량번호: string[];
-    메모: string;
     평상?: number;
     테이블?: number;
     능이백숙?: number;
@@ -22,6 +21,8 @@ export interface IDBService {
     버섯찌개2?: number;
     예약시점: string;
     입금확인: boolean;
+    메모: string;
+    관리자메모: string;
 }
 
 const COLLECTION = "hwayanghotel";

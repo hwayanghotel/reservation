@@ -12,27 +12,6 @@ export const MAX_RESERVATION = {
     주차: 35,
 };
 
-export interface IReservationForm extends IDBService {
-    id?: string;
-    예약유형: "식사" | "평상" | "객실";
-    날짜: string;
-    시간?: number;
-    상태: "대기" | "예약" | "방문" | "수정" | "취소";
-    성함: string;
-    인원: number;
-    전화번호: string;
-    차량번호: string[];
-    메모: string;
-    평상?: number;
-    테이블?: number;
-    능이백숙?: number;
-    백숙?: number;
-    버섯찌개?: number;
-    버섯찌개2?: number;
-    예약시점: string;
-    입금확인: boolean;
-}
-
 export interface IBookingAvailable {
     잔여백숙: number;
     잔여버섯: number;
@@ -56,9 +35,7 @@ export const StandardNumberOfPeople = {
 export class ReservationService {
     bookingStep$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
     reservationCheckUser: boolean;
-    formData$: BehaviorSubject<IReservationForm> = new BehaviorSubject<IReservationForm>(
-        JSON.parse(JSON.stringify(initForm))
-    );
+    formData$: BehaviorSubject<IDBService> = new BehaviorSubject<IDBService>(JSON.parse(JSON.stringify(initForm)));
 
     bookingAvailable$: BehaviorSubject<IBookingAvailable> = new BehaviorSubject(undefined);
 
@@ -113,15 +90,15 @@ export class ReservationService {
         }
     }
 
-    add(model?: IReservationForm) {
+    add(model?: IDBService) {
         this.DBService.add(model ? model : this.formData$.getValue());
     }
 
-    edit(model?: IReservationForm) {
+    edit(model?: IDBService) {
         this.DBService.edit(model ? model : this.formData$.getValue());
     }
 
-    cancel(model?: IReservationForm) {
+    cancel(model?: IDBService) {
         // this.DBService.delete(this.formData$.getValue().id);
         this.DBService.edit({
             ...(model ? model : this.formData$.getValue()),
@@ -130,11 +107,11 @@ export class ReservationService {
         });
     }
 
-    search(id?: string, excludes?: string[]): Promise<IReservationForm[]> {
+    search(id?: string, excludes?: string[]): Promise<IDBService[]> {
         return this.DBService.search(id, this.formData$.getValue(), excludes);
     }
 
-    getReservationCost(model: IReservationForm): number {
+    getReservationCost(model: IDBService): number {
         const flatTableCost: number = model["평상"] * Price["평상"] + model["테이블"] * Price["테이블"];
         const addedGuests: number =
             model["인원"] -
@@ -177,7 +154,7 @@ export class ReservationService {
     }
 }
 
-const initForm: IReservationForm = {
+const initForm: IDBService = {
     예약유형: undefined,
     날짜: undefined,
     시간: undefined,
@@ -195,4 +172,5 @@ const initForm: IReservationForm = {
     버섯찌개2: 0,
     예약시점: undefined,
     입금확인: undefined,
+    관리자메모: undefined,
 };

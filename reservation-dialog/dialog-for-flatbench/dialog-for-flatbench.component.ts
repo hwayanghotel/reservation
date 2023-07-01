@@ -1,12 +1,8 @@
 import { Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
-import {
-    IBookingAvailable,
-    IReservationForm,
-    ReservationService,
-    StandardNumberOfPeople,
-} from "reservation/service/reservation.service";
+import { IDBService } from "reservation/service/DB.service";
+import { IBookingAvailable, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
 
 @Component({
     selector: "dialog-for-flatbench",
@@ -14,7 +10,7 @@ import {
     styleUrls: ["../reservation-dialog.component.scss"],
 })
 export class DialogForFlatbenchComponent {
-    model: IReservationForm;
+    model: IDBService;
     bookingAvailable: IBookingAvailable;
 
     constructor(

@@ -1,7 +1,8 @@
 import { Component } from "@angular/core";
-import { IBookingAvailable, IReservationForm, ReservationService } from "reservation/service/reservation.service";
+import { IBookingAvailable, ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
 import { ManagerService } from "manager/manager.service";
+import { IDBService } from "reservation/service/DB.service";
 
 @Component({
     selector: "dialog-for-car-and-memo",
@@ -9,9 +10,10 @@ import { ManagerService } from "manager/manager.service";
     styleUrls: ["./dialog-for-car-and-memo.component.scss", "../reservation-dialog.component.scss"],
 })
 export class DialogForCarAndMemoComponent {
-    model: IReservationForm;
+    model: IDBService;
     bookingAvailable: IBookingAvailable;
     nextTime: boolean;
+    permission = this.managerService.permission;
 
     constructor(private reservationService: ReservationService, private managerService: ManagerService) {
         this.reservationService.formData$.subscribe((data) => {
@@ -32,7 +34,7 @@ export class DialogForCarAndMemoComponent {
     cannotAddForm(): boolean {
         //조건1: 총 주차대수 여유있어야 함
         //조건2: 주문 한도를 넘으면 안 됌
-        if (this.managerService.permission) {
+        if (this.permission) {
             return false;
         }
         const availableCars =

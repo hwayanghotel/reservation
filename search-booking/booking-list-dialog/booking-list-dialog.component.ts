@@ -1,7 +1,8 @@
 import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
-import { IReservationForm, ReservationService } from "reservation/service/reservation.service";
+import { IDBService } from "reservation/service/DB.service";
+import { ReservationService } from "reservation/service/reservation.service";
 
 interface Table {
     id: string;
@@ -16,7 +17,7 @@ interface Table {
     styleUrls: ["./booking-list-dialog.component.scss", "../../reservation-dialog/reservation-dialog.component.scss"],
 })
 export class BookingListDialogComponent {
-    model: IReservationForm = this.reservationService.formData$.getValue();
+    model: IDBService = this.reservationService.formData$.getValue();
 
     displayedColumns: string[] = ["info", "status", "link"];
     dataSource: Table[] = [];
@@ -58,7 +59,7 @@ export class BookingListDialogComponent {
         this.reservationService.bookingStep$.next(1);
     }
 
-    private _sortList(a: IReservationForm, b: IReservationForm) {
+    private _sortList(a: IDBService, b: IDBService) {
         // 1) "날짜"가 빠를수록 정렬
         const dateA = new Date(a["날짜"]);
         const dateB = new Date(b["날짜"]);

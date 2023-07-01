@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
-import { IReservationForm, ReservationService } from "reservation/service/reservation.service";
+import { ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
+import { IDBService } from "reservation/service/DB.service";
 
 @Component({
     selector: "dialog-for-type-and-date",
@@ -10,7 +11,7 @@ import { ManagerService } from "manager/manager.service";
     styleUrls: ["../reservation-dialog.component.scss"],
 })
 export class DialogForTypeAndDateComponent {
-    model: IReservationForm;
+    model: IDBService;
     date: Moment.Moment;
     dateFilter = (date: Date | null): boolean => date >= this._today;
     private _today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
