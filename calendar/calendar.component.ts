@@ -38,7 +38,10 @@ export class CalendarComponent {
             this.selectedDate.getFullYear() === this._today.getFullYear() &&
             this.selectedDate.getMonth() === this._today.getMonth()
         ) {
-            return this._today.getDate() > date;
+            const LIMIT_HOURS = 14;
+            return (
+                this._today.getDate() > date || (this._today.getDate() === date && this._today.getHours() > LIMIT_HOURS)
+            );
         }
 
         if (this.selectedDate.getFullYear() < this._today.getFullYear()) {
