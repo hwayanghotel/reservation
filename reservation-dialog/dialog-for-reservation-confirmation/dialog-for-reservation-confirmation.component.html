@@ -41,6 +41,14 @@
 
 	<h2 *ngIf="model['상태'] === '취소' || !model['상태']">예약 정보가 없습니다.</h2>
 	<a *ngIf="showReservationRule()" [href]="serviceLink()" target="_blank">예약 규정 보기 ></a>
+
+	<h3 class="todayInfo" *ngIf="showTodayInfo">
+		당일 예약은 빠른 확인을 위해 전화 부탁드립니다.
+		<a href="tel:0438324281">
+			<mat-icon [style.color]="'#5eb917'">call</mat-icon>
+			<span>(전화버튼)</span>
+		</a>
+	</h3>
 </div>
 
 <mat-dialog-actions [align]="'center'">

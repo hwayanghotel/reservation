@@ -13,8 +13,8 @@ import { IDBService } from "reservation/service/DB.service";
 export class DialogForTypeAndDateComponent {
     model: IDBService;
     date: Moment.Moment;
-    dateFilter = (date: Date | null): boolean => date >= this._today;
-    private _today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    timeList: number[] = [10, 11, 12, 13, 14, 15, 16];
+    dateFilter = (date: Date | null): boolean => date >= new Date(Moment().format("YY-M-D"));
 
     constructor(
         private reservationService: ReservationService,
@@ -24,7 +24,17 @@ export class DialogForTypeAndDateComponent {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
             this.date = Moment(this.model["날짜"]);
+            this._setTimeList();
         });
+    }
+
+    private _setTimeList() {
+        this.timeList = [];
+        const isToday: boolean = this.date.format("YYYY-MM-DD") === Moment().format("YYYY-MM-DD");
+        const startHour = isToday && new Date().getHours() > 10 ? new Date().getHours() + 1 : 10;
+        for (let h = startHour; h < 17; h++) {
+            this.timeList.push(h);
+        }
     }
 
     closeDialog() {

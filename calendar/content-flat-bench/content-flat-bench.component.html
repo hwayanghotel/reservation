@@ -1,5 +1,5 @@
 <p *ngFor="let value of data;"
    [class.expired]="value.expired"
    (click)="openDialog()">
-	{{value.text}}<span>{{value.ratio}}</span>
+   {{value.text}}<span *ngIf="!value.expired">{{value.ratio}}</span>
 </p>

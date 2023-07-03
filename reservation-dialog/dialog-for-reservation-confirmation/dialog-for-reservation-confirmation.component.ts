@@ -3,6 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ReservationService } from "reservation/service/reservation.service";
 import { DialogReservationCancelComponent } from "../dialog-reservation-cancel/dialog-reservation-cancel.component";
 import { IDBService } from "reservation/service/DB.service";
+import * as Moment from "moment";
 
 @Component({
     selector: "dialog-for-reservation-confirmation",
@@ -12,11 +13,14 @@ import { IDBService } from "reservation/service/DB.service";
 export class DialogForReservationConfirmationComponent {
     model: IDBService;
     reservationCost: number;
+    showTodayInfo: boolean;
 
     constructor(private reservationService: ReservationService, private dialog: MatDialog) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
             this.reservationCost = this.reservationService.getReservationCost(data);
+            this.showTodayInfo =
+                this.model["날짜"] === Moment().format("YY-M-D") && ["대기", "수정"].includes(data["상태"]);
         });
     }
 

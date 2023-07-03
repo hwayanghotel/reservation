@@ -31,7 +31,7 @@
 			<mat-form-field>
 				<mat-label>시간예약</mat-label>
 				<mat-select [(value)]="model['시간']">
-					<mat-option *ngFor="let time of [10,11,12,13,14,15,16]" [value]="time">{{time}}시</mat-option>
+					<mat-option *ngFor="let time of timeList" [value]="time">{{time}}시</mat-option>
 				</mat-select>
 			</mat-form-field>
 		</div>

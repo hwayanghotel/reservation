@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { IDBService, DBService } from "./DB.service";
 import { Price } from "src/assets/price";
+import * as Moment from "moment";
 
 export const MAX_RESERVATION = {
     백숙: 30,
@@ -103,7 +104,7 @@ export class ReservationService {
         this.DBService.edit({
             ...(model ? model : this.formData$.getValue()),
             상태: "취소",
-            메모: `취소일:${new Date().getMonth() + 1}-${new Date().getDate()}, ` + this.formData$.getValue()["메모"],
+            메모: `취소일:${Moment().format("MM-DD")}, ` + this.formData$.getValue()["메모"],
         });
     }
 

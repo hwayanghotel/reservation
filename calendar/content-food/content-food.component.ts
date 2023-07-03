@@ -53,7 +53,7 @@ export class ContentFoodComponent implements OnChanges {
             });
         this.data = {
             expired: cooks >= MAX_RESERVATION["식사"],
-            text: `식사 ${cooks >= MAX_RESERVATION["식사"] ? "마감" : "가능"}`,
+            text: `식사 ${cooks >= MAX_RESERVATION["식사"] ? "마감" : ""}`,
             ratio: `(${cooks}/${MAX_RESERVATION["식사"]})`,
         };
     }

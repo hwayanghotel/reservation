@@ -49,12 +49,12 @@ export class ContentFlatBenchComponent implements OnChanges {
             });
         this.data.push({
             expired: flatBench >= MAX_RESERVATION["평상"],
-            text: `평상 ${flatBench >= MAX_RESERVATION["평상"] ? "마감" : "가능"}`,
+            text: `평상 ${flatBench >= MAX_RESERVATION["평상"] ? "마감" : ""}`,
             ratio: `(${flatBench}/${MAX_RESERVATION["평상"]})`,
         });
         this.data.push({
             expired: table >= MAX_RESERVATION["테이블"],
-            text: `데크 ${table >= MAX_RESERVATION["테이블"] ? "마감" : "가능"}`,
+            text: `데크 ${table >= MAX_RESERVATION["테이블"] ? "마감" : ""}`,
             ratio: `(${table}/${MAX_RESERVATION["테이블"]})`,
         });
     }
