@@ -14,6 +14,12 @@ export class DialogForCustomerInfoComponent {
     model: IDBService;
     formControlName = new FormControl("", [Validators.required]);
     formControlPerson = new FormControl("", [Validators.required]);
+    formControlMiddleNumber = new FormControl("", [Validators.required]);
+    formControlLastNumber = new FormControl("", [Validators.required]);
+
+    firstNumber: string = "010";
+    middleNumber: string = "";
+    lastNumber: string = "";
 
     constructor(
         private reservationService: ReservationService,
@@ -33,6 +39,7 @@ export class DialogForCustomerInfoComponent {
         if (!this._checkStep()) {
             this._snackBar.open("예약 필수 정보를 적어주세요.", null, { duration: 2000 });
         } else {
+            this.model["전화번호"] = `${this.firstNumber}-${this.middleNumber}-${this.lastNumber}`;
             this.reservationService.setReservationForm(this.model);
             this.reservationService.bookingStep$.next(3 + Number(["식사", "객실"].includes(this.model["예약유형"])));
         }
@@ -42,6 +49,12 @@ export class DialogForCustomerInfoComponent {
         if (this.managerService.permission) {
             return true;
         }
-        return Boolean(this.model["성함"] && this.model["전화번호"] && this.model["인원"]);
+        return Boolean(
+            this.model["성함"] &&
+                this.firstNumber &&
+                this.middleNumber.length === 4 &&
+                this.lastNumber.length === 4 &&
+                this.model["인원"]
+        );
     }
 }

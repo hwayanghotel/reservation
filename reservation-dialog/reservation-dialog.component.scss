@@ -38,6 +38,15 @@ mat-dialog-actions {
 
     .answer {
         width: 55%;
+
+        &.tel-area {
+            display: flex;
+            align-items: center;
+
+            .hyphen {
+                margin-bottom: var(--input-bottom-height);
+            }
+        }
     }
 
     .pointer {
@@ -72,7 +81,7 @@ a {
     color: #e34c4c;
 }
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 600px) {
     .tel-field {
         flex-direction: column;
 

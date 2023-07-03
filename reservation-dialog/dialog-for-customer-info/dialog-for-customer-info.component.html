@@ -37,7 +37,35 @@
 		<h4 class="question">
 			3. 전화번호
 		</h4>
-		<form-field-custom-control-example class="answer"></form-field-custom-control-example>
+		<div class="answer tel-area">
+			<mat-form-field>
+				<mat-select [(value)]="firstNumber">
+					<mat-option value="010">010</mat-option>
+					<mat-option value="011">011</mat-option>
+					<mat-option value="016">016</mat-option>
+					<mat-option value="017">017</mat-option>
+					<mat-option value="018">018</mat-option>
+					<mat-option value="019">019</mat-option>
+					<mat-option value="0502">0502</mat-option>
+					<mat-option value="0504">0504</mat-option>
+					<mat-option value="0507">0507</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<p class="hyphen">-</p>
+			<mat-form-field>
+				<input matInput placeholder="1234" [formControl]="formControlMiddleNumber" required size="4"
+					   maxLength="4"
+					   [(ngModel)]="middleNumber">
+				<mat-error *ngIf="formControlMiddleNumber.invalid">번호를 입력하세요</mat-error>
+			</mat-form-field>
+			<p class="hyphen">-</p>
+			<mat-form-field>
+				<input matInput placeholder="1234" [formControl]="formControlLastNumber" required size="4"
+					   maxLength="4"
+					   [(ngModel)]="lastNumber">
+				<mat-error *ngIf="formControlLastNumber.invalid">번호를 입력하세요</mat-error>
+			</mat-form-field>
+		</div>
 	</div>
 
 	<div class="info">
