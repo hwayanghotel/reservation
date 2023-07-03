@@ -174,4 +174,6 @@ const initForm: IDBService = {
     예약시점: undefined,
     입금확인: undefined,
     관리자메모: undefined,
+    객실: undefined,
+    이용박수: undefined,
 };
