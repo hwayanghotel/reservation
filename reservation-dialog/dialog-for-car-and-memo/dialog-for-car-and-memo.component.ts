@@ -22,7 +22,8 @@ export class DialogForCarAndMemoComponent {
     ) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
-            if (data["차량번호"].length === 0) {
+            if (!data["차량번호"] || data["차량번호"].length === 0) {
+                this.model["차량번호"] = [];
                 this.model["차량번호"].length = 1;
             }
         });
