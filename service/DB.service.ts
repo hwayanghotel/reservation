@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
+import { NY_TEST_COLLECTION, Uploader } from "./uploader";
 
 export interface IDBService {
     // 고객정보
@@ -33,7 +34,9 @@ export interface IDBService {
     버섯찌개2?: number;
 }
 
-const COLLECTION = "hwayanghotel";
+const TEST = true;
+const NY_DB_COLLECTION = "NY_DB";
+const COLLECTION = TEST ? NY_TEST_COLLECTION : NY_DB_COLLECTION;
 
 @Injectable({
     providedIn: "root",
@@ -41,13 +44,17 @@ const COLLECTION = "hwayanghotel";
 export class DBService {
     firebaseStore$: Observable<any[]>;
     constructor(private http: HttpClient, private store: AngularFirestore) {
+        // new Uploader(this.http, this.store).uploadTest(false);
+
+        // this.firebaseStore$ = this.store.collection(COLLECTION).valueChanges();
+
         // this.store
         //     .collection(COLLECTION)
         //     .get()
         //     .subscribe((v: QuerySnapshot<any>) => {
         //         console.warn("요건 get이야", v.docs[1].data());
         //     });
-        this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
+        // this.firebaseStore$ = this.http.get("assets/fire.json") as Observable<any[]>;
         // this._setPensionDB();
 
         // this.http.get("assets/fire.json").subscribe((v) => {
@@ -72,7 +79,7 @@ export class DBService {
     }
 
     add(model: IDBService) {
-        // this.store.collection(COLLECTION).add(model);
+        this.store.collection(COLLECTION).add(model);
     }
 
     edit(model: IDBService) {
@@ -80,36 +87,29 @@ export class DBService {
     }
 
     delete(id: string) {
-        // this.store.collection(COLLECTION).doc(id).delete();
+        this.store.collection(COLLECTION).doc(id).delete();
     }
 
-    search(model: IDBService, excludes?: string[]): Promise<IDBService[]> {
+    search(model: IDBService): Promise<IDBService[]> {
         return new Promise((resolve) => {
-            this.firebaseStore$.subscribe((data) => {
-                if (model.id) {
-                    resolve(data.filter((v) => v.id === model.id));
-                }
-                if (!excludes || !excludes.includes("날짜")) {
-                    const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-                    data = data.filter((v) => new Date(v["날짜"]) >= today);
-                }
-                if (!excludes || !excludes.includes("상태")) {
-                    data = data.filter((v) => v["상태"] !== "취소");
-                }
-                if (model["예약유형"]) {
-                    data = data.filter((v) => v["예약유형"] === model["예약유형"]);
-                }
-                if (model["성함"]) {
-                    data = data.filter((v) => v["성함"] === model["성함"]);
-                }
-                if (model["전화번호"]) {
-                    data = data.filter((v) => v["전화번호"] === model["전화번호"]);
-                }
-                if (model["예약일"]) {
-                    data = data.filter((v) => v["날짜"] === model["예약일"]);
-                }
-                resolve(data);
-            });
+            this.store
+                .collection(COLLECTION)
+                .ref.where("성함", "==", model["성함"])
+                .where("전화번호", "==", model["전화번호"])
+                .get()
+                .then((snapshot) => {
+                    let searchedList: IDBService[] = [];
+                    snapshot.forEach((doc) => {
+                        const passedNum = Object.entries(model).filter(
+                            ([key, value]) => (doc.data() as any)[key] === value
+                        );
+                        if (passedNum.length === Object.keys(model).length) {
+                            searchedList.push(doc.data());
+                        }
+                    });
+                    searchedList = searchedList.filter((v) => v["예약일"] >= Moment().format("YYYY-MM-DD"));
+                    resolve(searchedList);
+                });
         });
     }
 
