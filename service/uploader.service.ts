@@ -39,7 +39,7 @@ interface GoogleSheetData {
 export class UploaderService {
     private currentDB: IDBService[] = [];
     constructor(private http: HttpClient, private store: AngularFirestore, private DBService: DBService) {
-        this.DBService.firebaseStore$.subscribe((v) => {
+        this.DBService.customerDB$.subscribe((v) => {
             this.currentDB = v;
         });
     }
