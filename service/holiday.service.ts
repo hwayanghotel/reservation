@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
+import * as Moment from "moment";
 
 @Injectable({
     providedIn: "root",
@@ -9,11 +10,19 @@ export class HolidayService {
     constructor(private http: HttpClient) {}
 
     getHolidays(date: Date): Promise<number[]> {
-        const weekEnds: number[] = this.getWeekendDates(date);
-
+        const index: string = Moment(date).format("YYYYMM");
+        if (Object.keys(HolidayList).includes(index)) {
+            return new Promise((resolve) => resolve((HolidayList as any)[index]));
+        }
         return new Promise((resolve) => {
+            const weekEnds: number[] = this.getWeekendDates(date);
             this.getHolidaysFromServer(date).subscribe(
                 (response) => {
+                    console.log(
+                        "holyday",
+                        Moment(date).format("YYYY-MM"),
+                        Array.from(new Set([...weekEnds, ...response])).sort((a, b) => a - b)
+                    );
                     resolve(Array.from(new Set([...weekEnds, ...response])).sort((a, b) => a - b));
                 },
                 (error) => {
@@ -68,3 +77,12 @@ export class HolidayService {
         );
     }
 }
+
+const HolidayList = {
+    "202307": [1, 2, 8, 9, 15, 16, 22, 23, 29, 30],
+    "202308": [5, 6, 12, 13, 15, 19, 20, 26, 27],
+    "202309": [2, 3, 9, 10, 16, 17, 23, 24, 28, 29, 30],
+    "202310": [1, 3, 7, 8, 9, 14, 15, 21, 22, 28, 29],
+    "202311": [4, 5, 11, 12, 18, 19, 25, 26],
+    "202312": [2, 3, 9, 10, 16, 17, 23, 24, 25, 30, 31],
+};
