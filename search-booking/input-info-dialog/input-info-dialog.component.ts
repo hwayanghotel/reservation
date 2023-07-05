@@ -33,7 +33,7 @@ export class InputInfoDialogComponent {
         if (this._checkStep()) {
             this.model["전화번호"] = `${this.firstNumber}-${this.middleNumber}-${this.lastNumber}`;
             if (this.date) {
-                this.model["날짜"] = this.date.format("YYYY-MM-DD");
+                this.model["예약일"] = this.date.format("YYYY-MM-DD");
             }
             this.reservationService.formData$.next(this.model);
             this.reservationService.bookingStep$.next(2);

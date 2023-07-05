@@ -55,7 +55,7 @@ export class ReservationService {
         };
         const dailyData = await this.DBService.getDailyData(
             this.formData$.getValue()["예약유형"],
-            this.formData$.getValue()["날짜"]
+            this.formData$.getValue()["예약일"]
         );
         dailyData.forEach((data) => {
             const numberOfChicken: number = data["능이백숙"] + data["백숙"];

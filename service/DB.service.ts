@@ -5,27 +5,32 @@ import { AngularFirestore } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
 
 export interface IDBService {
+    // 고객정보
     id?: string;
-    날짜?: string;
+    예약일?: string;
     예약시점?: string;
-    시간?: number;
+    성함?: string;
+    전화번호?: string;
+    // 예약정보
     예약유형?: "식사" | "평상" | "객실";
+    인원?: number;
+    상태?: "대기" | "예약" | "방문" | "수정" | "취소";
+    차량번호?: string[];
+    메모?: string;
+    관리자메모?: string;
+    // 객실정보
     객실?: "능운대" | "학소대" | "와룡암" | "첨성대";
     이용박수?: number;
-    상태?: "대기" | "예약" | "방문" | "수정" | "취소";
-    성함?: string;
-    인원?: number;
-    전화번호?: string;
-    차량번호?: string[];
+    // 평상정보
     평상?: number;
     테이블?: number;
+    입금확인?: boolean;
+    // 식사정보
+    예약시간?: number;
     능이백숙?: number;
     백숙?: number;
     버섯찌개?: number;
     버섯찌개2?: number;
-    입금확인?: boolean;
-    메모?: string;
-    관리자메모?: string;
 }
 
 const COLLECTION = "hwayanghotel";
@@ -100,8 +105,8 @@ export class DBService {
                 if (model["전화번호"]) {
                     data = data.filter((v) => v["전화번호"] === model["전화번호"]);
                 }
-                if (model["날짜"]) {
-                    data = data.filter((v) => v["날짜"] === model["날짜"]);
+                if (model["예약일"]) {
+                    data = data.filter((v) => v["날짜"] === model["예약일"]);
                 }
                 resolve(data);
             });
@@ -120,9 +125,9 @@ export class DBService {
                     let uploadDB: IDBService = {
                         예약유형: "객실",
                         객실: data[PENSION_DB["객실"]],
-                        날짜: Moment(data[PENSION_DB["이용일"]]).format("YYYY-MM-DD"),
+                        예약일: Moment(data[PENSION_DB["이용일"]]).format("YYYY-MM-DD"),
                         이용박수: data[PENSION_DB["이용박수"]],
-                        시간: null,
+                        예약시간: null,
                         상태: "예약",
                         성함: data[PENSION_DB["예약자"]],
                         인원: 0,

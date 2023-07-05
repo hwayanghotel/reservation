@@ -61,7 +61,7 @@ export class ContentFoodComponent implements OnChanges {
     openDialog() {
         this.reservationService.formData$.next({
             예약유형: "식사",
-            날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
+            예약일: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
             상태: "대기",
         });
         this.reservationService.bookingStep$.next(1);

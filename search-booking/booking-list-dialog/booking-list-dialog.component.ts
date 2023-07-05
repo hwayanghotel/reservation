@@ -37,7 +37,7 @@ export class BookingListDialogComponent {
         list.forEach((model) => {
             let item: Table = {
                 id: model.id,
-                info: `${model["날짜"].slice(5)} ${model["예약유형"]}`,
+                info: `${model["예약일"].slice(5)} ${model["예약유형"]}`,
                 status: model["상태"],
                 link: "자세히 보기",
             };
@@ -65,8 +65,8 @@ export class BookingListDialogComponent {
 
     private _sortList(a: IDBService, b: IDBService) {
         // 1) "날짜"가 빠를수록 정렬
-        const dateA = new Date(a["날짜"]);
-        const dateB = new Date(b["날짜"]);
+        const dateA = new Date(a["예약일"]);
+        const dateB = new Date(b["예약일"]);
         if (dateA < dateB) {
             return -1;
         }

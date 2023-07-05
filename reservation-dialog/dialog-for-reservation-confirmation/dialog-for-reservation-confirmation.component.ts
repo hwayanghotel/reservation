@@ -20,7 +20,7 @@ export class DialogForReservationConfirmationComponent {
             this.model = data;
             this.reservationCost = this.reservationService.getReservationCost(data);
             this.showTodayInfo =
-                this.model["날짜"] === Moment().format("YY-M-D") && ["대기", "수정"].includes(data["상태"]);
+                this.model["예약일"] === Moment().format("YY-M-D") && ["대기", "수정"].includes(data["상태"]);
         });
     }
 
