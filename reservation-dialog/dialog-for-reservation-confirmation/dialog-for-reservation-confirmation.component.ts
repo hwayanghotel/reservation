@@ -24,10 +24,6 @@ export class DialogForReservationConfirmationComponent {
         });
     }
 
-    get reservationCheckUser(): boolean {
-        return this.reservationService.reservationCheckUser;
-    }
-
     okButton() {
         this.reservationService.bookingStep$.next(undefined);
     }
@@ -41,7 +37,7 @@ export class DialogForReservationConfirmationComponent {
     }
 
     cancelButton() {
-        this.dialog.open(DialogReservationCancelComponent);
+        this.dialog.open(DialogReservationCancelComponent, { data: this.model });
     }
 
     showReservationRule(): boolean {

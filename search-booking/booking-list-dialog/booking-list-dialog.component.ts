@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
-import { IDBService } from "reservation/service/DB.service";
+import { IDBService, DBService } from "reservation/service/DB.service";
 import { ReservationService } from "reservation/service/reservation.service";
 
 interface Table {
@@ -22,12 +22,16 @@ export class BookingListDialogComponent {
     displayedColumns: string[] = ["info", "status", "link"];
     dataSource: Table[] = [];
 
-    constructor(private reservationService: ReservationService, private dialog: MatDialog) {
+    constructor(
+        private reservationService: ReservationService,
+        private dialog: MatDialog,
+        private DBService: DBService
+    ) {
         this.setList();
     }
 
     private async setList() {
-        let list = await this.reservationService.search();
+        let list = await this.DBService.search(this.model);
         list.sort((a, b) => this._sortList(a, b));
         this.dataSource = [];
         list.forEach((model) => {
@@ -44,8 +48,8 @@ export class BookingListDialogComponent {
     goToDetail(element: any) {
         this.dialog.openDialogs[0].afterClosed().subscribe(async () => {
             if (element.id) {
-                const model = await this.reservationService.search(element.id);
-                this.reservationService.setReservationForm(model[0]);
+                const model = await this.DBService.search({ id: element.id });
+                this.reservationService.formData$.next(model[0]);
                 this.reservationService.bookingStep$.next(6);
                 this.dialog.open(ReservationDialogComponent);
             } else {

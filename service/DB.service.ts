@@ -6,26 +6,26 @@ import * as Moment from "moment";
 
 export interface IDBService {
     id?: string;
-    날짜: string;
-    예약시점: string;
+    날짜?: string;
+    예약시점?: string;
     시간?: number;
-    예약유형: "식사" | "평상" | "객실";
-    객실: "능운대" | "학소대" | "와룡암" | "첨성대";
-    이용박수: number;
-    상태: "대기" | "예약" | "방문" | "수정" | "취소";
-    성함: string;
-    인원: number;
-    전화번호: string;
-    차량번호: string[];
+    예약유형?: "식사" | "평상" | "객실";
+    객실?: "능운대" | "학소대" | "와룡암" | "첨성대";
+    이용박수?: number;
+    상태?: "대기" | "예약" | "방문" | "수정" | "취소";
+    성함?: string;
+    인원?: number;
+    전화번호?: string;
+    차량번호?: string[];
     평상?: number;
     테이블?: number;
     능이백숙?: number;
     백숙?: number;
     버섯찌개?: number;
     버섯찌개2?: number;
-    입금확인: boolean;
-    메모: string;
-    관리자메모: string;
+    입금확인?: boolean;
+    메모?: string;
+    관리자메모?: string;
 }
 
 const COLLECTION = "hwayanghotel";
@@ -51,6 +51,11 @@ export class DBService {
         //         data: v,
         //     });
         // });
+
+        // TEST
+        this.firebaseStore$.subscribe((v) => {
+            console.log("firebaseStore$ update", v);
+        });
     }
 
     async getDailyData(type: "식사" | "평상" | "객실", date: string): Promise<IDBService[]> {
@@ -73,11 +78,11 @@ export class DBService {
         // this.store.collection(COLLECTION).doc(id).delete();
     }
 
-    search(id: string, model: IDBService, excludes?: string[]): Promise<IDBService[]> {
+    search(model: IDBService, excludes?: string[]): Promise<IDBService[]> {
         return new Promise((resolve) => {
             this.firebaseStore$.subscribe((data) => {
-                if (id) {
-                    resolve(data.filter((v) => v.id === id));
+                if (model.id) {
+                    resolve(data.filter((v) => v.id === model.id));
                 }
                 if (!excludes || !excludes.includes("날짜")) {
                     const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());

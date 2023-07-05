@@ -2,7 +2,12 @@ import { Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
 import { IDBService } from "reservation/service/DB.service";
-import { IBookingAvailable, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
+import {
+    IBookingAvailable,
+    MAX_RESERVATION,
+    ReservationService,
+    StandardNumberOfPeople,
+} from "reservation/service/reservation.service";
 import { Price } from "src/assets/price";
 
 @Component({
@@ -38,19 +43,8 @@ export class DialogForFoodComponent {
         if (this.model["예약유형"] === "평상") return;
         const foods: number =
             this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
-        if (!foods) {
-            let person: number = this.model["인원"];
-            this.model["능이백숙"] = Math.round(person / StandardNumberOfPeople["식사좌석"]);
-            if (this.model["능이백숙"] > this.bookingAvailable["잔여백숙"]) {
-                this.model["능이백숙"] = this.bookingAvailable["잔여백숙"];
-                person -= this.model["능이백숙"] * StandardNumberOfPeople["식사좌석"];
-                this.model["버섯찌개"] = Math.round(person / StandardNumberOfPeople["식사좌석"]);
-                if (this.model["버섯찌개"] > this.bookingAvailable["잔여버섯"]) {
-                    this.model["버섯찌개"] = this.bookingAvailable["잔여버섯"];
-                    person -= this.model["버섯찌개"] * StandardNumberOfPeople["식사좌석"];
-                    console.warn("적정 인원 대비 식사가 부족합니다", person);
-                }
-            }
+        if (foods > 0) {
+            this.model["능이백숙"] = Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]);
         }
     }
 
@@ -82,16 +76,17 @@ export class DialogForFoodComponent {
         this.model["버섯찌개2"] = value > 0 ? value : 0;
     }
 
-    get reservationCost(): number {
-        return this.reservationService.getReservationCost(this.model);
-    }
-
     get warning(): boolean {
         const foods = this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
         return (
             this.model["예약유형"] !== "평상" &&
             Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]) > foods
         );
+    }
+
+    get cantAddFood(): boolean {
+        const foods = this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
+        return MAX_RESERVATION["식사자리"] <= foods;
     }
 
     previousStep() {
@@ -102,7 +97,7 @@ export class DialogForFoodComponent {
         if (!this._checkStep()) {
             this._snackBar.open("입력된 식사 정보를 확인해주세요", null, { duration: 2000 });
         } else {
-            this.reservationService.setReservationForm(this.model);
+            this.reservationService.formData$.next(this.model);
             this.reservationService.bookingStep$.next(5);
         }
     }

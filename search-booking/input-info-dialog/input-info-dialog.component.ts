@@ -13,6 +13,12 @@ import { IDBService } from "reservation/service/DB.service";
 export class InputInfoDialogComponent {
     model: IDBService;
     formControlName = new FormControl("", [Validators.required]);
+    formControlMiddleNumber = new FormControl("", [Validators.required]);
+    formControlLastNumber = new FormControl("", [Validators.required]);
+
+    firstNumber: string = "010";
+    middleNumber: string = "";
+    lastNumber: string = "";
     date: Moment.Moment;
     dateFilter = (date: Date | null): boolean => date >= this._today;
     private _today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
@@ -25,10 +31,11 @@ export class InputInfoDialogComponent {
 
     search() {
         if (this._checkStep()) {
+            this.model["전화번호"] = `${this.firstNumber}-${this.middleNumber}-${this.lastNumber}`;
             if (this.date) {
                 this.model["날짜"] = this.date.format("YYYY-MM-DD");
             }
-            this.reservationService.setReservationForm(this.model);
+            this.reservationService.formData$.next(this.model);
             this.reservationService.bookingStep$.next(2);
         } else {
             this._snackBar.open("예약자 성함과 전화번호를 입력해주세요.", null, { duration: 2000 });
@@ -36,6 +43,8 @@ export class InputInfoDialogComponent {
     }
 
     private _checkStep(): boolean {
-        return Boolean(this.model["성함"] && this.model["전화번호"]);
+        return Boolean(
+            this.model["성함"] && this.firstNumber && this.middleNumber.length === 4 && this.lastNumber.length === 4
+        );
     }
 }

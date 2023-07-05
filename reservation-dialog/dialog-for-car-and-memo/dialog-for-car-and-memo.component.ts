@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { IBookingAvailable, ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
 import { ManagerService } from "manager/manager.service";
-import { IDBService } from "reservation/service/DB.service";
+import { DBService, IDBService } from "reservation/service/DB.service";
 
 @Component({
     selector: "dialog-for-car-and-memo",
@@ -15,7 +15,11 @@ export class DialogForCarAndMemoComponent {
     nextTime: boolean;
     permission = this.managerService.permission;
 
-    constructor(private reservationService: ReservationService, private managerService: ManagerService) {
+    constructor(
+        private reservationService: ReservationService,
+        private managerService: ManagerService,
+        private DBService: DBService
+    ) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
             if (data["차량번호"].length === 0) {
@@ -70,11 +74,11 @@ export class DialogForCarAndMemoComponent {
         if (this.model["상태"] === "예약") {
             this.model["상태"] = "수정";
             this.model["id"] = "edit" + this.model["id"].substring(4);
-            this.reservationService.add(this.model);
+            this.DBService.add(this.model);
         } else if (["대기", "방문", "수정"].includes(this.model["상태"]) && this.model.id) {
-            this.reservationService.edit(this.model);
+            this.DBService.edit(this.model);
         } else {
-            this.reservationService.add(this.model);
+            this.DBService.add(this.model);
         }
         this.reservationService.bookingStep$.next(6);
     }

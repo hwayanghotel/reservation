@@ -11,7 +11,7 @@
 				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="nyBaeksuk">
 				<mat-icon matSuffix class="pointer"
 						  (click)="nyBaeksuk = nyBaeksuk + 1"
-						  [class.disabled]="nyBaeksuk === bookingAvailable['잔여백숙']">keyboard_arrow_right</mat-icon>
+						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
 			</mat-form-field>
 		</div>
 	</div>
@@ -28,7 +28,7 @@
 				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="baeksuk">
 				<mat-icon matSuffix class="pointer"
 						  (click)="baeksuk = baeksuk + 1"
-						  [class.disabled]="baeksuk === bookingAvailable['잔여백숙']">keyboard_arrow_right</mat-icon>
+						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
 			</mat-form-field>
 		</div>
 	</div>
@@ -45,7 +45,7 @@
 				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="mushroomStew">
 				<mat-icon matSuffix class="pointer"
 						  (click)="mushroomStew = mushroomStew + 1"
-						  [class.disabled]="mushroomStew === bookingAvailable['잔여버섯']">keyboard_arrow_right</mat-icon>
+						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
 			</mat-form-field>
 		</div>
 	</div>
@@ -62,7 +62,7 @@
 				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="mushroomStew2">
 				<mat-icon matSuffix class="pointer"
 						  (click)="mushroomStew2 = mushroomStew2 + 1"
-						  [class.disabled]="mushroomStew2 === bookingAvailable['잔여버섯']">keyboard_arrow_right</mat-icon>
+						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
 			</mat-form-field>
 		</div>
 	</div>

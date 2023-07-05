@@ -60,7 +60,8 @@ export class ContentFlatBenchComponent implements OnChanges {
     }
 
     openDialog() {
-        this.reservationService.setReservationForm({
+        this.reservationService.formData$.next({
+            ...this.reservationService.formData$.getValue(),
             예약유형: "평상",
             날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
             상태: "대기",

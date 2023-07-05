@@ -52,14 +52,14 @@ export class ContentFoodComponent implements OnChanges {
                     Number(value["버섯찌개2"]);
             });
         this.data = {
-            expired: cooks >= MAX_RESERVATION["식사"],
-            text: `식사 ${cooks >= MAX_RESERVATION["식사"] ? "마감" : ""}`,
-            ratio: `(${cooks}/${MAX_RESERVATION["식사"]})`,
+            expired: cooks >= MAX_RESERVATION["식사자리"],
+            text: `식사 ${cooks >= MAX_RESERVATION["식사자리"] ? "마감" : ""}`,
+            ratio: `(${cooks}/${MAX_RESERVATION["식사자리"]})`,
         };
     }
 
     openDialog() {
-        this.reservationService.setReservationForm({
+        this.reservationService.formData$.next({
             예약유형: "식사",
             날짜: this.datePipe.transform(this.date, "yyyy-MM-dd") as string,
             상태: "대기",

@@ -40,7 +40,7 @@ export class DialogForCustomerInfoComponent {
             this._snackBar.open("예약 필수 정보를 적어주세요.", null, { duration: 2000 });
         } else {
             this.model["전화번호"] = `${this.firstNumber}-${this.middleNumber}-${this.lastNumber}`;
-            this.reservationService.setReservationForm(this.model);
+            this.reservationService.formData$.next(this.model);
             this.reservationService.bookingStep$.next(3 + Number(["식사", "객실"].includes(this.model["예약유형"])));
         }
     }

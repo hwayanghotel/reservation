@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
 import { SearchBookingComponent } from "reservation/search-booking/search-booking.component";
 import { ReservationService } from "reservation/service/reservation.service";
+import { DBService } from "reservation/service/DB.service";
 
 @Component({
     selector: "reservation",
@@ -16,7 +17,8 @@ export class ReservationComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private reseravationService: ReservationService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private DBService: DBService
     ) {}
 
     ngOnInit() {
@@ -32,12 +34,12 @@ export class ReservationComponent implements OnInit {
     private async _openCustomerInfoDialog(id: string, type: string) {
         console.warn("고객 직접 검색", id, type);
         if (id) {
-            const forms = await this.reseravationService.search(id);
-            this.reseravationService.setReservationForm(forms[0]);
+            const forms = await this.DBService.search({ id: id });
+            this.reseravationService.formData$.next(forms[0]);
             this.reseravationService.bookingStep$.next(6);
             this.dialog.open(ReservationDialogComponent);
         } else if (type === "room") {
-            this.reseravationService.setReservationForm({ 예약유형: "객실", 상태: "수정" }, true);
+            this.reseravationService.formData$.next({ 예약유형: "객실", 상태: "수정" });
             this.reseravationService.bookingStep$.next(1);
             this.dialog.open(ReservationDialogComponent);
         } else if (type === "search") {
