@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ReservationService } from "reservation/service/reservation.service";
 import { DialogReservationCancelComponent } from "../dialog-reservation-cancel/dialog-reservation-cancel.component";
-import { IDBService } from "reservation/service/DB.service";
+import { IUserDB } from "reservation/service/DB.service";
 import * as Moment from "moment";
 
 @Component({
@@ -11,7 +11,7 @@ import * as Moment from "moment";
     styleUrls: ["./dialog-for-reservation-confirmation.component.scss", "../reservation-dialog.component.scss"],
 })
 export class DialogForReservationConfirmationComponent {
-    model: IDBService;
+    model: IUserDB;
     reservationCost: number;
     showTodayInfo: boolean;
 

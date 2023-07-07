@@ -1,13 +1,8 @@
 import { Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
-import { IDBService } from "reservation/service/DB.service";
-import {
-    IBookingAvailable,
-    MAX_RESERVATION,
-    ReservationService,
-    StandardNumberOfPeople,
-} from "reservation/service/reservation.service";
+import { IUserDB } from "reservation/service/DB.service";
+import { MAX_RESERVATION, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
 import { Price } from "src/assets/price";
 
 @Component({
@@ -16,8 +11,7 @@ import { Price } from "src/assets/price";
     styleUrls: ["../reservation-dialog.component.scss"],
 })
 export class DialogForFoodComponent {
-    model: IDBService;
-    bookingAvailable: IBookingAvailable;
+    model: IUserDB;
     Price = Price;
 
     constructor(
@@ -27,15 +21,7 @@ export class DialogForFoodComponent {
     ) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
-            if (this.bookingAvailable) {
-                this._setRecommandFood();
-            }
-        });
-        this.reservationService.bookingAvailable$.subscribe((data) => {
-            this.bookingAvailable = data;
-            if (this.model) {
-                this._setRecommandFood();
-            }
+            this._setRecommandFood();
         });
     }
 

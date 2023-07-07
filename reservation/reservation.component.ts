@@ -5,6 +5,7 @@ import { ReservationDialogComponent } from "reservation/reservation-dialog/reser
 import { SearchBookingComponent } from "reservation/search-booking/search-booking.component";
 import { ReservationService } from "reservation/service/reservation.service";
 import { DBService } from "reservation/service/DB.service";
+import { UploaderService } from "reservation/service/uploader.service";
 
 @Component({
     selector: "reservation",
@@ -18,8 +19,11 @@ export class ReservationComponent implements OnInit {
         private route: ActivatedRoute,
         private reseravationService: ReservationService,
         private dialog: MatDialog,
-        private DBService: DBService
-    ) {}
+        private DBService: DBService,
+        private Uploader: UploaderService
+    ) {
+        this.Uploader.uploadTest(false);
+    }
 
     ngOnInit() {
         this.route.queryParams.subscribe((params) => {

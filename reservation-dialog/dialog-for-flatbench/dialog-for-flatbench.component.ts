@@ -1,35 +1,57 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
-import { IDBService } from "reservation/service/DB.service";
-import { IBookingAvailable, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
+import { DBService, IUserDB } from "reservation/service/DB.service";
+import { MAX_RESERVATION, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "dialog-for-flatbench",
     templateUrl: "./dialog-for-flatbench.component.html",
     styleUrls: ["../reservation-dialog.component.scss"],
 })
-export class DialogForFlatbenchComponent {
-    model: IDBService;
-    bookingAvailable: IBookingAvailable;
+export class DialogForFlatbenchComponent implements OnDestroy {
+    model: IUserDB;
+    bookingAvailable: { 잔여평상: number; 잔여테이블: number };
 
+    private subs: Subscription[] = [];
     constructor(
         private reservationService: ReservationService,
+        private DBService: DBService,
         private _snackBar: MatSnackBar,
         private managerService: ManagerService
     ) {
-        this.reservationService.formData$.subscribe((data) => {
-            this.model = data;
-            if (this.bookingAvailable) {
-                this._setRecommandFlatTable();
-            }
-        });
-        this.reservationService.bookingAvailable$.subscribe((data) => {
-            this.bookingAvailable = data;
-            if (this.model) {
-                this._setRecommandFlatTable();
-            }
-        });
+        this.subs.push(
+            this.reservationService.formData$.subscribe((data) => {
+                this.model = data;
+                if (!this.bookingAvailable) {
+                    this.subs.push(
+                        this.DBService.calendarDB$.subscribe((calenderDB) => {
+                            let flatBench: number = 0;
+                            let table: number = 0;
+                            try {
+                                flatBench =
+                                    calenderDB[this.model["예약일"].slice(0, 7)][this.model["예약일"]].flatBench;
+                                flatBench = flatBench ? flatBench : 0;
+                            } catch {
+                                flatBench = 0;
+                            }
+                            try {
+                                table = calenderDB[this.model["예약일"].slice(0, 7)][this.model["예약일"]].table;
+                                table = table ? table : 0;
+                            } catch {
+                                table = 0;
+                            }
+                            this.bookingAvailable = {
+                                잔여평상: MAX_RESERVATION["평상"] - flatBench,
+                                잔여테이블: MAX_RESERVATION["테이블"] - table,
+                            };
+                            this._setRecommandFlatTable();
+                        })
+                    );
+                }
+            })
+        );
     }
 
     private _setRecommandFlatTable() {
@@ -88,5 +110,9 @@ export class DialogForFlatbenchComponent {
             this.reservationService.formData$.next(this.model);
             this.reservationService.bookingStep$.next(4);
         }
+    }
+
+    ngOnDestroy() {
+        this.subs.forEach((sub) => sub.unsubscribe());
     }
 }

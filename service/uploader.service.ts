@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
 import { take } from "rxjs";
-import { COLLECTION, DBService, IDBService } from "./DB.service";
+import { USER_DB_COLLECTION, DBService, IUserDB } from "./DB.service";
 
 const googleCustomerInfoURL =
     "https://script.googleusercontent.com/macros/echo?user_content_key=stxTm3ZfpJF73WcKDT_zMWKpMf3-ntq6kIZkdauQjPgvnBXrSD20vM_oDCQLDW2rCE2UMyYVeZSSe_sLsIVYSELb-RBw8tcJm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLomcEa3hQohhqGF9IQLKkOJ80D3btfuvhX3I2KuvHpzSC-uDYVcZemS8MX4vfT_5QU5C9RHcyaKoVaHbWyl27C5NMOy6dfG9w&lib=MU7evG46Af933laVWNSEneXXtad7F4Vk4";
@@ -37,7 +37,7 @@ interface GoogleSheetData {
     providedIn: "root",
 })
 export class UploaderService {
-    private currentDB: IDBService[] = [];
+    private currentDB: IUserDB[] = [];
     constructor(private http: HttpClient, private store: AngularFirestore, private DBService: DBService) {
         this.DBService.customerDB$.subscribe((v) => {
             this.currentDB = v;
@@ -46,10 +46,10 @@ export class UploaderService {
 
     uploadTest(action: boolean) {
         if (action) {
-            const collectionRef = this.store.collection("NY_TEST");
+            const collectionRef = this.store.collection("USER_DB");
             const batch = this.store.firestore.batch();
 
-            this.http.get("assets/fire.json").subscribe((db) => {
+            this.http.get("assets/fire2.json").subscribe((db) => {
                 (db as object[]).forEach((v) => {
                     const docRef = collectionRef.doc().ref;
                     batch.set(docRef, v);
@@ -70,7 +70,7 @@ export class UploaderService {
                         (db) => db[PENSION_DB["예약상태"]] !== "예약취소"
                     );
 
-                    const collectionRef = this.store.collection(COLLECTION);
+                    const collectionRef = this.store.collection(USER_DB_COLLECTION);
                     const batch = this.store.firestore.batch();
 
                     for (let index = 0; index < db.length; index++) {
@@ -87,7 +87,7 @@ export class UploaderService {
                             입금확인: true,
                         };
                         const filteredList = this.currentDB.filter(
-                            (v: IDBService) =>
+                            (v: IUserDB) =>
                                 v["예약유형"] === uploadDB["예약유형"] &&
                                 v["객실"] === uploadDB["객실"] &&
                                 v["예약일"] === uploadDB["예약일"] &&

@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
-import { IBookingAvailable, ReservationService } from "reservation/service/reservation.service";
+import { ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
 import { ManagerService } from "manager/manager.service";
-import { DBService, IDBService } from "reservation/service/DB.service";
+import { DBService, IUserDB } from "reservation/service/DB.service";
 
 @Component({
     selector: "dialog-for-car-and-memo",
@@ -10,8 +10,7 @@ import { DBService, IDBService } from "reservation/service/DB.service";
     styleUrls: ["./dialog-for-car-and-memo.component.scss", "../reservation-dialog.component.scss"],
 })
 export class DialogForCarAndMemoComponent {
-    model: IDBService;
-    bookingAvailable: IBookingAvailable;
+    model: IUserDB;
     nextTime: boolean;
     permission = this.managerService.permission;
 
@@ -26,9 +25,6 @@ export class DialogForCarAndMemoComponent {
                 this.model["차량번호"] = [];
                 this.model["차량번호"].length = 1;
             }
-        });
-        this.reservationService.bookingAvailable$.subscribe((data) => {
-            this.bookingAvailable = data;
         });
     }
 
@@ -48,9 +44,7 @@ export class DialogForCarAndMemoComponent {
             this.model["버섯찌개"] +
             this.model["버섯찌개2"] +
             2 * (this.model["평상"] + this.model["테이블"]);
-        return (
-            this.carIndexList.length >= availableCars || this.carIndexList.length >= this.bookingAvailable["잔여주차"]
-        );
+        return this.carIndexList.length >= availableCars;
     }
 
     addForm() {

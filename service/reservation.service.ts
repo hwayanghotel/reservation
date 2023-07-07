@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { IDBService, DBService } from "./DB.service";
+import { IUserDB, DBService } from "./DB.service";
 import { Price } from "src/assets/price";
 
 export const MAX_RESERVATION = {
@@ -9,13 +9,6 @@ export const MAX_RESERVATION = {
     테이블: 6,
     주차: 35,
 };
-
-export interface IBookingAvailable {
-    잔여식사자리: number;
-    잔여평상: number;
-    잔여테이블: number;
-    잔여주차: number;
-}
 
 export const StandardNumberOfPeople = {
     식사좌석: 4,
@@ -30,45 +23,15 @@ export const StandardNumberOfPeople = {
 })
 export class ReservationService {
     bookingStep$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
-    formData$: BehaviorSubject<IDBService> = new BehaviorSubject<IDBService>({});
-
-    bookingAvailable$: BehaviorSubject<IBookingAvailable> = new BehaviorSubject(undefined);
+    formData$: BehaviorSubject<IUserDB> = new BehaviorSubject<IUserDB>({});
 
     constructor(private DBService: DBService) {
-        this.bookingStep$.subscribe((isOpen) => {
-            if (isOpen > 0) {
-                this._updateBookingAvailable();
-            }
-        });
-
         this.formData$.subscribe((v) => {
             console.log("formData update", v);
         });
     }
 
-    private async _updateBookingAvailable() {
-        let bookingAvailable: IBookingAvailable = {
-            잔여식사자리: MAX_RESERVATION["식사자리"],
-            잔여평상: MAX_RESERVATION["평상"],
-            잔여테이블: MAX_RESERVATION["테이블"],
-            잔여주차: MAX_RESERVATION["주차"],
-        };
-        const dailyData = await this.DBService.getDailyData(
-            this.formData$.getValue()["예약유형"],
-            this.formData$.getValue()["예약일"]
-        );
-        dailyData.forEach((data) => {
-            const numberOfChicken: number = data["능이백숙"] + data["백숙"];
-            const numberOfMushroom: number = data["버섯찌개"] + data["버섯찌개2"];
-            bookingAvailable["잔여식사자리"] -= numberOfChicken + numberOfMushroom;
-            bookingAvailable["잔여평상"] -= data["평상"];
-            bookingAvailable["잔여테이블"] -= data["테이블"];
-            bookingAvailable["잔여주차"] -= data["차량번호"].length;
-        });
-        this.bookingAvailable$.next(bookingAvailable);
-    }
-
-    getReservationCost(model: IDBService): number {
+    getReservationCost(model: IUserDB): number {
         const flatTableCost: number = model["평상"] * Price["평상"] + model["테이블"] * Price["테이블"];
         const addedGuests: number =
             model["인원"] -

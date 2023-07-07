@@ -23,12 +23,17 @@ export class ContentFoodComponent implements OnChanges {
         ratio: "",
         expired: false,
     };
+    private _calenderDB: any;
     constructor(
         private DBService: DBService,
         private datePipe: DatePipe,
         private reservationService: ReservationService,
         private dialog: MatDialog
-    ) {}
+    ) {
+        this.DBService.calendarDB$.subscribe((calenderDB) => {
+            this._calenderDB = calenderDB;
+        });
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         const previousValue = this.datePipe.transform(changes["date"].previousValue, "yyyy-MM-dd");
@@ -39,18 +44,15 @@ export class ContentFoodComponent implements OnChanges {
     }
 
     private async _setData() {
-        const dataList = await this.DBService.getDailyData("식사", this.datePipe.transform(this.date, "yyyy-MM-dd"));
-
         let cooks: number = 0;
-        dataList
-            .filter((value) => !["대기", "수정", "취소"].includes(value["상태"]))
-            .forEach((value) => {
-                cooks +=
-                    Number(value["능이백숙"]) +
-                    Number(value["백숙"]) +
-                    Number(value["버섯찌개"]) +
-                    Number(value["버섯찌개2"]);
-            });
+        try {
+            const today = this.datePipe.transform(this.date, "yyyy-MM-dd");
+            cooks = this._calenderDB[today.slice(0, 7)][today].food;
+            cooks = cooks ? cooks : 0;
+        } catch {
+            cooks = 0;
+        }
+
         this.data = {
             expired: cooks >= MAX_RESERVATION["식사자리"],
             text: `식사 ${cooks >= MAX_RESERVATION["식사자리"] ? "마감" : ""}`,

@@ -19,12 +19,17 @@ interface IData {
 export class ContentFlatBenchComponent implements OnChanges {
     @Input() date!: Date;
     data: IData[] = [];
+    private _calenderDB: any;
     constructor(
         private DBService: DBService,
         private datePipe: DatePipe,
         private reservationService: ReservationService,
         private dialog: MatDialog
-    ) {}
+    ) {
+        this.DBService.calendarDB$.subscribe((calenderDB) => {
+            this._calenderDB = calenderDB;
+        });
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         const previousValue = this.datePipe.transform(changes["date"].previousValue, "yyyy-MM-dd");
@@ -35,18 +40,23 @@ export class ContentFlatBenchComponent implements OnChanges {
     }
 
     private async _setData() {
-        const dataList = await this.DBService.getDailyData("평상", this.datePipe.transform(this.date, "yyyy-MM-dd"));
-
-        this.data = [];
-
         let flatBench: number = 0;
         let table: number = 0;
-        dataList
-            .filter((value) => !["대기", "수정", "취소"].includes(value["상태"]))
-            .forEach((value) => {
-                flatBench += value["평상"];
-                table += value["테이블"];
-            });
+
+        const today = this.datePipe.transform(this.date, "yyyy-MM-dd");
+        try {
+            flatBench = this._calenderDB[today.slice(0, 7)][today].flatBench;
+            flatBench = flatBench ? flatBench : 0;
+        } catch {
+            flatBench = 0;
+        }
+        try {
+            table = this._calenderDB[today.slice(0, 7)][today].table;
+            table = table ? table : 0;
+        } catch {
+            table = 0;
+        }
+
         this.data.push({
             expired: flatBench >= MAX_RESERVATION["평상"],
             text: `평상 ${flatBench >= MAX_RESERVATION["평상"] ? "마감" : ""}`,

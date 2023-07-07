@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
-import { IDBService } from "reservation/service/DB.service";
+import { IUserDB } from "reservation/service/DB.service";
 import { ReservationService } from "reservation/service/reservation.service";
 
 @Component({
@@ -11,7 +11,7 @@ import { ReservationService } from "reservation/service/reservation.service";
     styleUrls: ["../reservation-dialog.component.scss"],
 })
 export class DialogForCustomerInfoComponent {
-    model: IDBService;
+    model: IUserDB;
     formControlName = new FormControl("", [Validators.required]);
     formControlPerson = new FormControl("", [Validators.required]);
     formControlMiddleNumber = new FormControl("", [Validators.required]);

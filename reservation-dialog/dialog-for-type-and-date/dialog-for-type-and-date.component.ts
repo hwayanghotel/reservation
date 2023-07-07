@@ -3,7 +3,7 @@ import { ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
-import { IDBService } from "reservation/service/DB.service";
+import { IUserDB } from "reservation/service/DB.service";
 
 @Component({
     selector: "dialog-for-type-and-date",
@@ -11,7 +11,7 @@ import { IDBService } from "reservation/service/DB.service";
     styleUrls: ["../reservation-dialog.component.scss"],
 })
 export class DialogForTypeAndDateComponent {
-    model: IDBService;
+    model: IUserDB;
     date: Moment.Moment;
     timeList: number[] = [10, 11, 12, 13, 14, 15, 16];
     dateFilter = (date: Date | null): boolean => date >= new Date(Moment().format("YY-M-D"));

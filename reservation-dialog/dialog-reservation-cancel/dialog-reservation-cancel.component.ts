@@ -1,7 +1,7 @@
 import { Component, Inject } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { IDBService, DBService } from "reservation/service/DB.service";
+import { IUserDB, DBService } from "reservation/service/DB.service";
 import * as Moment from "moment";
 
 @Component({
@@ -12,7 +12,7 @@ export class DialogReservationCancelComponent {
     constructor(
         private DBService: DBService,
         private dialog: MatDialog,
-        @Inject(MAT_DIALOG_DATA) private data: IDBService,
+        @Inject(MAT_DIALOG_DATA) private data: IUserDB,
         private _snackBar: MatSnackBar
     ) {}
 

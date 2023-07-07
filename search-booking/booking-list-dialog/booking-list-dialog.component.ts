@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
-import { IDBService, DBService } from "reservation/service/DB.service";
+import { IUserDB, DBService } from "reservation/service/DB.service";
 import { ReservationService } from "reservation/service/reservation.service";
 
 interface Table {
@@ -17,7 +17,7 @@ interface Table {
     styleUrls: ["./booking-list-dialog.component.scss", "../../reservation-dialog/reservation-dialog.component.scss"],
 })
 export class BookingListDialogComponent {
-    model: IDBService = this.reservationService.formData$.getValue();
+    model: IUserDB = this.reservationService.formData$.getValue();
 
     displayedColumns: string[] = ["info", "status", "link"];
     dataSource: Table[] = [];
@@ -63,7 +63,7 @@ export class BookingListDialogComponent {
         this.reservationService.bookingStep$.next(1);
     }
 
-    private _sortList(a: IDBService, b: IDBService) {
+    private _sortList(a: IUserDB, b: IUserDB) {
         // 1) "날짜"가 빠를수록 정렬
         const dateA = new Date(a["예약일"]);
         const dateB = new Date(b["예약일"]);

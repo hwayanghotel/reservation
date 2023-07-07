@@ -3,7 +3,7 @@ import { ReservationService } from "reservation/service/reservation.service";
 import * as Moment from "moment";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FormControl, Validators } from "@angular/forms";
-import { IDBService } from "reservation/service/DB.service";
+import { IUserDB } from "reservation/service/DB.service";
 
 @Component({
     selector: "input-info-dialog",
@@ -11,7 +11,7 @@ import { IDBService } from "reservation/service/DB.service";
     styleUrls: ["../../reservation-dialog/reservation-dialog.component.scss"],
 })
 export class InputInfoDialogComponent {
-    model: IDBService;
+    model: IUserDB;
     formControlName = new FormControl("", [Validators.required]);
     formControlMiddleNumber = new FormControl("", [Validators.required]);
     formControlLastNumber = new FormControl("", [Validators.required]);
