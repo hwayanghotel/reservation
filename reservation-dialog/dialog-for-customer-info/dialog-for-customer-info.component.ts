@@ -28,6 +28,14 @@ export class DialogForCustomerInfoComponent {
     ) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
+            if (!this.model["인원"]) {
+                this.model["인원"] = 0;
+            }
+            if (this.model["전화번호"]) {
+                this.firstNumber = this.model["전화번호"].split("-")[0];
+                this.middleNumber = this.model["전화번호"].split("-")[1];
+                this.lastNumber = this.model["전화번호"].split("-")[2];
+            }
         });
     }
 

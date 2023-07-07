@@ -35,28 +35,28 @@ export class DialogForFoodComponent {
     }
 
     get nyBaeksuk(): number {
-        return this.model["능이백숙"];
+        return this.model["능이백숙"] ? this.model["능이백숙"] : 0;
     }
     set nyBaeksuk(value: number) {
         this.model["능이백숙"] = value > 0 ? value : 0;
     }
 
     get baeksuk(): number {
-        return this.model["백숙"];
+        return this.model["백숙"] ? this.model["백숙"] : 0;
     }
     set baeksuk(value: number) {
         this.model["백숙"] = value > 0 ? value : 0;
     }
 
     get mushroomStew(): number {
-        return this.model["버섯찌개"];
+        return this.model["버섯찌개"] ? this.model["버섯찌개"] : 0;
     }
     set mushroomStew(value: number) {
         this.model["버섯찌개"] = value > 0 ? value : 0;
     }
 
     get mushroomStew2(): number {
-        return this.model["버섯찌개2"];
+        return this.model["버섯찌개2"] ? this.model["버섯찌개2"] : 0;
     }
     set mushroomStew2(value: number) {
         this.model["버섯찌개2"] = value > 0 ? value : 0;

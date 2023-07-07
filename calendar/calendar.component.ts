@@ -168,6 +168,7 @@ export class CalendarComponent {
             type = "평상";
         }
         this.reservationService.formData$.next({
+            ...this.reservationService.formData$.getValue(),
             예약유형: type,
             예약일: Moment(this.selectedDate).date(date).format("YYYY-MM-DD"),
             상태: "대기",

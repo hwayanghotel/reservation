@@ -12,9 +12,10 @@ import { IUserDB } from "reservation/service/DB.service";
 })
 export class DialogForTypeAndDateComponent {
     model: IUserDB;
-    date: Moment.Moment;
+    date: Moment.Moment = Moment();
     timeList: number[] = [10, 11, 12, 13, 14, 15, 16];
-    dateFilter = (date: Date | null): boolean => date >= new Date(Moment().format("YY-M-D"));
+    dateFilter = (date: Moment.Moment): boolean =>
+        date === null || date.format("YYYY-MM-DD") > Moment().format("YYYY-MM-DD");
 
     constructor(
         private reservationService: ReservationService,

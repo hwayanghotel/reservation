@@ -27,7 +27,7 @@ export class ReservationService {
 
     constructor(private DBService: DBService) {
         this.formData$.subscribe((v) => {
-            console.log("formData update", v);
+            const test = this.DBService.customerDB$.getValue().filter((v) => v.id === this.formData$.getValue().id)[0];
         });
     }
 

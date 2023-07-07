@@ -18,11 +18,6 @@ export class HolidayService {
             const weekEnds: number[] = this.getWeekendDates(date);
             this.getHolidaysFromServer(date).subscribe(
                 (response) => {
-                    console.log(
-                        "holyday",
-                        Moment(date).format("YYYY-MM"),
-                        Array.from(new Set([...weekEnds, ...response])).sort((a, b) => a - b)
-                    );
                     resolve(Array.from(new Set([...weekEnds, ...response])).sort((a, b) => a - b));
                 },
                 (error) => {
