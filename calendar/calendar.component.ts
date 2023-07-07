@@ -1,5 +1,16 @@
 import { Component, Input } from "@angular/core";
+import { DBService, ICalenderDB as ICalendarDB } from "reservation/service/DB.service";
 import { HolidayService } from "reservation/service/holiday.service";
+import * as Moment from "moment";
+import { MAX_RESERVATION, ReservationService } from "reservation/service/reservation.service";
+import { MatDialog } from "@angular/material/dialog";
+import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
+
+interface IContent {
+    text: string;
+    ratio: string;
+    expired: boolean;
+}
 
 interface ICalendar {
     date: number;
@@ -16,10 +27,20 @@ export class CalendarComponent {
     selectedDate: Date = new Date();
     calendar: ICalendar[][] = [];
     week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
+    calendarDB: ICalendarDB;
 
     private _today = new Date();
-    constructor(private holidayService: HolidayService) {
+    constructor(
+        protected holidayService: HolidayService,
+        protected DBService: DBService,
+        protected dialog: MatDialog,
+        protected reservationService: ReservationService
+    ) {
         this._setCalendar();
+
+        this.DBService.calendarDB$.subscribe((calenderDB: ICalendarDB) => {
+            this.calendarDB = calenderDB;
+        });
     }
 
     getDate(date: number): Date {
@@ -31,6 +52,35 @@ export class CalendarComponent {
     }
     get currentMonth(): number {
         return this.selectedDate.getMonth() + 1;
+    }
+
+    get typeList(): ("평상" | "식사" | "테이블")[] {
+        return this.type === "평상" ? ["평상", "테이블"] : ["식사"];
+    }
+
+    getContent(date: number, type: "식사" | "평상" | "테이블"): IContent {
+        const today = Moment(this.selectedDate).date(date);
+        let content: number = 0;
+        let index: "식사자리" | "평상" | "테이블" = type === "식사" ? "식사자리" : type;
+        try {
+            if (type === "식사") {
+                content = this.calendarDB[today.format("YYYY-MM")][today.format("YYYY-MM-DD")].foods;
+            }
+            if (type === "평상") {
+                content = this.calendarDB[today.format("YYYY-MM")][today.format("YYYY-MM-DD")].flatBench;
+            }
+            if (type === "테이블") {
+                content = this.calendarDB[today.format("YYYY-MM")][today.format("YYYY-MM-DD")].table;
+            }
+            content = content ? content : 0;
+        } catch {
+            content = 0;
+        }
+        return {
+            expired: content >= MAX_RESERVATION[index],
+            text: `${index === "식사자리" ? "식사" : index} ${content >= MAX_RESERVATION[index] ? "마감" : ""}`,
+            ratio: `(${content}/${MAX_RESERVATION[index]})`,
+        };
     }
 
     isPassed(date: number): boolean {
@@ -111,5 +161,18 @@ export class CalendarComponent {
         }
 
         return calendar;
+    }
+
+    openDialog(date: number, type: "식사" | "평상" | "테이블") {
+        if (type === "테이블") {
+            type = "평상";
+        }
+        this.reservationService.formData$.next({
+            예약유형: type,
+            예약일: Moment(this.selectedDate).date(date).format("YYYY-MM-DD"),
+            상태: "대기",
+        });
+        this.reservationService.bookingStep$.next(1);
+        this.dialog.open(ReservationDialogComponent);
     }
 }

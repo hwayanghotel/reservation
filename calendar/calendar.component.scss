@@ -66,3 +66,16 @@
         opacity: 0.3;
     }
 }
+
+p.content {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #5eb917;
+    margin: 0.5rem 0.1rem;
+    cursor: pointer;
+
+    &.expired {
+        color: #e34c4c;
+        pointer-events: none;
+    }
+}
