@@ -9,8 +9,8 @@ import * as Moment from "moment";
 export class HolidayService {
     constructor(private http: HttpClient) {}
 
-    getHolidays(date: Date): Promise<number[]> {
-        const index: string = Moment(date).format("YYYYMM");
+    getHolidays(date: Moment.Moment): Promise<number[]> {
+        const index: string = date.format("YYYYMM");
         if (Object.keys(HolidayList).includes(index)) {
             return new Promise((resolve) => resolve((HolidayList as any)[index]));
         }
@@ -28,9 +28,9 @@ export class HolidayService {
         });
     }
 
-    private getWeekendDates(date: Date): number[] {
-        const year = date.getFullYear();
-        const month = date.getMonth();
+    private getWeekendDates(date: Moment.Moment): number[] {
+        const year = date.year();
+        const month = date.month();
         const weekendDates: number[] = [];
         const startDate = new Date(year, month, 1);
         const endDate = new Date(year, month + 1, 0);
@@ -45,9 +45,9 @@ export class HolidayService {
         return weekendDates;
     }
 
-    private getHolidaysFromServer(date: Date): Observable<number[]> {
-        const solYear = date.getFullYear().toString();
-        const solMonth: string = date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1).toString();
+    private getHolidaysFromServer(date: Moment.Moment): Observable<number[]> {
+        const solYear = date.format("YYYY");
+        const solMonth: string = date.month() < 9 ? "0" + (date.month() + 1) : (date.month() + 1).toString();
         const ServiceKey =
             "8b14d5v4Vx8aM3%2Fc43pEI7%2BPz3WY0FRigqDQb10hYDioC9KxGc1SipWlVtGO93OYDIgYwnDGudbs9CglwrDNIQ%3D%3D";
         const url =

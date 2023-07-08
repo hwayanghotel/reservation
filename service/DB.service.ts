@@ -9,6 +9,7 @@ export interface IUserDB {
     id?: string;
     예약일?: string;
     예약시점?: string;
+    만료일?: string;
     성함?: string;
     전화번호?: string;
     // 예약정보
@@ -57,70 +58,6 @@ export class DBService {
 
     constructor(private http: HttpClient, private store: AngularFirestore) {
         this._fetchCalenderDB();
-        this.subscribeUserDB(); //Manager Component에서 호출하고 여기서는 지우는 걸로. (828 통과한 경우)
-        // this._updateCustomerCallendar(); //Manager Component에서 호출한 이후에 활성화 가능 (828 통과한 경우)
-    }
-
-    subscribeUserDB() {
-        if (this.customerDB$.getValue().length > 0) return;
-
-        //날짜가 유효한 USER doc에 대해 sub을 걸고, 개별 변경 대응
-        this.store
-            .collection(USER_DB_COLLECTION)
-            .ref.where("예약일", ">=", Moment().format("YYYY-MM-DD"))
-            .get()
-            .then((snapshot) => {
-                snapshot.forEach((doc: QueryDocumentSnapshot<any>) => {
-                    if (["예약", "방문", "수정"].includes(doc.data()["상태"])) {
-                        doc.ref.onSnapshot((v) => {
-                            if (this.customerDB$.getValue().filter((user) => user["id"] === v.id)[0]) {
-                                const index = this.customerDB$.getValue().findIndex((user) => user.id === v.id);
-                                let changed = this.customerDB$.getValue();
-                                changed[index] = v.data();
-                                this.customerDB$.next(changed);
-                            } else {
-                                this.customerDB$.next([...this.customerDB$.getValue(), { id: v.id, ...v.data() }]);
-                            }
-                        });
-                    }
-                });
-            });
-
-        // 신규 DB(대기)는 새로 sub을 걸어야 해.
-        this.store
-            .collection(USER_DB_COLLECTION, (ref) => ref.where("상태", "==", "대기"))
-            .snapshotChanges()
-            .subscribe((actions) => {
-                actions.forEach((action) => {
-                    const data: any = action.payload.doc.data();
-                    const id = action.payload.doc.id;
-                    if (data["예약일"] >= Moment().format("YYYY-MM-DD")) {
-                        if (this.customerDB$.getValue().filter((user) => user["id"] === id).length === 0) {
-                            this.store
-                                .collection(USER_DB_COLLECTION)
-                                .doc(id)
-                                .ref.onSnapshot((doc) => {
-                                    if (this.customerDB$.getValue().filter((user) => user["id"] === doc.id)[0]) {
-                                        const index = this.customerDB$
-                                            .getValue()
-                                            .findIndex((user) => user.id === doc.id);
-                                        let changed = this.customerDB$.getValue();
-                                        changed[index] = doc.data();
-                                        this.customerDB$.next(changed);
-                                    } else {
-                                        this.customerDB$.next([
-                                            ...this.customerDB$.getValue(),
-                                            { id: doc.id, ...(doc.data() as object) },
-                                        ]);
-                                    }
-                                });
-                        }
-                    }
-                });
-            });
-
-        //TEST
-        // this.customerDB$ = this.http.get("assets/fire.json") as Observable<IDBService[]>; // this.customerDB$ = this.store.collection(COLLECTION).valueChanges();
     }
 
     private _fetchCalenderDB() {
@@ -138,6 +75,9 @@ export class DBService {
     }
 
     add(model: IUserDB) {
+        model["만료일"] = Moment(model["예약일"])
+            .add(model["이용박수"] ? model["이용박수"] : 0, "days")
+            .format("YYYY-MM-DD");
         this.store
             .collection(USER_DB_COLLECTION)
             .add(model)
@@ -194,6 +134,9 @@ export class DBService {
     }
 
     set(model: IUserDB) {
+        model["만료일"] = Moment(model["예약일"])
+            .add(model["이용박수"] ? model["이용박수"] : 0, "days")
+            .format("YYYY-MM-DD");
         const changed = model["수정내용"];
         model["수정내용"] = null;
         this.store
@@ -263,6 +206,9 @@ export class DBService {
     }
 
     edit(after: any) {
+        after["만료일"] = Moment(after["예약일"])
+            .add(after["이용박수"] ? after["이용박수"] : 0, "days")
+            .format("YYYY-MM-DD");
         after["수정내용"] = {};
         const before: IUserDB = this.customerDB$.getValue().filter((v) => v.id === after.id)[0];
         Object.entries(before).forEach(([key, value]) => {
@@ -344,16 +290,75 @@ export class DBService {
         });
     }
 
-    managerSearch(model: IUserDB): IUserDB[] {
-        let searchedList: IUserDB[] = [];
+    subscribeUserDB() {
+        if (this.customerDB$.getValue().length > 0) return;
 
-        return searchedList;
+        //날짜가 유효한 USER doc에 대해 sub을 걸고, 개별 변경 대응
+        this.store
+            .collection(USER_DB_COLLECTION)
+            .ref.where("만료일", ">=", Moment().format("YYYY-MM-DD"))
+            .get()
+            .then((snapshot) => {
+                snapshot.forEach((doc: QueryDocumentSnapshot<any>) => {
+                    if (["예약", "방문", "수정"].includes(doc.data()["상태"])) {
+                        doc.ref.onSnapshot((v) => {
+                            if (this.customerDB$.getValue().filter((user) => user["id"] === v.id)[0]) {
+                                const index = this.customerDB$.getValue().findIndex((user) => user.id === v.id);
+                                let changed = this.customerDB$.getValue();
+                                changed[index] = v.data();
+                                this.customerDB$.next(changed);
+                            } else {
+                                this.customerDB$.next([...this.customerDB$.getValue(), { id: v.id, ...v.data() }]);
+                            }
+                        });
+                    }
+                });
+                this._updateCustomerCallendar();
+            });
+
+        // 신규 DB(대기)는 새로 sub을 걸어야 해.
+        this.store
+            .collection(USER_DB_COLLECTION, (ref) => ref.where("상태", "==", "대기"))
+            .snapshotChanges()
+            .subscribe((actions) => {
+                actions.forEach((action) => {
+                    const data: any = action.payload.doc.data();
+                    const id = action.payload.doc.id;
+                    if (data["예약일"] >= Moment().format("YYYY-MM-DD")) {
+                        if (this.customerDB$.getValue().filter((user) => user["id"] === id).length === 0) {
+                            this.store
+                                .collection(USER_DB_COLLECTION)
+                                .doc(id)
+                                .ref.onSnapshot((doc) => {
+                                    if (this.customerDB$.getValue().filter((user) => user["id"] === doc.id)[0]) {
+                                        const index = this.customerDB$
+                                            .getValue()
+                                            .findIndex((user) => user.id === doc.id);
+                                        let changed = this.customerDB$.getValue();
+                                        changed[index] = doc.data();
+                                        this.customerDB$.next(changed);
+                                    } else {
+                                        this.customerDB$.next([
+                                            ...this.customerDB$.getValue(),
+                                            { id: doc.id, ...(doc.data() as object) },
+                                        ]);
+                                    }
+                                });
+                        }
+                    }
+                });
+            });
+        // this.customerDB$ = this.http.get("assets/fire.json") as Observable<IDBService[]>; // this.customerDB$ = this.store.collection(COLLECTION).valueChanges();
     }
 
     private _updateCustomerCallendar() {
         setTimeout(() => {
+            if (this.customerDB$.getValue().length === 0 || Object.keys(this.calendarDB$.getValue()).length === 0) {
+                return;
+            }
+
             const DB = this.customerDB$.getValue();
-            console.warn("DB", DB);
+
             let reservationCalendar: ICalenderDB = {};
 
             DB.filter((value) => !["대기", "수정", "취소"].includes(value["상태"])).forEach((v) => {
@@ -398,16 +403,18 @@ export class DBService {
                 if (this.calendarDB$.getValue()[monthKey]) {
                     let needToUpdate = false;
                     Object.entries(monthData).forEach(([dailyKey, dailyData]) => {
-                        if (
-                            this.calendarDB$.getValue()[monthKey][dailyKey].flatBench !== dailyData.flatBench ||
-                            this.calendarDB$.getValue()[monthKey][dailyKey].foods !== dailyData.foods ||
-                            this.calendarDB$.getValue()[monthKey][dailyKey].table !== dailyData.table
-                        ) {
-                            needToUpdate = true;
+                        if (this.calendarDB$.getValue()[monthKey][dailyKey]) {
+                            if (
+                                this.calendarDB$.getValue()[monthKey][dailyKey].flatBench !== dailyData.flatBench ||
+                                this.calendarDB$.getValue()[monthKey][dailyKey].foods !== dailyData.foods ||
+                                this.calendarDB$.getValue()[monthKey][dailyKey].table !== dailyData.table
+                            ) {
+                                needToUpdate = true;
+                            }
                         }
                     });
-                    console.warn("_updateCustomerCallendar", monthKey, monthData, needToUpdate);
                     if (needToUpdate) {
+                        console.warn("_updateCustomerCallendar", monthKey, monthData);
                         this.store.collection(CALLENDAR_COLLECTION).doc(monthKey).set(monthData);
                     }
                 }

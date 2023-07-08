@@ -6,7 +6,7 @@ import { take } from "rxjs";
 import { USER_DB_COLLECTION, DBService, IUserDB } from "./DB.service";
 
 const googleCustomerInfoURL =
-    "https://script.googleusercontent.com/macros/echo?user_content_key=stxTm3ZfpJF73WcKDT_zMWKpMf3-ntq6kIZkdauQjPgvnBXrSD20vM_oDCQLDW2rCE2UMyYVeZSSe_sLsIVYSELb-RBw8tcJm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLomcEa3hQohhqGF9IQLKkOJ80D3btfuvhX3I2KuvHpzSC-uDYVcZemS8MX4vfT_5QU5C9RHcyaKoVaHbWyl27C5NMOy6dfG9w&lib=MU7evG46Af933laVWNSEneXXtad7F4Vk4";
+    "https://script.google.com/macros/s/AKfycbyoZd2TMdGJl8UISn0V7LhA3uoN3D9keTYru2SPiPiTJnCgFeHdpP1HRTTwxCnotxZ8/exec";
 
 const pensionCallendarURL =
     "https://booking.ddnayo.com/booking-calendar-api/calendar/accommodation/12342/reservation-calendar?month=202307&calendarTypeCode=PRICE_CALENDAR&zoneIds=";
@@ -44,22 +44,6 @@ export class UploaderService {
         });
     }
 
-    uploadTest(action: boolean) {
-        if (action) {
-            const collectionRef = this.store.collection("USER_DB");
-            const batch = this.store.firestore.batch();
-
-            this.http.get("assets/fire2.json").subscribe((db) => {
-                (db as object[]).forEach((v) => {
-                    const docRef = collectionRef.doc().ref;
-                    batch.set(docRef, v);
-                });
-                console.warn("uploadTest", batch);
-                batch.commit();
-            });
-        }
-    }
-
     uploadPensionDB(action: boolean) {
         if (action) {
             this.http
@@ -72,14 +56,18 @@ export class UploaderService {
 
                     const collectionRef = this.store.collection(USER_DB_COLLECTION);
                     const batch = this.store.firestore.batch();
+                    let uploadDBList = [];
 
-                    for (let index = 0; index < db.length; index++) {
+                    for (let index = 1; index < db.length; index++) {
                         const data = db[index];
                         let uploadDB = {
                             예약유형: "객실",
                             객실: data[PENSION_DB["객실"]],
                             예약일: Moment(data[PENSION_DB["이용일"]]).format("YYYY-MM-DD"),
                             이용박수: data[PENSION_DB["이용박수"]],
+                            만료일: Moment(data[PENSION_DB["이용일"]])
+                                .add(data[PENSION_DB["이용박수"]], "days")
+                                .format("YYYY-MM-DD"),
                             상태: "예약",
                             성함: data[PENSION_DB["예약자"]],
                             전화번호: data[PENSION_DB["연락처"]],
@@ -95,12 +83,62 @@ export class UploaderService {
                                 v["예약시점"] === uploadDB["예약시점"]
                         );
                         if (filteredList.length === 0) {
-                            const docRef = collectionRef.doc().ref;
-                            batch.set(docRef, uploadDB);
+                            uploadDBList.push(uploadDB);
                         }
                     }
-                    batch.commit();
+
+                    let mergedDBList: any[] = [];
+                    uploadDBList.forEach((db) => {
+                        let foundItem = mergedDBList.find(
+                            (mergedDB: any) =>
+                                mergedDB["성함"] === db["성함"] &&
+                                mergedDB["전화번호"] === db["전화번호"] &&
+                                mergedDB["이용박수"] === db["이용박수"]
+                        );
+                        if (foundItem) {
+                            foundItem["객실"] = `${foundItem["객실"]}, ${db["객실"]}`;
+                            let sortedRooms: string;
+                            ["능운대", "학소대", "와룡암", "첨성대"].forEach((room) => {
+                                if (foundItem["객실"].includes(room)) {
+                                    if (sortedRooms) {
+                                        sortedRooms = `${sortedRooms}, ${room}`;
+                                    } else {
+                                        sortedRooms = room;
+                                    }
+                                }
+                            });
+                            foundItem["객실"] = sortedRooms;
+                        } else {
+                            mergedDBList.push(db);
+                        }
+                    });
+
+                    console.warn("uploader", mergedDBList);
+
+                    mergedDBList.forEach((db) => {
+                        const docRef = collectionRef.doc().ref;
+                        batch.set(docRef, db);
+                    });
+                    if (mergedDBList.length > 0) {
+                        batch.commit();
+                    }
                 });
+        }
+    }
+
+    uploadTest(action: boolean) {
+        if (action) {
+            const collectionRef = this.store.collection("USER_DB");
+            const batch = this.store.firestore.batch();
+
+            this.http.get("assets/fire2.json").subscribe((db) => {
+                (db as object[]).forEach((v) => {
+                    const docRef = collectionRef.doc().ref;
+                    batch.set(docRef, v);
+                });
+                console.warn("uploadTest", batch);
+                batch.commit();
+            });
         }
     }
 }

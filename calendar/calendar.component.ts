@@ -24,12 +24,12 @@ interface ICalendar {
 })
 export class CalendarComponent {
     @Input() type: "평상" | "식사";
-    selectedDate: Date = new Date();
+    selectedDate = Moment();
     calendar: ICalendar[][] = [];
     week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
     calendarDB: ICalendarDB;
 
-    private _today = new Date();
+    private _today = Moment();
     constructor(
         protected holidayService: HolidayService,
         protected DBService: DBService,
@@ -48,10 +48,10 @@ export class CalendarComponent {
     }
 
     get currentYear(): number {
-        return this.selectedDate.getFullYear();
+        return this.selectedDate.year();
     }
     get currentMonth(): number {
-        return this.selectedDate.getMonth() + 1;
+        return this.selectedDate.month() + 1;
     }
 
     get typeList(): ("평상" | "식사" | "테이블")[] {
@@ -84,28 +84,15 @@ export class CalendarComponent {
     }
 
     isPassed(date: number): boolean {
-        if (
-            this.selectedDate.getFullYear() === this._today.getFullYear() &&
-            this.selectedDate.getMonth() === this._today.getMonth()
-        ) {
-            const LIMIT_HOURS = 14;
-            return (
-                this._today.getDate() > date || (this._today.getDate() === date && this._today.getHours() > LIMIT_HOURS)
-            );
-        }
-
-        if (this.selectedDate.getFullYear() < this._today.getFullYear()) {
-            return true;
-        }
-        if (this.selectedDate.getFullYear() > this._today.getFullYear()) {
-            return false;
-        }
-        return this.selectedDate.getMonth() < this._today.getMonth();
+        const LAST_ORDER_HOURS = 14;
+        const baseDate = Moment(this.selectedDate).date(date).hour(LAST_ORDER_HOURS);
+        return baseDate.format("YYMMDDHH") < this._today.format("YYMMDDHH");
     }
 
     moveMonth(direction: -1 | 1) {
-        const date = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() + direction);
-        if (date.getFullYear() === this._today.getFullYear() && date.getMonth() === this._today.getMonth()) {
+        const date = Moment(this.selectedDate).add(direction, "month");
+        console.warn("moveMonth", date.format("YYMM"), this._today.format("YYMM"));
+        if (Number(date.format("YYMM")) === Number(this._today.format("YYMM"))) {
             this.selectedDate = this._today;
         } else {
             this.selectedDate = date;
@@ -128,8 +115,8 @@ export class CalendarComponent {
     private _initCalendar() {
         const calendar: ICalendar[][] = [];
 
-        const year: number = this.selectedDate.getFullYear();
-        const month: number = this.selectedDate.getMonth();
+        const year: number = this.selectedDate.year();
+        const month: number = this.selectedDate.month();
 
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const firstDayOfWeek = new Date(year, month, 1).getDay();
