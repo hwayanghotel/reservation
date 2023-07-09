@@ -138,63 +138,65 @@ export class DBService {
             .doc(model.id)
             .update(model)
             .then((v) => {
-                const month = model["예약일"].slice(0, 7);
-                const date = model["예약일"];
-                const originalFoods =
-                    (model["능이백숙"] ? model["능이백숙"] : 0) +
-                    (model["백숙"] ? model["백숙"] : 0) +
-                    (model["버섯찌개"] ? model["버섯찌개"] : 0) +
-                    (model["버섯찌개2"] ? model["버섯찌개2"] : 0);
-                const originalFlatBench = model["평상"] ? model["평상"] : 0;
-                const originalTable = model["테이블"] ? model["테이블"] : 0;
-                const changedFoods =
-                    (changed["능이백숙"] ? changed["능이백숙"] : 0) +
-                    (changed["백숙"] ? changed["백숙"] : 0) +
-                    (changed["버섯찌개"] ? changed["버섯찌개"] : 0) +
-                    (changed["버섯찌개2"] ? changed["버섯찌개2"] : 0);
-                const changedFlatBench = changed["평상"] ? changed["평상"] : 0;
-                const changedTable = changed["테이블"] ? changed["테이블"] : 0;
+                if (changed) {
+                    const month = model["예약일"].slice(0, 7);
+                    const date = model["예약일"];
+                    const originalFoods =
+                        (model["능이백숙"] ? model["능이백숙"] : 0) +
+                        (model["백숙"] ? model["백숙"] : 0) +
+                        (model["버섯찌개"] ? model["버섯찌개"] : 0) +
+                        (model["버섯찌개2"] ? model["버섯찌개2"] : 0);
+                    const originalFlatBench = model["평상"] ? model["평상"] : 0;
+                    const originalTable = model["테이블"] ? model["테이블"] : 0;
+                    const changedFoods =
+                        (changed["능이백숙"] ? changed["능이백숙"] : 0) +
+                        (changed["백숙"] ? changed["백숙"] : 0) +
+                        (changed["버섯찌개"] ? changed["버섯찌개"] : 0) +
+                        (changed["버섯찌개2"] ? changed["버섯찌개2"] : 0);
+                    const changedFlatBench = changed["평상"] ? changed["평상"] : 0;
+                    const changedTable = changed["테이블"] ? changed["테이블"] : 0;
 
-                const foods = changedFoods - originalFoods;
-                const flatBench = changedFlatBench - originalFlatBench;
-                const table = changedTable - originalTable;
+                    const foods = changedFoods - originalFoods;
+                    const flatBench = changedFlatBench - originalFlatBench;
+                    const table = changedTable - originalTable;
 
-                if (foods > 0 || flatBench > 0 || table > 0) {
-                    let reservationCalendar = this.calendarDB$.getValue();
-                    if (!reservationCalendar[month]) {
-                        reservationCalendar[month] = {};
-                    }
-                    if (!reservationCalendar[month][date]) {
-                        reservationCalendar[month][date] = {};
-                    }
-                    if (foods) {
-                        if (reservationCalendar[month][date].foods) {
-                            reservationCalendar[month][date].foods += foods;
-                        } else {
-                            reservationCalendar[month][date].foods = foods;
+                    if (foods > 0 || flatBench > 0 || table > 0) {
+                        let reservationCalendar = this.calendarDB$.getValue();
+                        if (!reservationCalendar[month]) {
+                            reservationCalendar[month] = {};
                         }
-                    }
-                    if (flatBench) {
-                        if (reservationCalendar[month][date].flatBench) {
-                            reservationCalendar[month][date].flatBench += flatBench;
-                        } else {
-                            reservationCalendar[month][date].flatBench = flatBench;
+                        if (!reservationCalendar[month][date]) {
+                            reservationCalendar[month][date] = {};
                         }
-                    }
-                    if (table) {
-                        if (reservationCalendar[month][date].table) {
-                            reservationCalendar[month][date].table += table;
-                        } else {
-                            reservationCalendar[month][date].table = table;
+                        if (foods) {
+                            if (reservationCalendar[month][date].foods) {
+                                reservationCalendar[month][date].foods += foods;
+                            } else {
+                                reservationCalendar[month][date].foods = foods;
+                            }
                         }
+                        if (flatBench) {
+                            if (reservationCalendar[month][date].flatBench) {
+                                reservationCalendar[month][date].flatBench += flatBench;
+                            } else {
+                                reservationCalendar[month][date].flatBench = flatBench;
+                            }
+                        }
+                        if (table) {
+                            if (reservationCalendar[month][date].table) {
+                                reservationCalendar[month][date].table += table;
+                            } else {
+                                reservationCalendar[month][date].table = table;
+                            }
+                        }
+                        this.store
+                            .collection(CALLENDAR_COLLECTION)
+                            .doc(month)
+                            .update(reservationCalendar[month])
+                            .then((v) => {
+                                console.warn("Callender가 정상적으로 업데이트 되었습니다.", v);
+                            });
                     }
-                    this.store
-                        .collection(CALLENDAR_COLLECTION)
-                        .doc(month)
-                        .update(reservationCalendar[month])
-                        .then((v) => {
-                            console.warn("Callender가 정상적으로 업데이트 되었습니다.", v);
-                        });
                 }
             });
     }
@@ -227,6 +229,7 @@ export class DBService {
             .doc(id)
             .delete()
             .then(() => {
+                //Calendar update
                 const month = model["예약일"].slice(0, 7);
                 const date = model["예약일"];
                 const foods =
@@ -252,9 +255,12 @@ export class DBService {
                         .doc(month)
                         .update(reservationCalendar[month])
                         .then((v) => {
-                            console.warn("Callender가 정상적으로 업데이트 되었습니다.", v);
+                            console.log("Callender가 정상적으로 업데이트 되었습니다.", v);
                         });
                 }
+
+                //해당 DB 삭제
+                this.customerDB$.next(this.customerDB$.getValue().filter((v) => v.id !== model.id));
             });
     }
 
@@ -297,6 +303,7 @@ export class DBService {
                                 const index = this.customerDB$.getValue().findIndex((user) => user.id === v.id);
                                 let changed = this.customerDB$.getValue();
                                 changed[index] = v.data();
+                                changed = changed.filter((item) => item);
                                 this.customerDB$.next(changed);
                             } else {
                                 this.customerDB$.next([...this.customerDB$.getValue(), { id: v.id, ...v.data() }]);
@@ -315,7 +322,7 @@ export class DBService {
                 actions.forEach((action) => {
                     const data: any = action.payload.doc.data();
                     const id = action.payload.doc.id;
-                    if (data["예약일"] >= Moment().format("YYYY-MM-DD")) {
+                    if (data["만료일"] >= Moment().format("YYYY-MM-DD")) {
                         if (this.customerDB$.getValue().filter((user) => user["id"] === id).length === 0) {
                             this.store
                                 .collection(USER_DB_COLLECTION)
@@ -327,6 +334,7 @@ export class DBService {
                                             .findIndex((user) => user.id === doc.id);
                                         let changed = this.customerDB$.getValue();
                                         changed[index] = doc.data();
+                                        changed = changed.filter((item) => item);
                                         this.customerDB$.next(changed);
                                     } else {
                                         this.customerDB$.next([
@@ -405,7 +413,7 @@ export class DBService {
                         }
                     });
                     if (needToUpdate) {
-                        console.warn("_updateCustomerCallendar", monthKey, monthData);
+                        console.log("_updateCustomerCallendar", monthKey, monthData);
                         this.store.collection(CALLENDAR_COLLECTION).doc(monthKey).set(monthData);
                     }
                 }
