@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { ManagerService } from "manager/manager.service";
 import { ReservationService } from "reservation/service/reservation.service";
 
 @Component({
@@ -8,9 +9,12 @@ import { ReservationService } from "reservation/service/reservation.service";
 })
 export class ReservationDialogComponent {
     step: number;
-    constructor(private reservationService: ReservationService) {
+    constructor(private reservationService: ReservationService, private managerService: ManagerService) {
         this.reservationService.bookingStep$.subscribe((step) => {
             this.step = step;
         });
+    }
+    get permission(): boolean {
+        return this.managerService.permission;
     }
 }

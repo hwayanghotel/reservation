@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>능운대 펜션 예약</h1>
+<h1 mat-dialog-title>능운대 펜션 예약<span *ngIf="permission">(주인 직접)</span></h1>
 
 <dialog-for-type-and-date *ngIf="step === 1"></dialog-for-type-and-date>
 <dialog-for-customer-info *ngIf="step === 2"></dialog-for-customer-info>

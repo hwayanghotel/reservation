@@ -25,6 +25,37 @@
 		</div>
 	</div>
 
+	<div class="field" *ngIf="model['예약유형'] === '객실'">
+		<h4 class="question">3. 이용 박수</h4>
+		<div class="answer">
+			<mat-form-field>
+				<mat-label>이용 박수</mat-label>
+				<mat-select [(value)]="model['이용박수']">
+					<mat-option [value]="1">1박</mat-option>
+					<mat-option [value]="2">2박</mat-option>
+					<mat-option [value]="3">3박</mat-option>
+					<mat-option [value]="4">4박</mat-option>
+					<mat-option [value]="5">5박</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div class="field" *ngIf="model['예약유형'] === '객실'">
+		<h4 class="question">4. 객실 선택</h4>
+		<div class="answer">
+			<mat-form-field>
+				<mat-label>객실 선택</mat-label>
+				<mat-select [(value)]="model['객실']">
+					<mat-option [value]="'능운대'">능운대</mat-option>
+					<mat-option [value]="'학소대'">학소대</mat-option>
+					<mat-option [value]="'와룡암'">와룡암</mat-option>
+					<mat-option [value]="'첨성대'">첨성대</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+
 	<div class="field" *ngIf="model['예약유형'] === '식사'">
 		<h4 class="question">3. 시간 예약</h4>
 		<div class="answer">

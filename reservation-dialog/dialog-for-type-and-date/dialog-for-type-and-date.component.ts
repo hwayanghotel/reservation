@@ -14,8 +14,13 @@ export class DialogForTypeAndDateComponent {
     model: IUserDB;
     date: Moment.Moment = Moment();
     timeList: number[] = [10, 11, 12, 13, 14, 15, 16];
-    dateFilter = (date: Moment.Moment): boolean =>
-        date === null || date.format("YYYY-MM-DD") > Moment().format("YYYY-MM-DD");
+    daysList: number[] = [1, 2, 3, 4, 5, 6, 7];
+    dateFilter = (date: Moment.Moment): boolean => {
+        if (this.model["예약유형"] === "객실") {
+            return date === null || date.format("YYYY-MM-DD") >= Moment().format("YYYY-MM-DD");
+        }
+        return date === null || date.format("YYYY-MM-DD") > Moment().format("YYYY-MM-DD");
+    };
 
     constructor(
         private reservationService: ReservationService,
@@ -44,6 +49,9 @@ export class DialogForTypeAndDateComponent {
 
     onClickNextButton() {
         this.model["예약일"] = this.date.format("YYYY-MM-DD");
+        this.model["만료일"] = Moment(this.model["예약일"])
+            .add(this.model["이용박수"] ? this.model["이용박수"] : 0, "days")
+            .format("YYYY-MM-DD");
 
         if (!this._checkStep()) {
             this._snackBar.open("빈칸이 있는지 확인해주세요.", null, { duration: 2000 });

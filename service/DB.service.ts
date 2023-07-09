@@ -75,9 +75,6 @@ export class DBService {
     }
 
     add(model: IUserDB) {
-        model["만료일"] = Moment(model["예약일"])
-            .add(model["이용박수"] ? model["이용박수"] : 0, "days")
-            .format("YYYY-MM-DD");
         this.store
             .collection(USER_DB_COLLECTION)
             .add(model)
@@ -134,9 +131,6 @@ export class DBService {
     }
 
     set(model: IUserDB) {
-        model["만료일"] = Moment(model["예약일"])
-            .add(model["이용박수"] ? model["이용박수"] : 0, "days")
-            .format("YYYY-MM-DD");
         const changed = model["수정내용"];
         model["수정내용"] = null;
         this.store
@@ -206,9 +200,6 @@ export class DBService {
     }
 
     edit(after: any) {
-        after["만료일"] = Moment(after["예약일"])
-            .add(after["이용박수"] ? after["이용박수"] : 0, "days")
-            .format("YYYY-MM-DD");
         after["수정내용"] = {};
         const before: IUserDB = this.customerDB$.getValue().filter((v) => v.id === after.id)[0];
         Object.entries(before).forEach(([key, value]) => {
@@ -284,7 +275,7 @@ export class DBService {
                             searchedList.push(doc.data());
                         }
                     });
-                    searchedList = searchedList.filter((v) => v["예약일"] >= Moment().format("YYYY-MM-DD"));
+                    searchedList = searchedList.filter((v) => v["만료일"] >= Moment().format("YYYY-MM-DD"));
                     resolve(searchedList);
                 });
         });
