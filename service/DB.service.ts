@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, take } from "rxjs";
 import { AngularFirestore, DocumentReference, QueryDocumentSnapshot } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
+import { AngularFireAuth } from "@angular/fire/compat/auth";
 
 export interface IUserDB {
     // 고객정보
@@ -56,7 +57,7 @@ export class DBService {
     customerDB$: BehaviorSubject<IUserDB[]> = new BehaviorSubject<IUserDB[]>([]);
     calendarDB$ = new BehaviorSubject<ICalenderDB>({});
 
-    constructor(private http: HttpClient, private store: AngularFirestore) {
+    constructor(private http: HttpClient, private store: AngularFirestore, private auth: AngularFireAuth) {
         this._fetchCalenderDB();
     }
 
@@ -289,6 +290,7 @@ export class DBService {
 
     subscribeUserDB() {
         if (this.customerDB$.getValue().length > 0) return;
+        this.auth.signInWithEmailAndPassword("hwayang@hwayang.com", "hwayang");
 
         //날짜가 유효한 USER doc에 대해 sub을 걸고, 개별 변경 대응
         this.store
