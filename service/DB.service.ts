@@ -299,7 +299,7 @@ export class DBService {
             .get()
             .then((snapshot) => {
                 snapshot.forEach((doc: QueryDocumentSnapshot<any>) => {
-                    if (["예약", "방문", "수정"].includes(doc.data()["상태"])) {
+                    if (["예약", "방문", "수정", "취소"].includes(doc.data()["상태"])) {
                         doc.ref.onSnapshot((v) => {
                             if (this.customerDB$.getValue().filter((user) => user["id"] === v.id)[0]) {
                                 const index = this.customerDB$.getValue().findIndex((user) => user.id === v.id);
