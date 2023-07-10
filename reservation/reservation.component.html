@@ -11,21 +11,3 @@
     <p *ngIf="type === '식사'">식사 예약</p>
     <p *ngIf="type === '평상'">평상/테이블 예약</p>
 </calendar>
-
-<!-- [Open 준비 중] -->
-<ng-template #NotOpenDialog>
-    <div class="NotOpenDialog">
-        <h1 mat-dialog-title>예약 준비 안내</h1>
-        <div mat-dialog-content>
-            <h3>식사, 평상 예약은 현재 준비 중입니다.<br />객실 예약은 아래 링크로 이용하시면 됩니다.</h3>
-        </div>
-        <mat-dialog-actions [align]="'center'">
-            <button mat-button mat-dialog-close routerLink="/home">홈으로</button>
-            <button mat-button mat-dialog-close routerLink="/home">
-                <a href="https://booking.ddnayo.com/booking-calendar-status?accommodationId=12342" target="_blank">
-                    객실 예약
-                </a>
-            </button>
-        </mat-dialog-actions>
-    </div>
-</ng-template>
