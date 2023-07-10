@@ -91,7 +91,6 @@ export class CalendarComponent {
 
     moveMonth(direction: -1 | 1) {
         const date = Moment(this.selectedDate).add(direction, "month");
-        console.warn("moveMonth", date.format("YYMM"), this._today.format("YYMM"));
         if (Number(date.format("YYMM")) === Number(this._today.format("YYMM"))) {
             this.selectedDate = this._today;
         } else {

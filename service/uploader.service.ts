@@ -113,7 +113,7 @@ export class UploaderService {
                         }
                     });
 
-                    console.warn("uploader", mergedDBList);
+                    console.warn("uploadPensionDB", mergedDBList);
 
                     mergedDBList.forEach((db) => {
                         const docRef = collectionRef.doc().ref;
