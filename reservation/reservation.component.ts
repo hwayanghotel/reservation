@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
@@ -12,7 +12,9 @@ import { UploaderService } from "reservation/service/uploader.service";
     templateUrl: "./reservation.component.html",
     styleUrls: ["./reservation.component.scss"],
 })
-export class ReservationComponent implements OnInit {
+export class ReservationComponent implements OnInit, AfterViewInit {
+    @ViewChild("NotOpenDialog") private NotOpenDialog: TemplateRef<any>; // [Open 준비 중]
+
     type: "평상" | "식사" = "식사";
 
     constructor(
@@ -25,14 +27,20 @@ export class ReservationComponent implements OnInit {
         this.Uploader.uploadTest(false);
     }
 
+    // [Open 준비 중]
+    ngAfterViewInit() {
+        this.dialog.open(this.NotOpenDialog, { disableClose: true });
+    }
+
     ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
-            const id = params["id"];
-            const type = params["type"];
-            if (id || type) {
-                this._openCustomerInfoDialog(id, type);
-            }
-        });
+        // [Open 준비 중]
+        // this.route.queryParams.subscribe((params) => {
+        //     const id = params["id"];
+        //     const type = params["type"];
+        //     if (id || type) {
+        //         this._openCustomerInfoDialog(id, type);
+        //     }
+        // });
     }
 
     private async _openCustomerInfoDialog(id: string, type: string) {
