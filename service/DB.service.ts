@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, take } from "rxjs";
 import { AngularFirestore, DocumentReference, QueryDocumentSnapshot } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
-import { AngularFireAuth } from "@angular/fire/compat/auth";
 
 export interface IUserDB {
     // 고객정보
@@ -57,7 +56,7 @@ export class DBService {
     customerDB$: BehaviorSubject<IUserDB[]> = new BehaviorSubject<IUserDB[]>([]);
     calendarDB$ = new BehaviorSubject<ICalenderDB>({});
 
-    constructor(private http: HttpClient, private store: AngularFirestore, private auth: AngularFireAuth) {
+    constructor(private http: HttpClient, private store: AngularFirestore) {
         this._fetchCalenderDB();
     }
 
@@ -79,61 +78,31 @@ export class DBService {
         this.store
             .collection(USER_DB_COLLECTION)
             .add(model)
-            .then((doc: DocumentReference) =>
-                doc.get().then((newDB) => {
-                    const month = newDB.data()["예약일"].slice(0, 7);
-                    const date = newDB.data()["예약일"];
-                    const foods =
-                        (newDB.data()["능이백숙"] ? newDB.data()["능이백숙"] : 0) +
-                        (newDB.data()["백숙"] ? newDB.data()["백숙"] : 0) +
-                        (newDB.data()["버섯찌개"] ? newDB.data()["버섯찌개"] : 0) +
-                        (newDB.data()["버섯찌개2"] ? newDB.data()["버섯찌개2"] : 0);
-                    const flatBench = newDB.data()["평상"];
-                    const table = newDB.data()["테이블"];
-                    if (foods > 0 || flatBench > 0 || table > 0) {
-                        let reservationCalendar = this.calendarDB$.getValue();
-                        if (!reservationCalendar[month]) {
-                            reservationCalendar[month] = {};
-                        }
-                        if (!reservationCalendar[month][date]) {
-                            reservationCalendar[month][date] = {};
-                        }
-                        if (foods) {
-                            if (reservationCalendar[month][date].foods) {
-                                reservationCalendar[month][date].foods += foods;
-                            } else {
-                                reservationCalendar[month][date].foods = foods;
-                            }
-                        }
-                        if (flatBench) {
-                            if (reservationCalendar[month][date].flatBench) {
-                                reservationCalendar[month][date].flatBench += flatBench;
-                            } else {
-                                reservationCalendar[month][date].flatBench = flatBench;
-                            }
-                        }
-                        if (table) {
-                            if (reservationCalendar[month][date].table) {
-                                reservationCalendar[month][date].table += table;
-                            } else {
-                                reservationCalendar[month][date].table = table;
-                            }
-                        }
-                        this.store
-                            .collection(CALLENDAR_COLLECTION)
-                            .doc(month)
-                            .update(reservationCalendar[month])
-                            .then((v) => {
-                                console.warn("Callender가 정상적으로 업데이트 되었습니다.", v);
-                            });
+            .then((doc: DocumentReference) => {
+                //new subs
+                doc.onSnapshot((v) => {
+                    if (this.customerDB$.getValue().filter((user) => user["id"] === v.id)[0]) {
+                        const index = this.customerDB$.getValue().findIndex((user) => user.id === v.id);
+                        let changed = this.customerDB$.getValue();
+                        changed[index] = v.data();
+                        changed = changed.filter((item) => item);
+                        this.customerDB$.next(changed);
+                    } else {
+                        this.customerDB$.next([...this.customerDB$.getValue(), { id: v.id, ...v.data() }]);
                     }
-                })
-            );
+                });
+            });
     }
 
     set(model: IUserDB) {
         const changed = model["수정내용"];
-        model["수정내용"] = null;
+        model = { ...model, ...changed };
+        Object.entries(model).forEach(([key, value]) => {
+            if (!value) {
+                (model as any)[key] = null;
+            }
+        });
+        console.log("Set", model);
         this.store
             .collection(USER_DB_COLLECTION)
             .doc(model.id)
@@ -195,31 +164,53 @@ export class DBService {
                             .doc(month)
                             .update(reservationCalendar[month])
                             .then((v) => {
-                                console.warn("Callender가 정상적으로 업데이트 되었습니다.", v);
+                                console.log("Callender가 정상적으로 업데이트 되었습니다.", v);
                             });
                     }
                 }
             });
     }
 
-    edit(after: any) {
-        after["수정내용"] = {};
-        const before: IUserDB = this.customerDB$.getValue().filter((v) => v.id === after.id)[0];
-        Object.entries(before).forEach(([key, value]) => {
-            if (
-                value !== after[key] ||
-                (["차량번호", "차량방문"].includes(key) &&
-                    JSON.stringify(value.sort()) !== JSON.stringify(after[key].sort()))
-            ) {
-                after["수정내용"][key] = value;
-            }
-        });
+    edit(changed: IUserDB | any) {
         this.store
             .collection(USER_DB_COLLECTION)
-            .doc(after.id)
-            .update(after)
-            .then((v) => {
-                console.warn("수정 상태가 되었습니다.", v);
+            .doc(changed.id)
+            .get()
+            .subscribe((v) => {
+                const user: IUserDB = { ...(v.data() as any), id: v.id, 상태: changed["상태"] };
+                user["수정내용"] = {};
+                changed["수정내용"] = {};
+
+                Object.entries(user).forEach(([uKey, uValue]) => {
+                    if (
+                        uValue !== changed[uKey] ||
+                        (["차량번호", "차량방문"].includes(uKey) &&
+                            JSON.stringify(uValue.sort()) !== JSON.stringify(changed[uKey].sort()))
+                    ) {
+                        (user["수정내용"] as any)[uKey] = changed[uKey];
+                    }
+                });
+
+                Object.entries(changed).forEach(([cKey, cValue]) => {
+                    if (
+                        cValue !== (user as any)[cKey] ||
+                        (["차량번호", "차량방문"].includes(cKey) &&
+                            JSON.stringify((cValue as any).sort()) !== JSON.stringify((user as any)[cKey].sort()))
+                    ) {
+                        if (!(user["수정내용"] as any)[cKey]) {
+                            (user["수정내용"] as any)[cKey] = cValue;
+                        }
+                    }
+                });
+                console.log("edit", user);
+
+                this.store
+                    .collection(USER_DB_COLLECTION)
+                    .doc(user.id)
+                    .update(user)
+                    .then(() => {
+                        console.log("수정 상태 변경");
+                    });
             });
     }
 
@@ -267,30 +258,33 @@ export class DBService {
 
     search(model: IUserDB): Promise<IUserDB[]> {
         return new Promise((resolve) => {
-            this.store
-                .collection(USER_DB_COLLECTION)
-                .ref.where("성함", "==", model["성함"])
-                .where("전화번호", "==", model["전화번호"])
-                .get()
-                .then((snapshot) => {
-                    let searchedList: IUserDB[] = [];
-                    snapshot.forEach((doc) => {
-                        const passedNum = Object.entries(model).filter(
-                            ([key, value]) => (doc.data() as any)[key] === value
-                        );
-                        if (passedNum.length === Object.keys(model).length) {
-                            searchedList.push(doc.data());
-                        }
-                    });
-                    searchedList = searchedList.filter((v) => v["만료일"] >= Moment().format("YYYY-MM-DD"));
-                    resolve(searchedList);
+            console.log("search", model);
+            const snapShot = model.id
+                ? this.store.collection(USER_DB_COLLECTION).ref.where("id", "==", model.id).get()
+                : this.store
+                      .collection(USER_DB_COLLECTION)
+                      .ref.where("성함", "==", model["성함"])
+                      .where("전화번호", "==", model["전화번호"])
+                      .get();
+            snapShot.then((snapshot) => {
+                let searchedList: IUserDB[] = [];
+                snapshot.forEach((doc) => {
+                    const passedNum = Object.entries(model).filter(
+                        ([key, value]) => (doc.data() as any)[key] === value
+                    );
+                    if (passedNum.length === Object.keys(model).length) {
+                        searchedList.push({ ...(doc.data() as any), id: doc.id });
+                    }
                 });
+                searchedList = searchedList.filter((v) => v["만료일"] >= Moment().format("YYYY-MM-DD"));
+                console.log("search result:", searchedList);
+                resolve(searchedList);
+            });
         });
     }
 
     subscribeUserDB() {
         if (this.customerDB$.getValue().length > 0) return;
-        this.auth.signInWithEmailAndPassword("hwayang@hwayang.com", "hwayang");
 
         //날짜가 유효한 USER doc에 대해 sub을 걸고, 개별 변경 대응
         this.store
