@@ -27,52 +27,53 @@ export class DialogForFoodComponent {
 
     private _setRecommandFood() {
         if (this.model["예약유형"] === "평상") return;
-        const foods: number =
-            this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
-        if (foods > 0) {
+        if (this.foods === 0) {
             this.model["능이백숙"] = Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]);
         }
     }
 
     get nyBaeksuk(): number {
-        return this.model["능이백숙"] ? this.model["능이백숙"] : 0;
+        return this.model["능이백숙"] || 0;
     }
     set nyBaeksuk(value: number) {
-        this.model["능이백숙"] = value > 0 ? value : 0;
+        this.model["능이백숙"] = value || 0;
     }
 
     get baeksuk(): number {
-        return this.model["백숙"] ? this.model["백숙"] : 0;
+        return this.model["백숙"] || 0;
     }
+
     set baeksuk(value: number) {
-        this.model["백숙"] = value > 0 ? value : 0;
+        this.model["백숙"] = value || 0;
     }
 
     get mushroomStew(): number {
-        return this.model["버섯찌개"] ? this.model["버섯찌개"] : 0;
+        return this.model["버섯찌개"] || 0;
     }
     set mushroomStew(value: number) {
-        this.model["버섯찌개"] = value > 0 ? value : 0;
+        this.model["버섯찌개"] = value || 0;
     }
 
     get mushroomStew2(): number {
-        return this.model["버섯찌개2"] ? this.model["버섯찌개2"] : 0;
+        return this.model["버섯찌개2"] || 0;
     }
     set mushroomStew2(value: number) {
-        this.model["버섯찌개2"] = value > 0 ? value : 0;
+        this.model["버섯찌개2"] = value || 0;
+    }
+
+    get foods(): number {
+        return this.nyBaeksuk + this.baeksuk + this.mushroomStew + this.mushroomStew2;
     }
 
     get warning(): boolean {
-        const foods = this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
         return (
             this.model["예약유형"] !== "평상" &&
-            Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]) > foods
+            Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]) > this.foods
         );
     }
 
     get cantAddFood(): boolean {
-        const foods = this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"];
-        return MAX_RESERVATION["식사자리"] <= foods;
+        return MAX_RESERVATION["식사자리"] <= this.foods;
     }
 
     previousStep() {

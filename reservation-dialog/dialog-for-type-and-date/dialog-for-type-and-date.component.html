@@ -67,6 +67,10 @@
 			</mat-form-field>
 		</div>
 	</div>
+
+	<div class="info" *ngIf="isToday">
+		<h5>당일 예약은 신청 완료 후 전화 부탁드립니다.</h5>
+	</div>
 </div>
 
 <mat-dialog-actions [align]="'center'">

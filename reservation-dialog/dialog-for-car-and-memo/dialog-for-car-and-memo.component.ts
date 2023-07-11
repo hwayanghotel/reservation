@@ -64,14 +64,14 @@ export class DialogForCarAndMemoComponent {
     }
 
     onClickNextButton() {
-        this.model["예약시점"] = Moment().format("YYYY-MM-DD");
+        this.model["예약시점"] = Moment().format("YYYY-MM-DD-HH-MM-SS");
         this.model["차량번호"] = this.model["차량번호"].filter((v) => v);
 
         if (this.model["상태"] === "예약") {
             this.model["상태"] = "수정";
             this.DBService.edit(this.model);
         } else if (["대기", "방문", "수정"].includes(this.model["상태"]) && this.model.id) {
-            this.model["상태"] = "수정";
+            this.model["상태"] = this.model["상태"] === "대기" ? "대기" : "수정";
             this.DBService.edit(this.model);
         } else {
             this.DBService.add(this.model);

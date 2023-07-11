@@ -8,7 +8,8 @@
 				<mat-label>평상 대수</mat-label>
 				<mat-icon matPrefix class="pointer" (click)="flatBench = flatBench - 1"
 						  [class.disabled]="flatBench === 0">keyboard_arrow_left</mat-icon>
-				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="flatBench">
+				<input [style.text-align]="'center'" matInput type="number" readonly placeholder="1"
+					   [(ngModel)]="flatBench">
 				<span matTextSuffix>대</span>
 				<mat-icon matSuffix class="pointer"
 						  (click)="flatBench = flatBench + 1"
@@ -26,7 +27,8 @@
 				<mat-label>테이블 대수</mat-label>
 				<mat-icon matPrefix class="pointer" (click)="table = table - 1"
 						  [class.disabled]="table === 0">keyboard_arrow_left</mat-icon>
-				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="table">
+				<input [style.text-align]="'center'" matInput type="number" readonly placeholder="1"
+					   [(ngModel)]="table">
 				<span matTextSuffix>대</span>
 				<mat-icon matSuffix class="pointer"
 						  (click)="table = table + 1"

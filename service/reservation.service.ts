@@ -32,11 +32,11 @@ export class ReservationService {
     }
 
     getReservationCost(model: IUserDB): number {
-        const flatTableCost: number = model["평상"] * Price["평상"] + model["테이블"] * Price["테이블"];
+        const flatTableCost: number = (model["평상"] || 0) * Price["평상"] + (model["테이블"] || 0) * Price["테이블"];
         const addedGuests: number =
             model["인원"] -
-            model["평상"] * StandardNumberOfPeople["평상"].적정인원 -
-            model["테이블"] * StandardNumberOfPeople["테이블"];
+            (model["평상"] || 0) * StandardNumberOfPeople["평상"].적정인원 -
+            (model["테이블"] || 0) * StandardNumberOfPeople["테이블"];
         return flatTableCost + (addedGuests > 0 ? addedGuests * Price["평상추가인원"] : 0);
     }
 }

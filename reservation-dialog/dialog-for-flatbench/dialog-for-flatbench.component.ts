@@ -72,17 +72,17 @@ export class DialogForFlatbenchComponent implements OnDestroy {
     }
 
     get flatBench(): number {
-        return this.model["평상"] ? this.model["평상"] : 0;
+        return this.model["평상"] || 0;
     }
     set flatBench(value: number) {
-        this.model["평상"] = value > 0 ? value : 0;
+        this.model["평상"] = value || 0;
     }
 
     get table(): number {
-        return this.model["테이블"] ? this.model["테이블"] : 0;
+        return this.model["테이블"] || 0;
     }
     set table(value: number) {
-        this.model["테이블"] = value > 0 ? value : 0;
+        this.model["테이블"] = value || 0;
     }
 
     get reservationCost(): number {
@@ -94,8 +94,7 @@ export class DialogForFlatbenchComponent implements OnDestroy {
             return false;
         }
         const reservationPerson =
-            this.model["평상"] * StandardNumberOfPeople["평상"]["최대인원"] +
-            this.model["테이블"] * StandardNumberOfPeople["테이블"];
+            this.flatBench * StandardNumberOfPeople["평상"]["최대인원"] + this.table * StandardNumberOfPeople["테이블"];
         return this.model["인원"] > reservationPerson;
     }
 

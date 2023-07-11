@@ -1,6 +1,8 @@
 <div mat-dialog-content>
 	<h3>{{model["성함"]}}님 안녕하세요.</h3>
-	<h3 *ngIf="dataSource.length === 0">확인된 예약이 없습니다. 내용을 다시 입력해주세요.</h3>
+	<h3 *ngIf="dataSource.length === 0">확인된 예약이 없습니다. 내용을 다시 입력해주세요.<br />
+		(네트워크 상황에 따라 10초 정도 소요될 수 있습니다.)
+	</h3>
 	<h3 *ngIf="dataSource.length > 0">예약을 선택하시면, 자세히 보기로 이동합니다.</h3>
 </div>
 

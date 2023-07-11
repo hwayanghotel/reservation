@@ -16,10 +16,7 @@ export class DialogForTypeAndDateComponent {
     timeList: number[] = [10, 11, 12, 13, 14, 15, 16];
     daysList: number[] = [1, 2, 3, 4, 5, 6, 7];
     dateFilter = (date: Moment.Moment): boolean => {
-        if (this.model["예약유형"] === "객실") {
-            return date === null || date.format("YYYY-MM-DD") >= Moment().format("YYYY-MM-DD");
-        }
-        return date === null || date.format("YYYY-MM-DD") > Moment().format("YYYY-MM-DD");
+        return date === null || date.format("YYYY-MM-DD") >= Moment().format("YYYY-MM-DD");
     };
 
     constructor(
@@ -36,11 +33,14 @@ export class DialogForTypeAndDateComponent {
 
     private _setTimeList() {
         this.timeList = [];
-        const isToday: boolean = this.date.format("YYYY-MM-DD") === Moment().format("YYYY-MM-DD");
-        const startHour = isToday && new Date().getHours() > 10 ? new Date().getHours() + 1 : 10;
+        const startHour = this.isToday && new Date().getHours() > 10 ? new Date().getHours() + 1 : 10;
         for (let h = startHour; h < 17; h++) {
             this.timeList.push(h);
         }
+    }
+
+    get isToday(): boolean {
+        return this.date.format("YYYY-MM-DD") === Moment().format("YYYY-MM-DD");
     }
 
     closeDialog() {

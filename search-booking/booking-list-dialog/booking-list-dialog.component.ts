@@ -18,6 +18,7 @@ interface Table {
 })
 export class BookingListDialogComponent {
     model: IUserDB = this.reservationService.formData$.getValue();
+    list: IUserDB[] = [];
 
     displayedColumns: string[] = ["info", "status", "link"];
     dataSource: Table[] = [];
@@ -31,10 +32,10 @@ export class BookingListDialogComponent {
     }
 
     private async setList() {
-        let list = await this.DBService.search(this.model);
-        list.sort((a, b) => this._sortList(a, b));
+        this.list = await this.DBService.search(this.model);
+        this.list.sort((a, b) => this._sortList(a, b));
         this.dataSource = [];
-        list.forEach((model) => {
+        this.list.forEach((model) => {
             let item: Table = {
                 id: model.id,
                 info: `${model["예약일"].slice(5)} ${model["예약유형"]}`,
@@ -48,7 +49,7 @@ export class BookingListDialogComponent {
     goToDetail(element: any) {
         this.dialog.openDialogs[0].afterClosed().subscribe(async () => {
             if (element.id) {
-                const model = await this.DBService.search({ id: element.id });
+                const model = this.list.filter((v) => v.id === element.id);
                 this.reservationService.formData$.next(model[0]);
                 this.reservationService.bookingStep$.next(6);
                 this.dialog.open(ReservationDialogComponent);

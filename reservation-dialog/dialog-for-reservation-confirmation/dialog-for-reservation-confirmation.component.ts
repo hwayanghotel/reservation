@@ -54,4 +54,9 @@ export class DialogForReservationConfirmationComponent {
         }
         return (uri += "room");
     }
+
+    copyAccount() {
+        const account = "신협 132-0687-4547-6";
+        navigator.clipboard.writeText(account);
+    }
 }

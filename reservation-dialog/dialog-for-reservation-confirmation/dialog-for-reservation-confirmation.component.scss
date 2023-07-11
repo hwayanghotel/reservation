@@ -1,3 +1,7 @@
+h2 {
+    font-weight: 600 !important;
+}
+
 h5 {
     margin: 0;
 }
@@ -6,9 +10,11 @@ h5 {
     color: rgba(1, 1, 1, 0.6);
 }
 
-a {
+.booking-rule {
+    font-size: 16px !important;
     margin-top: 2rem;
 }
+
 
 img {
     width: 1rem;
@@ -23,6 +29,12 @@ img {
         color: #5eb917;
     }
 
+}
+
+.button-copy {
+    padding: 0 0.4rem;
+    min-width: 0 !important;
+    height: auto !important;
 }
 
 @media only screen and (max-width: 440px) {

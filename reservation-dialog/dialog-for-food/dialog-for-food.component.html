@@ -8,7 +8,8 @@
 				<mat-label>능이백숙(4인)</mat-label>
 				<mat-icon matPrefix class="pointer" (click)="nyBaeksuk = nyBaeksuk - 1"
 						  [class.disabled]="nyBaeksuk === 0">keyboard_arrow_left</mat-icon>
-				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="nyBaeksuk">
+				<input [style.text-align]="'center'" matInput readonly type="number" placeholder="1"
+					   [(ngModel)]="nyBaeksuk">
 				<mat-icon matSuffix class="pointer"
 						  (click)="nyBaeksuk = nyBaeksuk + 1"
 						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
@@ -25,7 +26,8 @@
 				<mat-label>한방백숙(4인)</mat-label>
 				<mat-icon matPrefix class="pointer" (click)="baeksuk = baeksuk - 1"
 						  [class.disabled]="baeksuk === 0">keyboard_arrow_left</mat-icon>
-				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="baeksuk">
+				<input [style.text-align]="'center'" matInput readonly type="number" placeholder="1"
+					   [(ngModel)]="baeksuk">
 				<mat-icon matSuffix class="pointer"
 						  (click)="baeksuk = baeksuk + 1"
 						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
@@ -42,7 +44,8 @@
 				<mat-label>버섯찌개(4인)</mat-label>
 				<mat-icon matPrefix class="pointer" (click)="mushroomStew = mushroomStew - 1"
 						  [class.disabled]="mushroomStew === 0">keyboard_arrow_left</mat-icon>
-				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="mushroomStew">
+				<input [style.text-align]="'center'" matInput readonly type="number" placeholder="1"
+					   [(ngModel)]="mushroomStew">
 				<mat-icon matSuffix class="pointer"
 						  (click)="mushroomStew = mushroomStew + 1"
 						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
@@ -59,7 +62,8 @@
 				<mat-label>버섯찌개(2인)</mat-label>
 				<mat-icon matPrefix class="pointer" (click)="mushroomStew2 = mushroomStew2 - 1"
 						  [class.disabled]="mushroomStew2 === 0">keyboard_arrow_left</mat-icon>
-				<input [style.text-align]="'center'" matInput type="number" placeholder="1" [(ngModel)]="mushroomStew2">
+				<input [style.text-align]="'center'" matInput readonly type="number" placeholder="1"
+					   [(ngModel)]="mushroomStew2">
 				<mat-icon matSuffix class="pointer"
 						  (click)="mushroomStew2 = mushroomStew2 + 1"
 						  [class.disabled]="cantAddFood">keyboard_arrow_right</mat-icon>
