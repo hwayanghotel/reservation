@@ -4,6 +4,7 @@ import { ManagerService } from "manager/manager.service";
 import { DBService, IUserDB } from "reservation/service/DB.service";
 import { MAX_RESERVATION, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
 import { Subscription } from "rxjs";
+import * as Moment from "moment";
 
 @Component({
     selector: "dialog-for-flatbench",
@@ -31,13 +32,18 @@ export class DialogForFlatbenchComponent implements OnDestroy {
                             let table: number = 0;
                             try {
                                 flatBench =
-                                    calenderDB[this.model["예약일"].slice(0, 7)][this.model["예약일"]].flatBench;
+                                    calenderDB[Moment(this.model["예약일"]).format("YYMM")][
+                                        Moment(this.model["예약일"]).format("YYMMDD")
+                                    ].flatBench;
                                 flatBench = flatBench ? flatBench : 0;
                             } catch {
                                 flatBench = 0;
                             }
                             try {
-                                table = calenderDB[this.model["예약일"].slice(0, 7)][this.model["예약일"]].table;
+                                table =
+                                    calenderDB[Moment(this.model["예약일"]).format("YYMM")][
+                                        Moment(this.model["예약일"]).format("YYMMDD")
+                                    ].table;
                                 table = table ? table : 0;
                             } catch {
                                 table = 0;

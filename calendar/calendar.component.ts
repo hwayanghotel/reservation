@@ -64,13 +64,13 @@ export class CalendarComponent {
         let index: "식사자리" | "평상" | "테이블" = type === "식사" ? "식사자리" : type;
         try {
             if (type === "식사") {
-                content = this.calendarDB[today.format("YYYY-MM")][today.format("YYYY-MM-DD")].foods;
+                content = this.calendarDB[today.format("YYMM")][today.format("YYMMDD")].foods;
             }
             if (type === "평상") {
-                content = this.calendarDB[today.format("YYYY-MM")][today.format("YYYY-MM-DD")].flatBench;
+                content = this.calendarDB[today.format("YYMM")][today.format("YYMMDD")].flatBench;
             }
             if (type === "테이블") {
-                content = this.calendarDB[today.format("YYYY-MM")][today.format("YYYY-MM-DD")].table;
+                content = this.calendarDB[today.format("YYMM")][today.format("YYMMDD")].table;
             }
             content = content ? content : 0;
         } catch {

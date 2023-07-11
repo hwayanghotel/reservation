@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
 import { take } from "rxjs";
-import { USER_DB_COLLECTION, DBService, IUserDB } from "./DB.service";
+import { USER_DB_COLLECTION, DBService, IUserDB, ICalenderDB, CALLENDAR_COLLECTION } from "./DB.service";
 
 const googleCustomerInfoURL =
     "https://script.google.com/macros/s/AKfycbyoZd2TMdGJl8UISn0V7LhA3uoN3D9keTYru2SPiPiTJnCgFeHdpP1HRTTwxCnotxZ8/exec";
@@ -140,5 +140,47 @@ export class UploaderService {
                 batch.commit();
             });
         }
+    }
+
+    uploadCalenderDB() {
+        let calendarDB: ICalenderDB = {};
+
+        this.DBService.customerDB$.getValue().forEach((user: IUserDB) => {
+            const month = Moment(user["예약일"]).format("YYMM");
+            const date = Moment(user["예약일"]).format("YYMMDD");
+
+            if (!calendarDB[month]) {
+                calendarDB[month] = {};
+            }
+            if (!calendarDB[month][date]) {
+                calendarDB[month][date] = {
+                    flatBench: 0,
+                    table: 0,
+                    foods: 0,
+                };
+            }
+            calendarDB[month][date].flatBench += user["평상"] | 0;
+            calendarDB[month][date].table += user["테이블"] | 0;
+            calendarDB[month][date].foods +=
+                (user["능이백숙"] | 0) + (user["백숙"] | 0) + (user["버섯찌개"] | 0) + (user["버섯찌개2"] | 0);
+        });
+
+        Object.entries(calendarDB).forEach(([key, value]) => {
+            const calenderDB = this.DBService.calendarDB$.getValue()[key];
+            const sortedA = JSON.stringify(calenderDB, Object.keys(calenderDB).sort());
+            const sortedB = JSON.stringify(value, Object.keys(value).sort());
+            if (sortedA !== sortedB) {
+                this.store
+                    .collection(CALLENDAR_COLLECTION)
+                    .doc(key)
+                    .set(value)
+                    .then(() => {
+                        console.log("calenderDB 업로드 성공", key);
+                    })
+                    .catch((e) => {
+                        console.log("calenderDB 업로드 실패", key, e);
+                    });
+            }
+        });
     }
 }
