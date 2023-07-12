@@ -76,23 +76,7 @@ export class DBService {
     }
 
     add(model: IUserDB) {
-        this.store
-            .collection(USER_DB_COLLECTION)
-            .add(model)
-            .then((doc: DocumentReference) => {
-                //new subs
-                doc.onSnapshot((v) => {
-                    if (this.customerDB$.getValue().filter((user) => user["id"] === v.id)[0]) {
-                        const index = this.customerDB$.getValue().findIndex((user) => user.id === v.id);
-                        let changed = this.customerDB$.getValue();
-                        changed[index] = v.data();
-                        changed = changed.filter((item) => item);
-                        this.customerDB$.next(changed);
-                    } else {
-                        this.customerDB$.next([...this.customerDB$.getValue(), { id: v.id, ...v.data() }]);
-                    }
-                });
-            });
+        this.store.collection(USER_DB_COLLECTION).add(model);
     }
 
     set(model: IUserDB) {

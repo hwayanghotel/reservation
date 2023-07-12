@@ -25,6 +25,10 @@ export class DialogForCarAndMemoComponent {
                 this.model["차량번호"] = [];
                 this.model["차량번호"].length = 1;
             }
+            const reservationCost = this.reservationService.getReservationCost(this.model);
+            if (reservationCost) {
+                this.model["관리자메모"] = `예약금: ${this.reservationService.getReservationCost(this.model)}`;
+            }
         });
     }
 

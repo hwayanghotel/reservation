@@ -39,22 +39,32 @@ export class DialogForCustomerInfoComponent {
         });
     }
 
+    get permission(): boolean {
+        return this.managerService.permission;
+    }
+
     previousStep() {
         this.reservationService.bookingStep$.next(1);
     }
 
-    onClickNextButton() {
+    onClickNextButton(step?: number) {
         if (!this._checkStep()) {
             this._snackBar.open("예약 필수 정보를 적어주세요.", null, { duration: 2000 });
         } else {
             this.model["전화번호"] = `${this.firstNumber}-${this.middleNumber}-${this.lastNumber}`;
             this.reservationService.formData$.next(this.model);
-            this.reservationService.bookingStep$.next(3 + Number(["식사", "객실"].includes(this.model["예약유형"])));
+            if (step) {
+                this.reservationService.bookingStep$.next(step);
+            } else {
+                this.reservationService.bookingStep$.next(
+                    3 + Number(["식사", "객실"].includes(this.model["예약유형"]))
+                );
+            }
         }
     }
 
     private _checkStep(): boolean {
-        if (this.managerService.permission) {
+        if (this.permission) {
             return true;
         }
         return Boolean(

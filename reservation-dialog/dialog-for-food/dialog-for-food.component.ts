@@ -72,6 +72,10 @@ export class DialogForFoodComponent {
         );
     }
 
+    get permission(): boolean {
+        return this.managerService.permission;
+    }
+
     get cantAddFood(): boolean {
         return MAX_RESERVATION["식사자리"] <= this.foods;
     }
@@ -90,7 +94,7 @@ export class DialogForFoodComponent {
     }
 
     private _checkStep(): boolean {
-        if (this.managerService.permission || this.model["예약유형"] === "객실") {
+        if (this.permission || this.model["예약유형"] === "객실") {
             return true;
         }
         return this.model["예약유형"] === "평상" || !this.warning;

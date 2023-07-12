@@ -33,6 +33,9 @@ export class ReservationService {
 
     getReservationCost(model: IUserDB): number {
         const flatTableCost: number = (model["평상"] || 0) * Price["평상"] + (model["테이블"] || 0) * Price["테이블"];
+        if (flatTableCost === 0) {
+            return 0;
+        }
         const addedGuests: number =
             model["인원"] -
             (model["평상"] || 0) * StandardNumberOfPeople["평상"].적정인원 -

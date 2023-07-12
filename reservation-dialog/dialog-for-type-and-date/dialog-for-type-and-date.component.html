@@ -76,4 +76,5 @@
 <mat-dialog-actions [align]="'center'">
 	<button mat-button mat-dialog-close (click)="closeDialog()">취소</button>
 	<button mat-button (click)="onClickNextButton()">다음</button>
+	<button mat-button *ngIf="permission" (click)="onClickNextButton(5)">마지막으로</button>
 </mat-dialog-actions>

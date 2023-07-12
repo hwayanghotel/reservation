@@ -96,7 +96,7 @@ export class DialogForFlatbenchComponent implements OnDestroy {
     }
 
     get warning(): boolean {
-        if (this.managerService.permission) {
+        if (this.permission) {
             return false;
         }
         const reservationPerson =
@@ -104,16 +104,20 @@ export class DialogForFlatbenchComponent implements OnDestroy {
         return this.model["인원"] > reservationPerson;
     }
 
+    get permission(): boolean {
+        return this.managerService.permission;
+    }
+
     previousStep() {
         this.reservationService.bookingStep$.next(2);
     }
 
-    onClickNextButton() {
+    onClickNextButton(step?: number) {
         if (this.warning) {
             this._snackBar.open("입력된 평상 정보를 확인해주세요.", null, { duration: 2000 });
         } else {
             this.reservationService.formData$.next(this.model);
-            this.reservationService.bookingStep$.next(4);
+            this.reservationService.bookingStep$.next(step ? step : 4);
         }
     }
 
