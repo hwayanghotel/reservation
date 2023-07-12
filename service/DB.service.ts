@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, take } from "rxjs";
-import { AngularFirestore, DocumentReference, QueryDocumentSnapshot } from "@angular/fire/compat/firestore";
+import { BehaviorSubject } from "rxjs";
+import { AngularFirestore, QueryDocumentSnapshot } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
 
 export interface IUserDB {

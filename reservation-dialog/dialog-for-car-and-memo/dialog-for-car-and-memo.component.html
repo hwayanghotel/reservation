@@ -8,11 +8,16 @@
 		</div>
 
 		<div class="answer">
-			<mat-form-field *ngFor="let index of carIndexList">
-				<mat-label>차량번호</mat-label>
-				<input matInput placeholder="01능1234" [(ngModel)]="model['차량번호'][index]">
-				<mat-icon matSuffix class="pointer" (click)="deleteForm(index)">close</mat-icon>
-			</mat-form-field>
+			<ng-container *ngFor="let index of carIndexList">
+				<mat-form-field>
+					<mat-label>차량번호</mat-label>
+					<mat-checkbox matPrefix *ngIf="permission && model['차량방문']" color="Primary"
+								  [(ngModel)]="model['차량방문'][index]">
+					</mat-checkbox>
+					<input matInput placeholder="01능1234" [(ngModel)]="model['차량번호'][index]">
+					<mat-icon matSuffix class="pointer" (click)="deleteForm(index)">close</mat-icon>
+				</mat-form-field>
+			</ng-container>
 		</div>
 		<mat-checkbox [(ngModel)]="nextTime">다음에 입력하기</mat-checkbox>
 	</div>

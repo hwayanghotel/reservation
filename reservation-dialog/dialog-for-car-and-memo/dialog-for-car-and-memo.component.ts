@@ -23,7 +23,9 @@ export class DialogForCarAndMemoComponent {
             this.model = data;
             if (!data["차량번호"] || data["차량번호"].length === 0) {
                 this.model["차량번호"] = [];
+                this.model["차량방문"] = [];
                 this.model["차량번호"].length = 1;
+                this.model["차량방문"].length = 1;
             }
             const reservationCost = this.reservationService.getReservationCost(this.model);
             if (reservationCost) {
@@ -53,14 +55,12 @@ export class DialogForCarAndMemoComponent {
 
     addForm() {
         this.model["차량번호"].length++;
+        this.model["차량방문"].length++;
     }
 
     deleteForm(index: number) {
         this.model["차량번호"].splice(index, 1);
-    }
-
-    updateCarList(value: number) {
-        this.model["차량번호"].length += value;
+        this.model["차량방문"].splice(index, 1);
     }
 
     previousStep() {
@@ -69,7 +69,11 @@ export class DialogForCarAndMemoComponent {
 
     onClickNextButton() {
         this.model["예약시점"] = Moment().format("YYYY-MM-DD-HH-MM-SS");
+        this.model["차량번호"].forEach((value: string, index: number) => {
+            this.model["차량방문"][index] = value ? Boolean(this.model["차량방문"][index]) : undefined;
+        });
         this.model["차량번호"] = this.model["차량번호"].filter((v) => v);
+        this.model["차량방문"] = this.model["차량방문"].filter((v) => v !== undefined);
 
         if (this.model["상태"] === "예약") {
             this.model["상태"] = "수정";

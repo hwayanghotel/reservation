@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { IUserDB, DBService } from "./DB.service";
+import { IUserDB } from "./DB.service";
 import { Price } from "src/assets/price";
 
 export const MAX_RESERVATION = {
@@ -25,9 +25,9 @@ export class ReservationService {
     bookingStep$: BehaviorSubject<number> = new BehaviorSubject<number>(undefined);
     formData$: BehaviorSubject<IUserDB> = new BehaviorSubject<IUserDB>({});
 
-    constructor(private DBService: DBService) {
+    constructor() {
         this.formData$.subscribe((v) => {
-            const test = this.DBService.customerDB$.getValue().filter((v) => v.id === this.formData$.getValue().id)[0];
+            console.log("formData$ update", v);
         });
     }
 
