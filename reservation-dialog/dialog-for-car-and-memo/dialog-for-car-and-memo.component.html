@@ -45,5 +45,7 @@
 
 <mat-dialog-actions [align]="'center'">
 	<button mat-button (click)="previousStep()">이전</button>
-	<button mat-button (click)="onClickNextButton()">완료</button>
+	<button mat-button *ngIf="!permission" (click)="onClickNextButton()">완료</button>
+	<button mat-button *ngIf="permission" (click)="onClickNextButton()">수정변경</button>
+	<button mat-button mat-dialog-close *ngIf="permission" (click)="onClickNextButton(true)">바로적용</button>
 </mat-dialog-actions>

@@ -67,13 +67,19 @@ export class DialogForCarAndMemoComponent {
         this.reservationService.bookingStep$.next(4);
     }
 
-    onClickNextButton() {
+    onClickNextButton(direct?: boolean) {
         this.model["예약시점"] = Moment().format("YYYY-MM-DD-HH-MM-SS");
         this.model["차량번호"].forEach((value: string, index: number) => {
             this.model["차량방문"][index] = value ? Boolean(this.model["차량방문"][index]) : undefined;
         });
         this.model["차량번호"] = this.model["차량번호"].filter((v) => v);
         this.model["차량방문"] = this.model["차량방문"].filter((v) => v !== undefined);
+
+        if (direct) {
+            this.model["상태"] = ["대기", "예약", "수정"].includes(this.model["상태"]) ? "예약" : this.model["상태"];
+            this.DBService.set(this.model);
+            return;
+        }
 
         if (this.model["상태"] === "예약") {
             this.model["상태"] = "수정";
