@@ -65,7 +65,6 @@ export class DBService {
             .collection(CALLENDAR_COLLECTION)
             .valueChanges()
             .subscribe((docs: any) => {
-                console.warn("fetch calenderDB", docs);
                 let db: ICalenderDB = {};
                 docs.forEach((doc: any) => {
                     const key = Object.keys(doc)[0].slice(0, 4);
