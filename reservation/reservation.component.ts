@@ -29,7 +29,7 @@ export class ReservationComponent implements OnInit {
         this.route.queryParams.subscribe((params) => {
             const id = params["id"];
             const type = params["type"];
-            this.type = type !== "" ? this.type : type;
+            this.type = type ? type : this.type;
             if (id) {
                 this._openCustomerInfoDialog(id, this.type);
             }
