@@ -14,21 +14,24 @@ export class DialogForTypeAndDateComponent {
     model: IUserDB;
     timeList: number[] = [10, 11, 12, 13, 14, 15, 16];
     daysList: number[] = [1, 2, 3, 4, 5, 6, 7];
+    roomInfo: any = {
+        능운대: false,
+        학소대: false,
+        와룡암: false,
+        첨성대: false,
+    };
     dateFilter = (date: Moment.Moment): boolean => {
         return date === null || date.format("YYYY-MM-DD") >= Moment().format("YYYY-MM-DD");
     };
 
     private _date: Moment.Moment = Moment();
 
-    constructor(
-        private reservationService: ReservationService,
-        private _snackBar: MatSnackBar,
-        private managerService: ManagerService
-    ) {
+    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar, private managerService: ManagerService) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
             this._date = Moment(this.model["예약일"]);
             this._setTimeList();
+            this._setRoomInfo();
         });
     }
 
@@ -50,6 +53,24 @@ export class DialogForTypeAndDateComponent {
 
     get isToday(): boolean {
         return this._date.format("YYYY-MM-DD") === Moment().format("YYYY-MM-DD");
+    }
+
+    private _setRoomInfo() {
+        if (this.model["객실"]) {
+            Object.entries(this.roomInfo).forEach(([key, value]) => {
+                this.roomInfo[key] = this.model["객실"].includes(key);
+            });
+        }
+    }
+
+    updateRoomInfo() {
+        let rooms = "";
+        Object.entries(this.roomInfo).forEach(([key, value]) => {
+            if (value) {
+                rooms += (rooms ? "," : "") + key;
+            }
+        });
+        this.model["객실"] = rooms;
     }
 
     closeDialog() {

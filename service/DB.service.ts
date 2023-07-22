@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore, QueryDocumentSnapshot } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 export interface IUserDB {
     // 고객정보
@@ -21,7 +22,7 @@ export interface IUserDB {
     메모?: string;
     관리자메모?: string;
     // 객실정보
-    객실?: "능운대" | "학소대" | "와룡암" | "첨성대";
+    객실?: string; //"능운대" | "학소대" | "와룡암" | "첨성대";
     이용박수?: number;
     // 평상정보
     평상?: number;
@@ -56,7 +57,7 @@ export class DBService {
     customerDB$: BehaviorSubject<IUserDB[]> = new BehaviorSubject<IUserDB[]>([]);
     calendarDB$ = new BehaviorSubject<ICalenderDB>({});
 
-    constructor(private http: HttpClient, private store: AngularFirestore) {
+    constructor(private http: HttpClient, private store: AngularFirestore, private _snackBar: MatSnackBar) {
         this._fetchCalenderDB();
     }
 
@@ -75,7 +76,14 @@ export class DBService {
     }
 
     add(model: IUserDB) {
-        this.store.collection(USER_DB_COLLECTION).add(model);
+        console.log("try add", model);
+        this.store
+            .collection(USER_DB_COLLECTION)
+            .add(model)
+            .catch((e) => {
+                console.warn("add error", e);
+                this._snackBar.open("예약 추가를 실패했습니다. 새로고침 후 다시 시도해주세요.", null, { duration: 2000 });
+            });
     }
 
     set(model: IUserDB) {
@@ -91,7 +99,11 @@ export class DBService {
             .collection(USER_DB_COLLECTION)
             .doc(model.id)
             .update(model)
-            .then(() => console.log("set 성공", model));
+            .then(() => console.log("set 성공", model))
+            .catch((e) => {
+                console.warn("set error", e);
+                this._snackBar.open("SET을 실패했습니다. 새로고침 후 다시 시도해주세요.", null, { duration: 2000 });
+            });
     }
 
     edit(changed: IUserDB | any) {
@@ -107,8 +119,7 @@ export class DBService {
                 Object.entries(user).forEach(([uKey, uValue]) => {
                     if (
                         uValue !== changed[uKey] ||
-                        (["차량번호", "차량방문"].includes(uKey) &&
-                            JSON.stringify(uValue.sort()) !== JSON.stringify(changed[uKey].sort()))
+                        (["차량번호", "차량방문"].includes(uKey) && JSON.stringify(uValue.sort()) !== JSON.stringify(changed[uKey].sort()))
                     ) {
                         (user["수정내용"] as any)[uKey] = changed[uKey];
                     }
@@ -117,8 +128,7 @@ export class DBService {
                 Object.entries(changed).forEach(([cKey, cValue]) => {
                     if (
                         cValue !== (user as any)[cKey] ||
-                        (["차량번호", "차량방문"].includes(cKey) &&
-                            JSON.stringify((cValue as any).sort()) !== JSON.stringify((user as any)[cKey].sort()))
+                        (["차량번호", "차량방문"].includes(cKey) && JSON.stringify((cValue as any).sort()) !== JSON.stringify((user as any)[cKey].sort()))
                     ) {
                         if (!(user["수정내용"] as any)[cKey]) {
                             (user["수정내용"] as any)[cKey] = cValue;
@@ -133,6 +143,10 @@ export class DBService {
                     .update(user)
                     .then(() => {
                         console.log("edit 성공");
+                    })
+                    .catch((e) => {
+                        console.warn("edit error", e);
+                        this._snackBar.open("예약 수정을 실패했습니다. 새로고침 후 다시 시도해주세요.", null, { duration: 2000 });
                     });
             });
     }
@@ -146,6 +160,10 @@ export class DBService {
             .then(() => {
                 //해당 DB 삭제
                 this.customerDB$.next(this.customerDB$.getValue().filter((v) => v.id !== model.id));
+            })
+            .catch((e) => {
+                console.warn("delete error", e);
+                this._snackBar.open("삭제를 실패했습니다. 새로고침 후 다시 시도해주세요.", null, { duration: 2000 });
             });
     }
 
@@ -154,25 +172,24 @@ export class DBService {
             console.log("search", model);
             const snapShot = model.id
                 ? this.store.collection(USER_DB_COLLECTION).ref.where("id", "==", model.id).get()
-                : this.store
-                      .collection(USER_DB_COLLECTION)
-                      .ref.where("성함", "==", model["성함"])
-                      .where("전화번호", "==", model["전화번호"])
-                      .get();
-            snapShot.then((snapshot) => {
-                let searchedList: IUserDB[] = [];
-                snapshot.forEach((doc) => {
-                    const passedNum = Object.entries(model).filter(
-                        ([key, value]) => (doc.data() as any)[key] === value
-                    );
-                    if (passedNum.length === Object.keys(model).length) {
-                        searchedList.push({ ...(doc.data() as any), id: doc.id });
-                    }
+                : this.store.collection(USER_DB_COLLECTION).ref.where("성함", "==", model["성함"]).where("전화번호", "==", model["전화번호"]).get();
+            snapShot
+                .then((snapshot) => {
+                    let searchedList: IUserDB[] = [];
+                    snapshot.forEach((doc) => {
+                        const passedNum = Object.entries(model).filter(([key, value]) => (doc.data() as any)[key] === value);
+                        if (passedNum.length === Object.keys(model).length) {
+                            searchedList.push({ ...(doc.data() as any), id: doc.id });
+                        }
+                    });
+                    searchedList = searchedList.filter((v) => v["만료일"] >= Moment().format("YYYY-MM-DD"));
+                    console.log("search result:", searchedList);
+                    resolve(searchedList);
+                })
+                .catch((e) => {
+                    console.warn("search error", e);
+                    this._snackBar.open("검색을 실패했습니다. 새로고침 후 다시 시도해주세요.", null, { duration: 2000 });
                 });
-                searchedList = searchedList.filter((v) => v["만료일"] >= Moment().format("YYYY-MM-DD"));
-                console.log("search result:", searchedList);
-                resolve(searchedList);
-            });
         });
     }
 
@@ -217,18 +234,13 @@ export class DBService {
                                 .doc(id)
                                 .ref.onSnapshot((doc) => {
                                     if (this.customerDB$.getValue().filter((user) => user["id"] === doc.id)[0]) {
-                                        const index = this.customerDB$
-                                            .getValue()
-                                            .findIndex((user) => user.id === doc.id);
+                                        const index = this.customerDB$.getValue().findIndex((user) => user.id === doc.id);
                                         let changed = this.customerDB$.getValue();
                                         changed[index] = doc.data();
                                         changed = changed.filter((item) => item);
                                         this.customerDB$.next(changed);
                                     } else {
-                                        this.customerDB$.next([
-                                            ...this.customerDB$.getValue(),
-                                            { id: doc.id, ...(doc.data() as object) },
-                                        ]);
+                                        this.customerDB$.next([...this.customerDB$.getValue(), { id: doc.id, ...(doc.data() as object) }]);
                                     }
                                 });
                         }

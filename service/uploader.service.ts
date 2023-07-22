@@ -5,11 +5,9 @@ import * as Moment from "moment";
 import { take } from "rxjs";
 import { USER_DB_COLLECTION, DBService, IUserDB, ICalenderDB, CALLENDAR_COLLECTION } from "./DB.service";
 
-const googlePensionInfoURL =
-    "https://script.google.com/macros/s/AKfycby0tNVTzNLtaSSHjomtf9NtDm7kAKBrBAt9W9xUj8cL_gTE3RNxjcp7-a_nc3H0ZY0m/exec";
+const googlePensionInfoURL = "https://script.google.com/macros/s/AKfycby0tNVTzNLtaSSHjomtf9NtDm7kAKBrBAt9W9xUj8cL_gTE3RNxjcp7-a_nc3H0ZY0m/exec";
 
-const googleOtherBoolingInfoURL =
-    "https://script.google.com/macros/s/AKfycbzhxcY9prULQIaFwY5OAolzBeRcxZ3cNmZsDlN7sbOpMlR59-drhbys6Zgd4Ny3o6eR/exec";
+const googleOtherBoolingInfoURL = "https://script.google.com/macros/s/AKfycbzhxcY9prULQIaFwY5OAolzBeRcxZ3cNmZsDlN7sbOpMlR59-drhbys6Zgd4Ny3o6eR/exec";
 
 enum PENSION_DB {
     예약번호,
@@ -71,9 +69,7 @@ export class UploaderService {
                 .get(googlePensionInfoURL)
                 .pipe(take(1))
                 .subscribe((v) => {
-                    const db = (v as GoogleSheetData)["GoogleSheetData"].filter(
-                        (db) => db[PENSION_DB["예약상태"]] === "결제완료"
-                    );
+                    const db = (v as GoogleSheetData)["GoogleSheetData"].filter((db) => db[PENSION_DB["예약상태"]] === "결제완료");
 
                     const collectionRef = this.store.collection(USER_DB_COLLECTION);
                     const batch = this.store.firestore.batch();
@@ -86,9 +82,7 @@ export class UploaderService {
                             객실: data[PENSION_DB["객실"]],
                             예약일: Moment(data[PENSION_DB["이용일"]]).format("YYYY-MM-DD"),
                             이용박수: data[PENSION_DB["이용박수"]],
-                            만료일: Moment(data[PENSION_DB["이용일"]])
-                                .add(data[PENSION_DB["이용박수"]], "days")
-                                .format("YYYY-MM-DD"),
+                            만료일: Moment(data[PENSION_DB["이용일"]]).add(data[PENSION_DB["이용박수"]], "days").format("YYYY-MM-DD"),
                             상태: "예약",
                             성함: data[PENSION_DB["예약자"]],
                             전화번호: data[PENSION_DB["연락처"]],
@@ -111,9 +105,7 @@ export class UploaderService {
                     uploadDBList.forEach((db) => {
                         let foundItem = mergedDBList.find(
                             (mergedDB: any) =>
-                                mergedDB["성함"] === db["성함"] &&
-                                mergedDB["전화번호"] === db["전화번호"] &&
-                                mergedDB["이용박수"] === db["이용박수"]
+                                mergedDB["성함"] === db["성함"] && mergedDB["전화번호"] === db["전화번호"] && mergedDB["이용박수"] === db["이용박수"]
                         );
                         if (foundItem) {
                             foundItem["객실"] = `${foundItem["객실"]}, ${db["객실"]}`;
@@ -168,9 +160,7 @@ export class UploaderService {
                         let uploadDB: any = {};
                         if (data[BOOKING_DB["예약일"]]) {
                             uploadDB["예약일"] = Moment(data[BOOKING_DB["예약일"]]).format("YYYY-MM-DD");
-                            uploadDB["만료일"] = Moment(data[BOOKING_DB["예약일"]])
-                                .add(data[BOOKING_DB["이용박수"]], "days")
-                                .format("YYYY-MM-DD");
+                            uploadDB["만료일"] = Moment(data[BOOKING_DB["예약일"]]).add(data[BOOKING_DB["이용박수"]], "days").format("YYYY-MM-DD");
                         }
                         if (data[BOOKING_DB["차량번호"]]) {
                             uploadDB["차량번호"] = (data[BOOKING_DB["차량번호"]] as string).replace(" ", "").split(",");
@@ -215,9 +205,7 @@ export class UploaderService {
                     uploadDBList.forEach((db) => {
                         let foundItem = mergedDBList.find(
                             (mergedDB: any) =>
-                                mergedDB["성함"] === db["성함"] &&
-                                mergedDB["전화번호"] === db["전화번호"] &&
-                                mergedDB["이용박수"] === db["이용박수"]
+                                mergedDB["성함"] === db["성함"] && mergedDB["전화번호"] === db["전화번호"] && mergedDB["이용박수"] === db["이용박수"]
                         );
                         if (foundItem) {
                             foundItem["객실"] = `${foundItem["객실"]}, ${db["객실"]}`;
@@ -285,26 +273,22 @@ export class UploaderService {
             }
             calendarDB[month][date].flatBench += user["평상"] | 0;
             calendarDB[month][date].table += user["테이블"] | 0;
-            calendarDB[month][date].foods +=
-                (user["능이백숙"] | 0) + (user["백숙"] | 0) + (user["버섯찌개"] | 0) + (user["버섯찌개2"] | 0);
+            if (user["예약유형"] === "식사") {
+                calendarDB[month][date].foods += (user["능이백숙"] | 0) + (user["백숙"] | 0) + (user["버섯찌개"] | 0) + (user["버섯찌개2"] | 0);
+            }
         });
 
         Object.entries(calendarDB).forEach(([key, value]) => {
-            const calenderDB = this.DBService.calendarDB$.getValue()[key];
-            const sortedA = JSON.stringify(calenderDB, Object.keys(calenderDB).sort());
-            const sortedB = JSON.stringify(value, Object.keys(value).sort());
-            if (sortedA !== sortedB) {
-                this.store
-                    .collection(CALLENDAR_COLLECTION)
-                    .doc(key)
-                    .set(value)
-                    .then(() => {
-                        console.log("calenderDB 업로드 성공", key);
-                    })
-                    .catch((e) => {
-                        console.log("calenderDB 업로드 실패", key, e);
-                    });
-            }
+            this.store
+                .collection(CALLENDAR_COLLECTION)
+                .doc(key)
+                .set(value)
+                .then(() => {
+                    console.log("calenderDB 업로드 성공", key);
+                })
+                .catch((e) => {
+                    console.log("calenderDB 업로드 실패", key, e);
+                });
         });
     }
 }

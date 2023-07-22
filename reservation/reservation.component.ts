@@ -37,7 +37,7 @@ export class ReservationComponent implements OnInit {
     }
 
     private async _openCustomerInfoDialog(id: string, type: string) {
-        console.warn("고객 직접 검색", id, type);
+        console.log("고객 직접 검색", id, type);
         if (id) {
             const forms = await this.DBService.search({ id: id });
             this.reseravationService.formData$.next(forms[0]);

@@ -14,14 +14,12 @@ export class DialogForFoodComponent {
     model: IUserDB;
     Price = Price;
 
-    constructor(
-        private reservationService: ReservationService,
-        private _snackBar: MatSnackBar,
-        private managerService: ManagerService
-    ) {
+    constructor(private reservationService: ReservationService, private _snackBar: MatSnackBar, private managerService: ManagerService) {
         this.reservationService.formData$.subscribe((data) => {
             this.model = data;
-            this._setRecommandFood();
+            if (!this.permission) {
+                this._setRecommandFood();
+            }
         });
     }
 
@@ -66,10 +64,7 @@ export class DialogForFoodComponent {
     }
 
     get warning(): boolean {
-        return (
-            this.model["예약유형"] !== "평상" &&
-            Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]) > this.foods
-        );
+        return this.model["예약유형"] !== "평상" && Math.round(this.model["인원"] / StandardNumberOfPeople["식사좌석"]) > this.foods;
     }
 
     get permission(): boolean {

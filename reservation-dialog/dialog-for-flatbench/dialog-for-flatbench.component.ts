@@ -31,19 +31,13 @@ export class DialogForFlatbenchComponent implements OnDestroy {
                             let flatBench: number = 0;
                             let table: number = 0;
                             try {
-                                flatBench =
-                                    calenderDB[Moment(this.model["예약일"]).format("YYMM")][
-                                        Moment(this.model["예약일"]).format("YYMMDD")
-                                    ].flatBench;
+                                flatBench = calenderDB[Moment(this.model["예약일"]).format("YYMM")][Moment(this.model["예약일"]).format("YYMMDD")].flatBench;
                                 flatBench = flatBench ? flatBench : 0;
                             } catch {
                                 flatBench = 0;
                             }
                             try {
-                                table =
-                                    calenderDB[Moment(this.model["예약일"]).format("YYMM")][
-                                        Moment(this.model["예약일"]).format("YYMMDD")
-                                    ].table;
+                                table = calenderDB[Moment(this.model["예약일"]).format("YYMM")][Moment(this.model["예약일"]).format("YYMMDD")].table;
                                 table = table ? table : 0;
                             } catch {
                                 table = 0;
@@ -52,7 +46,9 @@ export class DialogForFlatbenchComponent implements OnDestroy {
                                 잔여평상: MAX_RESERVATION["평상"] - flatBench,
                                 잔여테이블: MAX_RESERVATION["테이블"] - table,
                             };
-                            this._setRecommandFlatTable();
+                            if (!this.permission) {
+                                this._setRecommandFlatTable();
+                            }
                         })
                     );
                 }
@@ -99,8 +95,7 @@ export class DialogForFlatbenchComponent implements OnDestroy {
         if (this.permission) {
             return false;
         }
-        const reservationPerson =
-            this.flatBench * StandardNumberOfPeople["평상"]["최대인원"] + this.table * StandardNumberOfPeople["테이블"];
+        const reservationPerson = this.flatBench * StandardNumberOfPeople["평상"]["최대인원"] + this.table * StandardNumberOfPeople["테이블"];
         return this.model["인원"] > reservationPerson;
     }
 

@@ -44,15 +44,10 @@
 	<div class="field" *ngIf="model['예약유형'] === '객실'">
 		<h4 class="question">4. 객실 선택</h4>
 		<div class="answer">
-			<mat-form-field>
-				<mat-label>객실 선택</mat-label>
-				<mat-select [(value)]="model['객실']">
-					<mat-option [value]="'능운대'">능운대</mat-option>
-					<mat-option [value]="'학소대'">학소대</mat-option>
-					<mat-option [value]="'와룡암'">와룡암</mat-option>
-					<mat-option [value]="'첨성대'">첨성대</mat-option>
-				</mat-select>
-			</mat-form-field>
+			<mat-checkbox color="Primary" *ngFor="let room of ['능운대','학소대','와룡암','첨성대']"
+						  [(ngModel)]="roomInfo[room]"
+						  (ngModelChange)="updateRoomInfo()">{{room}}
+			</mat-checkbox>
 		</div>
 	</div>
 
