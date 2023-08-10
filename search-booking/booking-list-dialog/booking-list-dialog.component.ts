@@ -23,11 +23,7 @@ export class BookingListDialogComponent {
     displayedColumns: string[] = ["info", "status", "link"];
     dataSource: Table[] = [];
 
-    constructor(
-        private reservationService: ReservationService,
-        private dialog: MatDialog,
-        private DBService: DBService
-    ) {
+    constructor(private reservationService: ReservationService, private dialog: MatDialog, private DBService: DBService) {
         this.setList();
     }
 
@@ -75,13 +71,14 @@ export class BookingListDialogComponent {
             return 1;
         }
 
-        // 2) "상태"가 "대기" > "수정" > "예약" > "방문" > "취소" 순서로 정렬
+        // 2) "상태"가 "대기" > "수정" > "예약" > "방문" > "완료", "취소" 순서로 정렬
         const statusOrder = {
             대기: 0,
             수정: 1,
             예약: 2,
             방문: 3,
-            취소: 4,
+            완료: 4,
+            취소: 5,
         };
         const statusA = statusOrder[a["상태"]];
         const statusB = statusOrder[b["상태"]];

@@ -80,7 +80,7 @@ export class DialogForCarAndMemoComponent {
         if (this.model["상태"] === "예약") {
             this.model["상태"] = "수정";
             this.DBService.edit(this.model);
-        } else if (["대기", "방문", "수정"].includes(this.model["상태"]) && this.model.id) {
+        } else if (["대기", "방문", "완료", "수정"].includes(this.model["상태"]) && this.model.id) {
             this.model["상태"] = this.model["상태"] === "대기" ? "대기" : "수정";
             this.DBService.edit(this.model);
         } else {

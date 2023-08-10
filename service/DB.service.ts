@@ -16,7 +16,7 @@ export interface IUserDB {
     // 예약정보
     예약유형?: "식사" | "평상" | "객실";
     인원?: number;
-    상태?: "대기" | "예약" | "방문" | "수정" | "취소";
+    상태?: "대기" | "예약" | "방문" | "완료" | "수정" | "취소";
     차량번호?: string[];
     차량방문?: boolean[];
     메모?: string;
@@ -203,7 +203,7 @@ export class DBService {
             .get()
             .then((snapshot) => {
                 snapshot.forEach((doc: QueryDocumentSnapshot<any>) => {
-                    if (["예약", "방문", "수정", "취소"].includes(doc.data()["상태"])) {
+                    if (["예약", "방문", "완료", "수정", "취소"].includes(doc.data()["상태"])) {
                         doc.ref.onSnapshot((v) => {
                             if (this.customerDB$.getValue().filter((user) => user["id"] === v.id)[0]) {
                                 const index = this.customerDB$.getValue().findIndex((user) => user.id === v.id);

@@ -259,7 +259,7 @@ export class UploaderService {
 
         this.DBService.customerDB$
             .getValue()
-            .filter((v) => ["예약", "방문"].includes(v["상태"]))
+            .filter((v) => ["예약", "방문", "완료"].includes(v["상태"]))
             .forEach((user: IUserDB) => {
                 const month = Moment(user["예약일"]).format("YYMM");
                 const date = Moment(user["예약일"]).format("YYMMDD");
