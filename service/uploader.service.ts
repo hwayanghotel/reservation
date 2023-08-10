@@ -257,26 +257,29 @@ export class UploaderService {
     uploadCalenderDB() {
         let calendarDB: ICalenderDB = {};
 
-        this.DBService.customerDB$.getValue().forEach((user: IUserDB) => {
-            const month = Moment(user["예약일"]).format("YYMM");
-            const date = Moment(user["예약일"]).format("YYMMDD");
+        this.DBService.customerDB$
+            .getValue()
+            .filter((v) => ["예약", "방문"].includes(v["상태"]))
+            .forEach((user: IUserDB) => {
+                const month = Moment(user["예약일"]).format("YYMM");
+                const date = Moment(user["예약일"]).format("YYMMDD");
 
-            if (!calendarDB[month]) {
-                calendarDB[month] = {};
-            }
-            if (!calendarDB[month][date]) {
-                calendarDB[month][date] = {
-                    flatBench: 0,
-                    table: 0,
-                    foods: 0,
-                };
-            }
-            calendarDB[month][date].flatBench += user["평상"] | 0;
-            calendarDB[month][date].table += user["테이블"] | 0;
-            if (user["예약유형"] === "식사") {
-                calendarDB[month][date].foods += (user["능이백숙"] | 0) + (user["백숙"] | 0) + (user["버섯찌개"] | 0) + (user["버섯찌개2"] | 0);
-            }
-        });
+                if (!calendarDB[month]) {
+                    calendarDB[month] = {};
+                }
+                if (!calendarDB[month][date]) {
+                    calendarDB[month][date] = {
+                        flatBench: 0,
+                        table: 0,
+                        foods: 0,
+                    };
+                }
+                calendarDB[month][date].flatBench += user["평상"] | 0;
+                calendarDB[month][date].table += user["테이블"] | 0;
+                if (user["예약유형"] === "식사") {
+                    calendarDB[month][date].foods += (user["능이백숙"] | 0) + (user["백숙"] | 0) + (user["버섯찌개"] | 0) + (user["버섯찌개2"] | 0);
+                }
+            });
 
         Object.entries(calendarDB).forEach(([key, value]) => {
             this.store
