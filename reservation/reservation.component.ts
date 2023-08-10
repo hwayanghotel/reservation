@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { ReservationDialogComponent } from "reservation/reservation-dialog/reservation-dialog.component";
@@ -13,6 +13,7 @@ import { UploaderService } from "reservation/service/uploader.service";
     styleUrls: ["./reservation.component.scss"],
 })
 export class ReservationComponent implements OnInit {
+    @ViewChild("TestDialog") TestDialog: TemplateRef<any>;
     type: "평상" | "식사" = "식사";
 
     constructor(
@@ -23,6 +24,10 @@ export class ReservationComponent implements OnInit {
         private Uploader: UploaderService
     ) {
         this.Uploader.uploadTest(false);
+
+        setTimeout(() => {
+            this.dialog.open(this.TestDialog);
+        }, 100);
     }
 
     ngOnInit() {

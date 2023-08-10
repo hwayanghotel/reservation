@@ -11,3 +11,15 @@
     <p *ngIf="type === '식사'">식사 예약</p>
     <p *ngIf="type === '평상'">평상/테이블 예약</p>
 </calendar>
+
+<ng-template #TestDialog>
+    <h2 mat-dialog-title>테스트 작업 중</h2>
+    <div mat-dialog-content>
+        <p>안녕하세요. 능운대펜션입니다.</p>
+        <p>현재 본 페이지의 예약 기능은 테스트 중 입니다.</p>
+        <p>실제 예약은 전화로 부탁드립니다.</p>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Ok</button>
+    </div>
+</ng-template>
