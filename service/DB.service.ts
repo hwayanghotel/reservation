@@ -159,7 +159,12 @@ export class DBService {
             .delete()
             .then(() => {
                 //해당 DB 삭제
-                this.customerDB$.next(this.customerDB$.getValue().filter((v) => v.id !== model.id));
+                this.customerDB$.next(
+                    this.customerDB$
+                        .getValue()
+                        .filter((v) => v.id !== model.id)
+                        .sort((a, b) => this._sortList(a, b))
+                );
             })
             .catch((e) => {
                 console.warn("delete error", e);
@@ -210,9 +215,9 @@ export class DBService {
                                 let changed = this.customerDB$.getValue();
                                 changed[index] = v.data();
                                 changed = changed.filter((item) => item);
-                                this.customerDB$.next(changed);
+                                this.customerDB$.next(changed.sort((a, b) => this._sortList(a, b)));
                             } else {
-                                this.customerDB$.next([...this.customerDB$.getValue(), { id: v.id, ...v.data() }]);
+                                this.customerDB$.next([...this.customerDB$.getValue(), { id: v.id, ...v.data() }].sort((a, b) => this._sortList(a, b)));
                             }
                         });
                     }
@@ -238,9 +243,11 @@ export class DBService {
                                         let changed = this.customerDB$.getValue();
                                         changed[index] = doc.data();
                                         changed = changed.filter((item) => item);
-                                        this.customerDB$.next(changed);
+                                        this.customerDB$.next(changed.sort((a, b) => this._sortList(a, b)));
                                     } else {
-                                        this.customerDB$.next([...this.customerDB$.getValue(), { id: doc.id, ...(doc.data() as object) }]);
+                                        this.customerDB$.next(
+                                            [...this.customerDB$.getValue(), { id: doc.id, ...(doc.data() as object) }].sort((a, b) => this._sortList(a, b))
+                                        );
                                     }
                                 });
                         }
@@ -248,5 +255,37 @@ export class DBService {
                 });
             });
         // this.customerDB$ = this.http.get("assets/fire.json") as Observable<IDBService[]>; // this.customerDB$ = this.store.collection(COLLECTION).valueChanges();
+    }
+
+    private _sortList(a: IUserDB, b: IUserDB) {
+        // 1) "날짜"가 빠를수록 정렬
+        const dateA = new Date(a["예약일"]);
+        const dateB = new Date(b["예약일"]);
+        if (dateA < dateB) {
+            return -1;
+        }
+        if (dateA > dateB) {
+            return 1;
+        }
+
+        // 2) "상태"가 "대기" > "수정" > "예약" > "방문" > "완료" > "취소" 순서로 정렬
+        const statusOrder = {
+            대기: 0,
+            수정: 1,
+            예약: 2,
+            방문: 3,
+            완료: 4,
+            취소: 5,
+        };
+        const statusA = statusOrder[a["상태"]];
+        const statusB = statusOrder[b["상태"]];
+        if (statusA < statusB) {
+            return -1;
+        }
+        if (statusA > statusB) {
+            return 1;
+        }
+
+        return 0; // 동일한 경우 유지
     }
 }
