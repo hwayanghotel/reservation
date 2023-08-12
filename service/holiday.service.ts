@@ -18,6 +18,8 @@ export class HolidayService {
             const weekEnds: number[] = this.getWeekendDates(date);
             this.getHolidaysFromServer(date).subscribe(
                 (response) => {
+                    const holidaylist: number[] = Array.from(new Set([...weekEnds, ...response])).sort((a, b) => a - b);
+                    HolidayList[index] = holidaylist;
                     resolve(Array.from(new Set([...weekEnds, ...response])).sort((a, b) => a - b));
                 },
                 (error) => {
@@ -48,8 +50,7 @@ export class HolidayService {
     private getHolidaysFromServer(date: Moment.Moment): Observable<number[]> {
         const solYear = date.format("YYYY");
         const solMonth: string = date.month() < 9 ? "0" + (date.month() + 1) : (date.month() + 1).toString();
-        const ServiceKey =
-            "8b14d5v4Vx8aM3%2Fc43pEI7%2BPz3WY0FRigqDQb10hYDioC9KxGc1SipWlVtGO93OYDIgYwnDGudbs9CglwrDNIQ%3D%3D";
+        const ServiceKey = "8b14d5v4Vx8aM3%2Fc43pEI7%2BPz3WY0FRigqDQb10hYDioC9KxGc1SipWlVtGO93OYDIgYwnDGudbs9CglwrDNIQ%3D%3D";
         const url =
             "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?solYear=" +
             solYear +
@@ -73,7 +74,7 @@ export class HolidayService {
     }
 }
 
-const HolidayList = {
+const HolidayList: any = {
     "202307": [1, 2, 8, 9, 15, 16, 22, 23, 29, 30],
     "202308": [5, 6, 12, 13, 15, 19, 20, 26, 27],
     "202309": [2, 3, 9, 10, 16, 17, 23, 24, 28, 29, 30],
