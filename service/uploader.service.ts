@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import * as Moment from "moment";
-import { take } from "rxjs";
+import { debounceTime, take } from "rxjs";
 import { USER_DB_COLLECTION, DBService, IUserDB, ICalenderDB, CALLENDAR_COLLECTION } from "./DB.service";
 
 const googlePensionInfoURL = "https://script.google.com/macros/s/AKfycby0tNVTzNLtaSSHjomtf9NtDm7kAKBrBAt9W9xUj8cL_gTE3RNxjcp7-a_nc3H0ZY0m/exec";
@@ -58,7 +58,7 @@ interface GoogleSheetData {
 export class UploaderService {
     private currentDB: IUserDB[] = [];
     constructor(private http: HttpClient, private store: AngularFirestore, private DBService: DBService) {
-        this.DBService.customerDB$.subscribe((v) => {
+        this.DBService.customerDB$.pipe(debounceTime(300)).subscribe((v) => {
             this.currentDB = v;
         });
     }
