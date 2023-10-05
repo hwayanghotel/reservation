@@ -13,7 +13,7 @@ import * as Moment from "moment";
 })
 export class DialogForFlatbenchComponent implements OnDestroy {
     model: IUserDB;
-    bookingAvailable: { 잔여평상: number; 잔여테이블: number };
+    bookingAvailable: { 잔여평상: number; 잔여데크: number };
 
     private subs: Subscription[] = [];
     constructor(
@@ -44,7 +44,7 @@ export class DialogForFlatbenchComponent implements OnDestroy {
                             }
                             this.bookingAvailable = {
                                 잔여평상: MAX_RESERVATION["평상"] - flatBench,
-                                잔여테이블: MAX_RESERVATION["테이블"] - table,
+                                잔여데크: MAX_RESERVATION["데크"] - table,
                             };
                             if (!this.permission) {
                                 this._setRecommandFlatTable();
@@ -57,16 +57,16 @@ export class DialogForFlatbenchComponent implements OnDestroy {
     }
 
     private _setRecommandFlatTable() {
-        if (!this.model["평상"] && !this.model["테이블"]) {
+        if (!this.model["평상"] && !this.model["데크"]) {
             let person: number = this.model["인원"];
             this.model["평상"] = Math.round(person / StandardNumberOfPeople["평상"]["적정인원"]);
             if (this.model["평상"] > this.bookingAvailable["잔여평상"]) {
                 this.model["평상"] = this.bookingAvailable["잔여평상"];
                 person -= this.model["평상"] * StandardNumberOfPeople["평상"]["적정인원"];
-                this.model["테이블"] = Math.round(person / StandardNumberOfPeople["테이블"]);
-                if (this.model["테이블"] > this.bookingAvailable["잔여테이블"]) {
-                    this.model["테이블"] = this.bookingAvailable["잔여테이블"];
-                    person -= this.model["테이블"] * StandardNumberOfPeople["테이블"];
+                this.model["데크"] = Math.round(person / StandardNumberOfPeople["데크"]);
+                if (this.model["데크"] > this.bookingAvailable["잔여데크"]) {
+                    this.model["데크"] = this.bookingAvailable["잔여데크"];
+                    person -= this.model["데크"] * StandardNumberOfPeople["데크"];
                     console.warn("적정 인원 대비 평상이 부족합니다", person);
                 }
             }
@@ -81,10 +81,10 @@ export class DialogForFlatbenchComponent implements OnDestroy {
     }
 
     get table(): number {
-        return this.model["테이블"] || 0;
+        return this.model["데크"] || 0;
     }
     set table(value: number) {
-        this.model["테이블"] = value || 0;
+        this.model["데크"] = value || 0;
     }
 
     get reservationCost(): number {
@@ -95,7 +95,7 @@ export class DialogForFlatbenchComponent implements OnDestroy {
         if (this.permission) {
             return false;
         }
-        const reservationPerson = this.flatBench * StandardNumberOfPeople["평상"]["최대인원"] + this.table * StandardNumberOfPeople["테이블"];
+        const reservationPerson = this.flatBench * StandardNumberOfPeople["평상"]["최대인원"] + this.table * StandardNumberOfPeople["데크"];
         return this.model["인원"] > reservationPerson;
     }
 

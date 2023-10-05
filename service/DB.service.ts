@@ -26,7 +26,7 @@ export interface IUserDB {
     이용박수?: number;
     // 평상정보
     평상?: number;
-    테이블?: number;
+    데크?: number;
     입금확인?: boolean;
     // 식사정보
     예약시간?: number;

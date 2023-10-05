@@ -54,14 +54,14 @@ export class CalendarComponent {
         return this.selectedDate.month() + 1;
     }
 
-    get typeList(): ("평상" | "식사" | "테이블")[] {
-        return this.type === "평상" ? ["평상", "테이블"] : ["식사"];
+    get typeList(): ("평상" | "식사" | "데크")[] {
+        return this.type === "평상" ? ["평상", "데크"] : ["식사"];
     }
 
-    getContent(date: number, type: "식사" | "평상" | "테이블"): IContent {
+    getContent(date: number, type: "식사" | "평상" | "데크"): IContent {
         const today = Moment(this.selectedDate).date(date);
         let content: number = 0;
-        let index: "식사자리" | "평상" | "테이블" = type === "식사" ? "식사자리" : type;
+        let index: "식사자리" | "평상" | "데크" = type === "식사" ? "식사자리" : type;
         try {
             if (type === "식사") {
                 content = this.calendarDB[today.format("YYMM")][today.format("YYMMDD")].foods;
@@ -69,7 +69,7 @@ export class CalendarComponent {
             if (type === "평상") {
                 content = this.calendarDB[today.format("YYMM")][today.format("YYMMDD")].flatBench;
             }
-            if (type === "테이블") {
+            if (type === "데크") {
                 content = this.calendarDB[today.format("YYMM")][today.format("YYMMDD")].table;
             }
             content = content ? content : 0;
@@ -149,8 +149,8 @@ export class CalendarComponent {
         return calendar;
     }
 
-    openDialog(date: number, type: "식사" | "평상" | "테이블") {
-        if (type === "테이블") {
+    openDialog(date: number, type: "식사" | "평상" | "데크") {
+        if (type === "데크") {
             type = "평상";
         }
         this.reservationService.formData$.next({

@@ -1,11 +1,14 @@
-import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { HolidayService } from "reservation/service/holiday.service";
 import * as Moment from "moment";
 
-export interface DateAndTable {
-    date: Moment.Moment;
+export interface FlatTables {
     flatTable: number;
     dechTable: number;
+}
+
+export interface DateAndTable extends FlatTables {
+    date: Moment.Moment;
 }
 
 interface ICalendar {
@@ -22,7 +25,7 @@ export class BookingDateComponent {
     @Output() back = new EventEmitter<void>();
     @Output() completeDateAndTable = new EventEmitter<DateAndTable>();
     @Input("type") type: "food" | "flat-table" = "food";
-    @Input("dateAndTable") dateAndTable: DateAndTable = { date: Moment().add(1, "d"), flatTable: 0, dechTable: 0 };
+    @Input("dateAndTable") dateAndTable: DateAndTable = { date: Moment().add(1, "d").set("hour", 12).set("minute", 0), flatTable: 0, dechTable: 0 };
     week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
     timeList: string[] = [];
     calendar: ICalendar[][] = [];

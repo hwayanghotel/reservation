@@ -4,16 +4,16 @@ import { IUserDB } from "./DB.service";
 import { Price } from "src/assets/price";
 
 export const MAX_RESERVATION = {
-    식사자리: 14,
+    식사자리: 16,
     평상: 6,
-    테이블: 6,
-    주차: 35,
+    데크: 6,
+    주차: 40,
 };
 
 export const StandardNumberOfPeople = {
     식사좌석: 4,
     평상: { 적정인원: 4, 최대인원: 7 },
-    테이블: 4,
+    데크: 4,
     평상주차: 2,
     식사주차: 1,
 };
@@ -32,14 +32,12 @@ export class ReservationService {
     }
 
     getReservationCost(model: IUserDB): number {
-        const flatTableCost: number = (model["평상"] || 0) * Price["평상"] + (model["테이블"] || 0) * Price["테이블"];
+        const flatTableCost: number = (model["평상"] || 0) * Price["평상"] + (model["데크"] || 0) * Price["데크"];
         if (flatTableCost === 0) {
             return 0;
         }
         const addedGuests: number =
-            model["인원"] -
-            (model["평상"] || 0) * StandardNumberOfPeople["평상"].적정인원 -
-            (model["테이블"] || 0) * StandardNumberOfPeople["테이블"];
+            model["인원"] - (model["평상"] || 0) * StandardNumberOfPeople["평상"].적정인원 - (model["데크"] || 0) * StandardNumberOfPeople["데크"];
         return flatTableCost + (addedGuests > 0 ? addedGuests * Price["평상추가인원"] : 0);
     }
 }

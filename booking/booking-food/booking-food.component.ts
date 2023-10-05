@@ -9,15 +9,13 @@ import { Foods } from "../booking-select-food/booking-select-food.component";
     styleUrls: ["./booking-food.component.scss"],
 })
 export class BookingFoodComponent extends BookingComponent {
-    foods: Foods = { 능이백숙: 0, 한방백숙: 0, 버섯찌개: 0, 버섯찌개2: 0 };
-
     override completeDateAndTable(v: DateAndTable) {
         this.dateAndTable = v;
         this.bookingStep = BookingStep.SelectFood;
     }
 
     completeSelectFoods(v: Foods) {
-        console.warn("completeSelectFoods", v);
+        this.foods = v;
         this.bookingStep = BookingStep.ExtraInfo;
     }
 }

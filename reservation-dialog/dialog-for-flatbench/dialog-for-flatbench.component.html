@@ -20,11 +20,11 @@
 
 	<div class="field">
 		<h4 class="question">
-			2. 테이블 대여<span>(최대:{{bookingAvailable["잔여테이블"]}})</span>
+			2. 데크 대여<span>(최대:{{bookingAvailable["잔여데크"]}})</span>
 		</h4>
 		<div class="answer">
 			<mat-form-field floatLabel="always">
-				<mat-label>테이블 대수</mat-label>
+				<mat-label>데크 대수</mat-label>
 				<mat-icon matPrefix class="pointer" (click)="table = table - 1"
 						  [class.disabled]="table === 0">keyboard_arrow_left</mat-icon>
 				<input [style.text-align]="'center'" matInput type="number" readonly placeholder="1"
@@ -32,7 +32,7 @@
 				<span matTextSuffix>대</span>
 				<mat-icon matSuffix class="pointer"
 						  (click)="table = table + 1"
-						  [class.disabled]="table === bookingAvailable['잔여테이블']">keyboard_arrow_right</mat-icon>
+						  [class.disabled]="table === bookingAvailable['잔여데크']">keyboard_arrow_right</mat-icon>
 			</mat-form-field>
 		</div>
 	</div>
@@ -40,7 +40,7 @@
 	<div class="info">
 		<h5>- 평상 예약금: {{reservationCost | number}}원</h5>
 		<h5>- 평상(5만원)은 적정인원 4명입니다. (최대 7명)</h5>
-		<h5>- 입식 테이블(4만원)은 4인석입니다. (최대 5명)</h5>
+		<h5>- 입식 데크(4만원)은 4인석입니다. (최대 5명)</h5>
 		<h5>- 추가인원 비용은 1만원 입니다.</h5>
 		<a class="link" href="https://hwayanghotel.github.io/#/flat-bench" target="_blank">- 더 많은 설명 보기 ></a>
 	</div>

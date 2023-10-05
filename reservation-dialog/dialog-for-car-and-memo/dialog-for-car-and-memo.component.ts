@@ -45,7 +45,7 @@ export class DialogForCarAndMemoComponent {
             return false;
         }
         const availableCars =
-            this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"] + 2 * (this.model["평상"] + this.model["테이블"]);
+            this.model["능이백숙"] + this.model["백숙"] + this.model["버섯찌개"] + this.model["버섯찌개2"] + 2 * (this.model["평상"] + this.model["데크"]);
         return this.carIndexList.length >= availableCars;
     }
 

@@ -22,5 +22,5 @@
 	</div>
 </div>
 <div class="button-container">
-	<button mat-raised-button (click)="onNextButton()">다음</button>
+	<button mat-raised-button [class.disabled]="!guest.person" (click)="onNextButton()">다음</button>
 </div>

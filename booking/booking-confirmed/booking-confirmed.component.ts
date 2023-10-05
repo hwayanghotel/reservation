@@ -4,8 +4,9 @@ import { ExtraInfo } from "../booking-extra-info/booking-extra-info.component";
 import { NumberOfGuests } from "../booking-number-guest/booking-number-guest.component";
 import { Price } from "src/assets/price";
 import { StandardNumberOfPeople } from "reservation/service/reservation.service";
+import { Foods } from "../booking-select-food/booking-select-food.component";
 
-export interface CustomerInfo extends DateAndTable, ExtraInfo, NumberOfGuests {
+export interface CustomerInfo extends DateAndTable, ExtraInfo, NumberOfGuests, Foods {
     customerMemo: string;
 }
 
@@ -91,7 +92,7 @@ export class BookingConfirmedComponent {
         const dech = this.customerInfo.dechTable;
         const guests = this.customerInfo.person + this.customerInfo.kids;
         const additionalGuests = guests - StandardNumberOfPeople["평상"]["적정인원"] * (flat + dech);
-        return flat * Price["평상"] + dech * Price["테이블"] + (additionalGuests > 0 ? additionalGuests * Price["평상추가인원"] : 0);
+        return flat * Price["평상"] + dech * Price["데크"] + (additionalGuests > 0 ? additionalGuests * Price["평상추가인원"] : 0);
     }
 
     onBackButton() {

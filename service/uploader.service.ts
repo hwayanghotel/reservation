@@ -38,7 +38,7 @@ enum BOOKING_DB {
     객실,
     이용박수,
     평상,
-    테이블,
+    데크,
     입금확인,
     예약시간,
     능이백숙,
@@ -175,7 +175,7 @@ export class UploaderService {
                             "객실",
                             "이용박수",
                             "평상",
-                            "테이블",
+                            "데크",
                             "예약시간",
                             "능이백숙",
                             "백숙",
@@ -275,7 +275,7 @@ export class UploaderService {
                     };
                 }
                 calendarDB[month][date].flatBench += user["평상"] | 0;
-                calendarDB[month][date].table += user["테이블"] | 0;
+                calendarDB[month][date].table += user["데크"] | 0;
                 if (user["예약유형"] === "식사") {
                     calendarDB[month][date].foods += (user["능이백숙"] | 0) + (user["백숙"] | 0) + (user["버섯찌개"] | 0) + (user["버섯찌개2"] | 0);
                 }

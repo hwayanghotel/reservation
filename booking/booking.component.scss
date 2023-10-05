@@ -46,11 +46,6 @@
                 align-items: center;
                 min-width: 3rem;
                 height: 3rem;
-
-                &.disabled {
-                    pointer-events: none;
-                    opacity: 0.3;
-                }
             }
 
             p {
@@ -81,12 +76,12 @@
         font-size: 1.1rem;
         background-color: black;
         color: white;
-
-        &.disabled {
-            pointer-events: none;
-            opacity: 0.3;
-        }
     }
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.3;
 }
 
 .notice {
