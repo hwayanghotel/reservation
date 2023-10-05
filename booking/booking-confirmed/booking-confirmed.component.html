@@ -1,0 +1,55 @@
+<mat-icon class="back" (click)="onBackButton()">keyboard_backspace</mat-icon>
+
+<div class="title-container" [class.complete]="status !== 'ready'">
+	<!-- ready -->
+	<h2 *ngIf="status === 'ready'">예약 정보를<br>확인해 주세요.</h2>
+	<!-- ing -->
+	<mat-icon *ngIf="status === 'ing'">done</mat-icon>
+	<h2 *ngIf="status === 'ing'">예약 진행 중</h2>
+	<!-- done -->
+	<mat-icon *ngIf="status === 'done'">done</mat-icon>
+	<h2 *ngIf="status === 'done'">예약 완료</h2>
+</div>
+<p *ngIf="status === 'ing'" [style.text-align]="'center'">입금 확인 후 예약 확정해드려요.<br>신협 132-0687-4547-6 (정경미)</p>
+
+<div class="content-container">
+	<div class="answer-box">
+		<p>성함</p>
+		<p>{{name}}</p>
+	</div>
+	<div class="answer-box">
+		<p>전화번호</p>
+		<p>{{tel}}</p>
+	</div>
+	<div class="answer-box">
+		<p>인원</p>
+		<p class="answer">{{guests}}</p>
+	</div>
+	<div class="answer-box">
+		<p>날짜</p>
+		<p class="answer">{{date}}</p>
+	</div>
+	<div class="answer-box">
+		<p>평상 대여</p>
+		<p class="answer">{{bookingFlatTable}}</p>
+	</div>
+	<div class="answer-box">
+		<p>식사 예약</p>
+		<p class="answer" [innerHTML]="bookingFoods"></p>
+	</div>
+	<div class="answer-box">
+		<p>차량등록</p>
+		<p>{{totalOfCars}}대<br>{{carList}}</p>
+	</div>
+	<div class="answer-box">
+		<p>예약금</p>
+		<p>{{cost | number}}원</p>
+	</div>
+	<div class="answer-box memo-box">
+		<p>요청 사항</p>
+		<textarea [placeholder]="status === 'ready'? '요청 사항은 여기에 입력해 주세요. (선택항목)' : ''" [(ngModel)]="memo" [readOnly]="status !== 'ready'"></textarea>
+	</div>
+</div>
+<div class="button-container">
+	<button mat-raised-button (click)="onBookingButton()">예약하기</button>
+</div>

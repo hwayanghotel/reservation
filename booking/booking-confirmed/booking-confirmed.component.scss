@@ -1,0 +1,51 @@
+@import "../booking.component.scss";
+
+.title-container {
+    &.complete {
+        align-items: center;
+    }
+
+    mat-icon {
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+    }
+}
+
+.content-container {
+    .answer-box {
+        margin: 0.5rem 0;
+        align-items: baseline;
+
+        p:last-child {
+            margin-left: 1rem;
+            text-align: end;
+            color: black;
+        }
+
+        &.memo-box {
+            flex-direction: column;
+
+            textarea {
+                margin-top: 0.5rem;
+                width: 100%;
+                min-height: 3rem;
+                border: none;
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+p {
+    min-width: 4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: gray;
+}
