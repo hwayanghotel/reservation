@@ -1,0 +1,26 @@
+<button mat-button class="back" (click)="onBackButton()">취소</button>
+<div class="title-container">
+	<h2>인원을<br>적어주세요.</h2>
+</div>
+<div class="content-container">
+	<div class="answer-box">
+		<p>대인</p>
+		<div class="select-number">
+			<mat-icon matRipple [class.disabled]="!guest.person" (click)="guest.person = guest.person-1">keyboard_arrow_down</mat-icon>
+			<p>{{guest.person}}</p>
+			<mat-icon matRipple (click)="guest.person = guest.person+1">keyboard_arrow_up</mat-icon>
+		</div>
+	</div>
+
+	<div class="answer-box">
+		<p>소인 (7세 이하)</p>
+		<div class="select-number">
+			<mat-icon matRipple [class.disabled]="!guest.kids" (click)="guest.kids = guest.kids-1">keyboard_arrow_down</mat-icon>
+			<p>{{guest.kids}}</p>
+			<mat-icon matRipple (click)="guest.kids = guest.kids+1">keyboard_arrow_up</mat-icon>
+		</div>
+	</div>
+</div>
+<div class="button-container">
+	<button mat-raised-button (click)="onNextButton()">다음</button>
+</div>
