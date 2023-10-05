@@ -1,0 +1,54 @@
+<mat-icon class="back" (click)="onBackButton()">keyboard_backspace</mat-icon>
+
+<div class="title-container">
+	<h2>날짜를<br>선택하세요.</h2>
+</div>
+
+<div class="content-container">
+	<div class="calender-container">
+		<div class="month-container">
+			<mat-icon matRipple (click)="moveMonth(-1)" [class.disabled]="disabledPreviousMonth">keyboard_arrow_left</mat-icon>
+			<p>{{selectedMonth}}</p>
+			<mat-icon matRipple (click)="moveMonth(1)">keyboard_arrow_right</mat-icon>
+		</div>
+		<div class="weekdays-list">
+			<p *ngFor="let day of week">{{day}}</p>
+		</div>
+		<div class="weekday" *ngFor="let weekday of calendar">
+			<div class="date" *ngFor="let date of weekday" matRipple [class.disabled]="isPassed(date)" [class.selected]="isSelected(date)"
+				 (click)="setSelectedDate(date)" [class.today]="isToday(date)">
+				<p *ngIf="date.date !== 0" [class.holiday]="date.isHoliday && !isSelected(date)">{{date.date}}</p>
+			</div>
+		</div>
+	</div>
+	<p *ngIf="type === 'food'">시간 선택</p>
+	<div class="time-container" *ngIf="type === 'food'">
+		<p class="time" *ngIf="isToday()">당일은 전화로 도와드릴게요.<br>(043-832-4281)</p>
+		<p class="time" *ngFor="let time of timeList" (click)="setSelectedTime(time)"
+		   [class.hide]="isToday()" [class.selected]="isSelectedTime(time)" [class.notSupport]="isTimeNotSupported(time)">{{time}}
+		</p>
+	</div>
+	<p *ngIf="isToday() && type === 'flat-table'">당일은 전화로 도와드릴게요.<br>(043-832-4281)</p>
+	<div *ngIf="!isToday() && type === 'flat-table'" class="select-table-container">
+		<div class="answer-box">
+			<p>평상 대여</p>
+			<div class="select-number">
+				<mat-icon matRipple [class.disabled]="!flatTable" (click)="setFlatTable(-1)">keyboard_arrow_down</mat-icon>
+				<p>{{flatTable}}</p>
+				<mat-icon matRipple (click)="setFlatTable(1)">keyboard_arrow_up</mat-icon>
+			</div>
+		</div>
+		<div class="answer-box">
+			<p>데크 대여</p>
+			<div class="select-number">
+				<mat-icon matRipple [class.disabled]="!dechTable" (click)="setDechTable(-1)">keyboard_arrow_down</mat-icon>
+				<p>{{dechTable}}</p>
+				<mat-icon matRipple (click)="setDechTable(1)">keyboard_arrow_up</mat-icon>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="button-container">
+	<button mat-raised-button [class.disabled]="isToday()" (click)="onNextButton()">다음</button>
+</div>

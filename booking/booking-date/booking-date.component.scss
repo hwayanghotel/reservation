@@ -1,0 +1,128 @@
+@import "../booking.component.scss";
+
+.content-container {
+    .calender-container {
+        margin-bottom: 4rem;
+
+        .month-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+
+            mat-icon {
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-width: 3rem;
+                height: 3rem;
+
+                &.disabled {
+                    pointer-events: none;
+                    opacity: 0.3;
+                }
+            }
+        }
+
+        .weekdays-list {
+            display: flex;
+            justify-content: space-around;
+
+            p {
+                font-size: 0.8rem;
+                font-weight: 500;
+                opacity: 0.8;
+            }
+        }
+
+        .weekday {
+            display: flex;
+            justify-content: space-around;
+
+            .date {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 2rem;
+                height: 2rem;
+                border-radius: 50%;
+
+                &.selected {
+                    background-color: black;
+
+                    p {
+                        color: white;
+                    }
+                }
+
+                &.today {
+                    text-decoration-line: underline;
+                }
+
+                &.disabled {
+                    pointer-events: none;
+                    opacity: 0.2;
+                }
+
+                p {
+                    font-size: 1rem;
+                    font-weight: 500;
+
+                    &.holiday {
+                        color: #e34c4c;
+                    }
+
+                    &.hide {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .time-container {
+        margin-top: 0.5rem;
+        display: flex;
+        white-space: nowrap;
+        overflow-x: auto;
+
+        scrollbar-width: none;
+        /* Firefox에서만 동작 */
+        -ms-overflow-style: none;
+        /* Internet Explorer 11용 */
+
+        // &::-webkit-scrollbar {
+        //     width: 0px;
+        //     /* 스크롤바 너비를 0으로 설정하여 숨김 */
+        //     /* PC edge에서 스크롤 정상동작 실패하여 주석 처리 */ 
+        // }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: white;
+            /* 스크롤바 색상 */
+        }
+
+        .time {
+            padding: 0.4rem 0.6rem;
+            font-size: 1rem;
+            font-weight: 600;
+
+            &.selected {
+                border-radius: 1rem;
+                background-color: black;
+                color: white;
+            }
+
+            &.hide {
+                display: none;
+            }
+
+            &.notSupport {
+                pointer-events: none;
+                text-decoration: line-through;
+                opacity: 0.2;
+            }
+        }
+    }
+}
