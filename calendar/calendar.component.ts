@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { DBService, ICalenderDB as ICalendarDB } from "reservation/service/DB.service";
-import { HolidayService } from "reservation/service/holiday.service";
+import { HolidayService } from "reservation/service/holiday/holiday.service";
 import * as Moment from "moment";
 import { MAX_RESERVATION, ReservationService } from "reservation/service/reservation.service";
 import { MatDialog } from "@angular/material/dialog";

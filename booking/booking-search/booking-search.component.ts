@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { BookingDateComponent } from "../booking-date/booking-date.component";
-import { HolidayService } from "reservation/service/holiday.service";
+import { HolidayService } from "reservation/service/holiday/holiday.service";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CustomerInfo } from "../booking.interface";
@@ -21,9 +21,7 @@ enum BookingSearchStatus {
     styleUrls: ["./booking-search.component.scss"],
 })
 export class BookingSearchComponent extends BookingDateComponent {
-    // searchInfo: SearchInfo = { name: "", id: undefined };
-    searchInfo: SearchInfo = { name: "이야얍", id: 231108141145 };
-
+    searchInfo: SearchInfo = { name: "", id: undefined };
     customerInfo: CustomerInfo;
     BookingSearchStatus = BookingSearchStatus;
     status: BookingSearchStatus = BookingSearchStatus.search;

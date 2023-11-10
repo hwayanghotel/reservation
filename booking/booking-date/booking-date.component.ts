@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { HolidayService } from "reservation/service/holiday.service";
+import { HolidayService } from "reservation/service/holiday/holiday.service";
 import * as Moment from "moment";
 import { DateAndFlatTable } from "../booking.interface";
 
