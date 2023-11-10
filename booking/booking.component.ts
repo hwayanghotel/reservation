@@ -1,9 +1,6 @@
 import { Component } from "@angular/core";
 import * as Moment from "moment";
-import { DateAndTable } from "./booking-date/booking-date.component";
-import { ExtraInfo } from "./booking-extra-info/booking-extra-info.component";
-import { CustomerInfo } from "./booking-confirmed/booking-confirmed.component";
-import { Foods } from "./booking-select-food/booking-select-food.component";
+import { CustomerInfo, DateAndFlatTable, ExtraInfo, Foods } from "./booking.interface";
 
 export enum BookingStep {
     NumberOfGuests,
@@ -20,15 +17,23 @@ export enum BookingStep {
 })
 export class BookingComponent {
     numberOfGuests: { person: number; kids: number } = { person: 4, kids: 0 };
-    dateAndTable: DateAndTable = { date: Moment().add(1, "d").set("hour", 12).set("minute", 0), flatTable: 0, dechTable: 0 };
-    foods: Foods = { 능이백숙: 0, 한방백숙: 0, 버섯찌개: 0, 버섯찌개2: 0 };
-    extraInfo: ExtraInfo = { name: "", tel: "", carNumber: [] };
+    dateAndTable: DateAndFlatTable = { date: Moment().add(1, "d").set("hour", 12).set("minute", 0), flatTable: 0, dechTable: 0 };
+    foods: Foods = { neungiBaeksuk: 0, baeksuk: 0, mushroomStew: 0, mushroomStewForTwoPeople: 0 };
+    extraInfo: ExtraInfo = { name: "", tel: "", carNumbers: [] };
     BookingStep = BookingStep;
     bookingStep: BookingStep = BookingStep.NumberOfGuests;
-    customerMemo: string = "";
+    id: string = Moment().format("YYMMDDHHmmss");
 
     get customerInfo(): CustomerInfo {
-        return { ...this.numberOfGuests, ...this.dateAndTable, ...this.extraInfo, ...this.foods, customerMemo: this.customerMemo };
+        return {
+            id: this.id,
+            customerMemo: "",
+            status: "ready",
+            ...this.numberOfGuests,
+            ...this.dateAndTable,
+            ...this.extraInfo,
+            ...this.foods,
+        };
     }
 
     completeNumberOfGuests(v: { person: number; kids: number }) {
@@ -36,7 +41,7 @@ export class BookingComponent {
         this.bookingStep = BookingStep.DateAndTime;
     }
 
-    completeDateAndTable(v: DateAndTable) {
+    completeDateAndTable(v: DateAndFlatTable) {
         this.dateAndTable = v;
         this.bookingStep = BookingStep.ExtraInfo;
     }
@@ -46,12 +51,10 @@ export class BookingComponent {
         this.bookingStep = BookingStep.Confirmed;
     }
 
-    completeCustomerInfo(v: CustomerInfo) {
-        this.customerMemo = v.customerMemo;
-        // this.bookingStep = BookingStep.Complete;
-    }
-
     backStep() {
+        if (this.bookingStep === BookingStep.ExtraInfo) {
+            this.bookingStep -= Number(this.dateAndTable.dechTable || this.dateAndTable.flatTable);
+        }
         this.bookingStep--;
     }
 }
