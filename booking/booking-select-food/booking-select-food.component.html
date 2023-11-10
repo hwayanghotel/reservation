@@ -1,4 +1,4 @@
-<mat-icon class="back" (click)="onBackButton()">keyboard_backspace</mat-icon>
+<mat-icon class="back" matRipple (click)="onBackButton()">keyboard_backspace</mat-icon>
 <div class="title-container">
 	<h2>식사를<br>골라주세요.</h2>
 </div>
@@ -6,41 +6,44 @@
 	<div class="answer-box">
 		<p>능이백숙</p>
 		<div class="select-number">
-			<mat-icon matRipple [class.disabled]="!foods['능이백숙']" (click)="foods['능이백숙'] = foods['능이백숙']-1">keyboard_arrow_down</mat-icon>
-			<p>{{foods['능이백숙']}}</p>
-			<mat-icon matRipple (click)="foods['능이백숙'] = foods['능이백숙']+1">keyboard_arrow_up</mat-icon>
+			<mat-icon matRipple [class.disabled]="!foods['neungiBaeksuk']"
+					  (click)="foods['neungiBaeksuk'] = foods['neungiBaeksuk']-1">keyboard_arrow_down</mat-icon>
+			<p>{{foods['neungiBaeksuk']}}</p>
+			<mat-icon matRipple (click)="foods['neungiBaeksuk'] = foods['neungiBaeksuk']+1">keyboard_arrow_up</mat-icon>
 		</div>
 	</div>
 
 	<div class="answer-box">
 		<p>한방백숙</p>
 		<div class="select-number">
-			<mat-icon matRipple [class.disabled]="!foods['한방백숙']" (click)="foods['한방백숙'] = foods['한방백숙']-1">keyboard_arrow_down</mat-icon>
-			<p>{{foods['한방백숙']}}</p>
-			<mat-icon matRipple (click)="foods['한방백숙'] = foods['한방백숙']+1">keyboard_arrow_up</mat-icon>
+			<mat-icon matRipple [class.disabled]="!foods['baeksuk']" (click)="foods['baeksuk'] = foods['baeksuk']-1">keyboard_arrow_down</mat-icon>
+			<p>{{foods['baeksuk']}}</p>
+			<mat-icon matRipple (click)="foods['baeksuk'] = foods['baeksuk']+1">keyboard_arrow_up</mat-icon>
 		</div>
 	</div>
 
 	<div class="answer-box">
 		<p>버섯찌개</p>
 		<div class="select-number">
-			<mat-icon matRipple [class.disabled]="!foods['버섯찌개']" (click)="foods['버섯찌개'] = foods['버섯찌개']-1">keyboard_arrow_down</mat-icon>
-			<p>{{foods['버섯찌개']}}</p>
-			<mat-icon matRipple (click)="foods['버섯찌개'] = foods['버섯찌개']+1">keyboard_arrow_up</mat-icon>
+			<mat-icon matRipple [class.disabled]="!foods['mushroomStew']"
+					  (click)="foods['mushroomStew'] = foods['mushroomStew']-1">keyboard_arrow_down</mat-icon>
+			<p>{{foods['mushroomStew']}}</p>
+			<mat-icon matRipple (click)="foods['mushroomStew'] = foods['mushroomStew']+1">keyboard_arrow_up</mat-icon>
 		</div>
 	</div>
 
 	<div class="answer-box">
 		<p>버섯찌개(2인)</p>
 		<div class="select-number">
-			<mat-icon matRipple [class.disabled]="!foods['버섯찌개2']" (click)="foods['버섯찌개2'] = foods['버섯찌개2']-1">keyboard_arrow_down</mat-icon>
-			<p>{{foods['버섯찌개2']}}</p>
-			<mat-icon matRipple (click)="foods['버섯찌개2'] = foods['버섯찌개2']+1">keyboard_arrow_up</mat-icon>
+			<mat-icon matRipple [class.disabled]="!foods['mushroomStewForTwoPeople']"
+					  (click)="foods['mushroomStewForTwoPeople'] = foods['mushroomStewForTwoPeople']-1">keyboard_arrow_down</mat-icon>
+			<p>{{foods['mushroomStewForTwoPeople']}}</p>
+			<mat-icon matRipple (click)="foods['mushroomStewForTwoPeople'] = foods['mushroomStewForTwoPeople']+1">keyboard_arrow_up</mat-icon>
 		</div>
 	</div>
 </div>
 <div class="button-container">
-	<button mat-raised-button (click)="onNextButton()">다음</button>
+	<button mat-raised-button [class.disabled]="disabled" (click)="onNextButton()">다음</button>
 </div>
 
 <ng-template #notice>

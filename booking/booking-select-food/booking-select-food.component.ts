@@ -1,12 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
-
-export interface Foods {
-    능이백숙: number;
-    한방백숙: number;
-    버섯찌개: number;
-    버섯찌개2: number;
-}
+import { Foods } from "../booking.interface";
 
 @Component({
     selector: "booking-select-food",
@@ -15,7 +9,8 @@ export interface Foods {
 })
 export class BookingSelectFoodComponent implements AfterViewInit {
     @ViewChild("notice") notice: TemplateRef<any>;
-    @Input("foods") foods: Foods = { 능이백숙: 0, 한방백숙: 0, 버섯찌개: 0, 버섯찌개2: 0 };
+    @Input("foods") foods: Foods = { neungiBaeksuk: 0, baeksuk: 0, mushroomStew: 0, mushroomStewForTwoPeople: 0 };
+    @Input("type") type: "food" | "flat-table" = "food";
     @Output() completeSelectFoods = new EventEmitter<Foods>();
     @Output() back = new EventEmitter<void>();
 
@@ -23,6 +18,12 @@ export class BookingSelectFoodComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.dialog.open(this.notice);
+    }
+
+    get disabled(): boolean {
+        return (
+            this.type === "food" && !Boolean(this.foods.neungiBaeksuk || this.foods.baeksuk || this.foods.mushroomStew || this.foods.mushroomStewForTwoPeople)
+        );
     }
 
     onBackButton() {
