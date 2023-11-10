@@ -1,4 +1,4 @@
-<mat-icon class="back" (click)="onBackButton()">keyboard_backspace</mat-icon>
+<mat-icon class="back" matRipple (click)="onBackButton()">keyboard_backspace</mat-icon>
 
 <div class="title-container">
 	<h2>추가 정보를<br>입력하세요.</h2>
@@ -19,14 +19,14 @@
 		<p>차량등록</p>
 		<div class="answer">
 			<div class="select-number">
-				<mat-icon matRipple [class.disabled]="carNumber === 0" (click)="carNumber = -1">keyboard_arrow_down</mat-icon>
-				<p>{{carNumber}}</p>
-				<mat-icon matRipple (click)="carNumber = 1">keyboard_arrow_up</mat-icon>
+				<mat-icon matRipple [class.disabled]="carNumbers === 0" (click)="carNumbers = -1">keyboard_arrow_down</mat-icon>
+				<p>{{carNumbers}}</p>
+				<mat-icon matRipple (click)="carNumbers = 1">keyboard_arrow_up</mat-icon>
 			</div>
 			<div class="input-list">
-				<ng-container *ngFor="let car of extraInfo.carNumber; let index = index">
+				<ng-container *ngFor="let car of extraInfo.carNumbers; let index = index">
 					<input type="text" placeholder="ex) 뒷4자리(0123)"
-						   [value]="extraInfo.carNumber[index]"
+						   [value]="extraInfo.carNumbers[index]"
 						   (input)="inputCarNumber(index, $event)">
 				</ng-container>
 			</div>
@@ -35,5 +35,5 @@
 	<p class="info">※ 차량번호를 모를 경우, 등록 대수만 적어주세요. (추후 입력 가능)</p>
 </div>
 <div class="button-container">
-	<button mat-raised-button (click)="onNextButton()">다음</button>
+	<button mat-raised-button [class.disabled]="disabled" (click)="onNextButton()">다음</button>
 </div>
