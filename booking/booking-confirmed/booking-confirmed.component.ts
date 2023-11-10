@@ -1,26 +1,32 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { DateAndTable } from "../booking-date/booking-date.component";
-import { ExtraInfo } from "../booking-extra-info/booking-extra-info.component";
-import { NumberOfGuests } from "../booking-number-guest/booking-number-guest.component";
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { Price } from "src/assets/price";
 import { StandardNumberOfPeople } from "reservation/service/reservation.service";
-import { Foods } from "../booking-select-food/booking-select-food.component";
-
-export interface CustomerInfo extends DateAndTable, ExtraInfo, NumberOfGuests, Foods {
-    customerMemo: string;
-}
+import { BookingService } from "reservation/service/booking/booking.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatBottomSheet } from "@angular/material/bottom-sheet";
+import { CustomerInfo } from "../booking.interface";
 
 @Component({
     selector: "booking-confirmed",
     templateUrl: "./booking-confirmed.component.html",
     styleUrls: ["./booking-confirmed.component.scss"],
 })
-export class BookingConfirmedComponent {
+export class BookingConfirmedComponent implements OnInit {
+    @ViewChild("CancelPopup") cancelPopup: TemplateRef<any>;
     @Output() back = new EventEmitter<void>();
-    @Output() completeCustomerInfo = new EventEmitter<CustomerInfo>();
     @Input("customerInfo") customerInfo: CustomerInfo;
     memo: string;
-    status: "ready" | "ing" | "done" = "ready";
+    status: "ready" | "paymentReady" | "bookingComplete" | "cancel" = "ready";
+
+    constructor(private bookingService: BookingService, private snackBar: MatSnackBar, private dialog: MatBottomSheet) {}
+
+    ngOnInit() {
+        this.status = this.customerInfo.status;
+    }
+
+    get id(): string {
+        return this.customerInfo.id;
+    }
 
     get name(): string {
         return this.customerInfo.name;
@@ -50,10 +56,10 @@ export class BookingConfirmedComponent {
     }
 
     get bookingFoods(): string {
-        const 능이 = 1;
-        const 한방 = 2;
-        const 버섯 = 0;
-        const 버섯2 = 0;
+        const 능이 = this.customerInfo.neungiBaeksuk;
+        const 한방 = this.customerInfo.baeksuk;
+        const 버섯 = this.customerInfo.mushroomStew;
+        const 버섯2 = this.customerInfo.mushroomStewForTwoPeople;
         let foods: string = "";
         if (능이) {
             foods = `능이백숙 ${능이}상`;
@@ -71,12 +77,12 @@ export class BookingConfirmedComponent {
     }
 
     get totalOfCars(): number {
-        return this.customerInfo.carNumber.length;
+        return this.customerInfo.carNumbers.length;
     }
 
     get carList(): string {
         let description = "";
-        this.customerInfo.carNumber
+        this.customerInfo.carNumbers
             .filter((v) => v.length)
             .forEach((car) => {
                 if (description !== "") {
@@ -95,18 +101,51 @@ export class BookingConfirmedComponent {
         return flat * Price["평상"] + dech * Price["데크"] + (additionalGuests > 0 ? additionalGuests * Price["평상추가인원"] : 0);
     }
 
+    onAddButton() {
+        this.bookingService
+            .add({
+                ...this.customerInfo,
+                id: this.id,
+                status: this.customerInfo.flatTable || this.customerInfo.dechTable ? "paymentReady" : "bookingComplete",
+                customerMemo: this.memo || null,
+            })
+            .then((user) => {
+                this.status = user.status;
+            })
+            .catch((e) => {
+                console.error("신규 예약 등록 실패", e);
+                this.snackBar.open("예약을 실패했습니다. 다시 시도해주세요.", null, { duration: 2000 });
+            });
+    }
+
     onBackButton() {
         this.back.emit();
     }
 
-    onBookingButton() {
-        console.warn("onBookingButton");
-        if (this.status === "ready") this.status = "ing";
-        else if (this.status === "ing") this.status = "done";
-        else if (this.status === "done") this.status = "ready";
-        // this.completeCustomerInfo.emit({
-        //     ...this.customerInfo,
-        //     customerMemo: this.memo,
-        // });
+    onOkayButton() {
+        window.history.back();
+    }
+
+    onCarRegister() {
+        console.warn("주차등록");
+    }
+
+    onCancelButton() {
+        this.dialog.open(this.cancelPopup);
+    }
+
+    closePopup() {
+        this.dialog.dismiss();
+    }
+
+    onBookingCancelButton() {
+        this.closePopup();
+
+        this.bookingService
+            .cancel(this.customerInfo)
+            .then((user) => {
+                this.customerInfo = user;
+            })
+            .catch((e) => this.snackBar.open("예약이 취소되지 않았습니다. 다시 시도해주세요.", null, { duration: 2000 }));
     }
 }

@@ -1,18 +1,33 @@
-<mat-icon class="back" (click)="onBackButton()">keyboard_backspace</mat-icon>
+<mat-icon *ngIf="status === 'ready'" class="back" matRipple (click)="onBackButton()">keyboard_backspace</mat-icon>
+<mat-icon *ngIf="status === 'paymentReady' || status === 'bookingComplete'" class="more" matRipple [matMenuTriggerFor]="menu">more_vert</mat-icon>
+
+<mat-menu #menu="matMenu">
+	<button mat-menu-item>
+		<p class="menu" (click)="onCancelButton()">취소하기</p>
+	</button>
+</mat-menu>
 
 <div class="title-container" [class.complete]="status !== 'ready'">
 	<!-- ready -->
 	<h2 *ngIf="status === 'ready'">예약 정보를<br>확인해 주세요.</h2>
-	<!-- ing -->
-	<mat-icon *ngIf="status === 'ing'">done</mat-icon>
-	<h2 *ngIf="status === 'ing'">예약 진행 중</h2>
-	<!-- done -->
-	<mat-icon *ngIf="status === 'done'">done</mat-icon>
-	<h2 *ngIf="status === 'done'">예약 완료</h2>
+	<!-- paymentReady -->
+	<mat-icon *ngIf="status === 'paymentReady'">done</mat-icon>
+	<h2 *ngIf="status === 'paymentReady'">예약 진행 중</h2>
+	<!-- bookingComplete -->
+	<mat-icon *ngIf="status === 'bookingComplete'">done</mat-icon>
+	<h2 *ngIf="status === 'bookingComplete'">예약 완료</h2>
+	<!-- cancel -->
+	<mat-icon *ngIf="status === 'cancel'">cancel</mat-icon>
+	<h2 *ngIf="status === 'cancel'">예약 취소</h2>
 </div>
-<p *ngIf="status === 'ing'" [style.text-align]="'center'">입금 확인 후 예약 확정해드려요.<br>신협 132-0687-4547-6 (정경미)</p>
+<p *ngIf="status === 'paymentReady'" [style.text-align]="'center'">입금 확인 후 예약 확정해드려요.<br>신협 132-0687-4547-6 (정경미)</p>
+<p *ngIf="status === 'cancel'" [style.text-align]="'center'">예약이 정상적으로 취소되었습니다.<br>다음에 모시겠습니다.</p>
 
-<div class="content-container">
+<div class="content-container" *ngIf="status !=='cancel'">
+	<div class="answer-box">
+		<p>예약번호</p>
+		<p>{{id}}</p>
+	</div>
 	<div class="answer-box">
 		<p>성함</p>
 		<p>{{name}}</p>
@@ -33,7 +48,7 @@
 		<p>평상 대여</p>
 		<p class="answer">{{bookingFlatTable}}</p>
 	</div>
-	<div class="answer-box">
+	<div class="answer-box" *ngIf="bookingFoods">
 		<p>식사 예약</p>
 		<p class="answer" [innerHTML]="bookingFoods"></p>
 	</div>
@@ -50,6 +65,18 @@
 		<textarea [placeholder]="status === 'ready'? '요청 사항은 여기에 입력해 주세요. (선택항목)' : ''" [(ngModel)]="memo" [readOnly]="status !== 'ready'"></textarea>
 	</div>
 </div>
-<div class="button-container">
-	<button mat-raised-button (click)="onBookingButton()">예약하기</button>
+<div class="button-container" [class.half-button]="status !== 'ready'">
+	<button mat-raised-button *ngIf="status === 'paymentReady' || status === 'bookingComplete'" (click)="onCarRegister()">주차등록</button>
+	<button mat-raised-button *ngIf="status !== 'ready'" (click)="onOkayButton()">확인</button>
+	<button mat-raised-button *ngIf="status === 'ready'" (click)="onAddButton()">예약하기</button>
 </div>
+
+<ng-template #CancelPopup>
+	<div class="notice">
+		<h3>정말 예약을 취소하시겠습니까?</h3>
+	</div>
+	<div class="notice-button-container half-button">
+		<button mat-raised-button (click)="closePopup()">유지하기</button>
+		<button mat-raised-button (click)="onBookingCancelButton()">취소하기</button>
+	</div>
+</ng-template>
