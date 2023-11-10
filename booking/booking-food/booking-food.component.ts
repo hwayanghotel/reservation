@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { BookingComponent, BookingStep } from "../booking.component";
-import { DateAndTable } from "../booking-date/booking-date.component";
-import { Foods } from "../booking-select-food/booking-select-food.component";
+import { DateAndFlatTable, Foods } from "../booking.interface";
 
 @Component({
     selector: "booking-food",
@@ -9,7 +8,7 @@ import { Foods } from "../booking-select-food/booking-select-food.component";
     styleUrls: ["./booking-food.component.scss"],
 })
 export class BookingFoodComponent extends BookingComponent {
-    override completeDateAndTable(v: DateAndTable) {
+    override completeDateAndTable(v: DateAndFlatTable) {
         this.dateAndTable = v;
         this.bookingStep = BookingStep.SelectFood;
     }

@@ -11,7 +11,7 @@
 </booking-date>
 
 <booking-select-food *ngIf="bookingStep === BookingStep.SelectFood" (back)="backStep()"
-                     [foods]="foods"
+                     [foods]="foods" type="food"
                      (completeSelectFoods)="completeSelectFoods($event)">
 </booking-select-food>
 
@@ -20,7 +20,5 @@
                     (completeExtraInfo)="completeExtraInfo($event)">
 </booking-extra-info>
 
-<booking-confirmed *ngIf="bookingStep === BookingStep.Confirmed" (back)="backStep()"
-                   [customerInfo]="customerInfo"
-                   (completeCustomerInfo)="completeCustomerInfo($event)">
+<booking-confirmed *ngIf="bookingStep === BookingStep.Confirmed" (back)="backStep()" [customerInfo]="customerInfo">
 </booking-confirmed>
