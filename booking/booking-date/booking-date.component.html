@@ -1,4 +1,4 @@
-<mat-icon class="back" (click)="onBackButton()">keyboard_backspace</mat-icon>
+<mat-icon class="back" matRipple (click)="onBackButton()">keyboard_backspace</mat-icon>
 
 <div class="title-container">
 	<h2>날짜를<br>선택하세요.</h2>
@@ -50,5 +50,5 @@
 </div>
 
 <div class="button-container">
-	<button mat-raised-button [class.disabled]="isToday()" (click)="onNextButton()">다음</button>
+	<button mat-raised-button [class.disabled]="disabled" (click)="onNextButton()">다음</button>
 </div>

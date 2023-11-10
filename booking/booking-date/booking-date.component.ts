@@ -1,15 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { HolidayService } from "reservation/service/holiday.service";
 import * as Moment from "moment";
-
-export interface FlatTables {
-    flatTable: number;
-    dechTable: number;
-}
-
-export interface DateAndTable extends FlatTables {
-    date: Moment.Moment;
-}
+import { DateAndFlatTable } from "../booking.interface";
 
 interface ICalendar {
     date: number;
@@ -23,9 +15,9 @@ interface ICalendar {
 })
 export class BookingDateComponent {
     @Output() back = new EventEmitter<void>();
-    @Output() completeDateAndTable = new EventEmitter<DateAndTable>();
+    @Output() completeDateAndTable = new EventEmitter<DateAndFlatTable>();
     @Input("type") type: "food" | "flat-table" = "food";
-    @Input("dateAndTable") dateAndTable: DateAndTable = { date: Moment().add(1, "d").set("hour", 12).set("minute", 0), flatTable: 0, dechTable: 0 };
+    @Input("dateAndTable") dateAndTable: DateAndFlatTable = { date: Moment().add(1, "d").set("hour", 12).set("minute", 0), flatTable: 0, dechTable: 0 };
     week: string[] = ["일", "월", "화", "수", "목", "금", "토"];
     timeList: string[] = [];
     calendar: ICalendar[][] = [];
@@ -46,6 +38,10 @@ export class BookingDateComponent {
 
     get dechTable(): number {
         return this.dateAndTable.dechTable;
+    }
+
+    get disabled(): boolean {
+        return this.isToday() || (this.type === "flat-table" ? this.flatTable + this.dechTable === 0 : false);
     }
 
     isSelected(date: ICalendar): boolean {
