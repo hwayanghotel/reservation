@@ -17,7 +17,7 @@ export enum BookingStep {
 })
 export class BookingComponent {
     numberOfGuests: { person: number; kids: number } = { person: 4, kids: 0 };
-    dateAndTable: DateAndFlatTable = { date: Moment().add(1, "d").set("hour", 12).set("minute", 0), flatTable: 0, dechTable: 0 };
+    dateAndTable: DateAndFlatTable = { date: Moment().add(1, "d").set("hour", 10).set("minute", 0), flatTable: 0, dechTable: 0 };
     foods: Foods = { neungiBaeksuk: 0, baeksuk: 0, mushroomStew: 0, mushroomStewForTwoPeople: 0 };
     extraInfo: ExtraInfo = { name: "", tel: "", carNumbers: [] };
     BookingStep = BookingStep;
@@ -39,11 +39,6 @@ export class BookingComponent {
     completeNumberOfGuests(v: { person: number; kids: number }) {
         this.numberOfGuests = v;
         this.bookingStep = BookingStep.DateAndTime;
-    }
-
-    completeDateAndTable(v: DateAndFlatTable) {
-        this.dateAndTable = v;
-        this.bookingStep = BookingStep.ExtraInfo;
     }
 
     completeExtraInfo(v: ExtraInfo) {
