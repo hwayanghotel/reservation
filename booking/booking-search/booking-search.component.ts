@@ -4,6 +4,7 @@ import { HolidayService } from "reservation/service/holiday/holiday.service";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CustomerInfo } from "../booking.interface";
+import { CalendarService } from "reservation/service/calendar/calendar.service";
 
 interface SearchInfo {
     name: string;
@@ -26,8 +27,8 @@ export class BookingSearchComponent extends BookingDateComponent {
     BookingSearchStatus = BookingSearchStatus;
     status: BookingSearchStatus = BookingSearchStatus.search;
 
-    constructor(holidayService: HolidayService, private bookingService: BookingService, private snackBar: MatSnackBar) {
-        super(holidayService);
+    constructor(holidayService: HolidayService, calendarService: CalendarService, private bookingService: BookingService, private snackBar: MatSnackBar) {
+        super(holidayService, calendarService);
     }
     override onBackButton() {
         window.history.back();
