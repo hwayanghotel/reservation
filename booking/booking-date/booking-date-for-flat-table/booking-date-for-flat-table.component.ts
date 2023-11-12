@@ -1,13 +1,31 @@
-import { Component } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, Output, TemplateRef, ViewChild } from "@angular/core";
 import { BookingDateComponent, ICalendar } from "../booking-date.component";
-import { MAX_BOOKING } from "reservation/service/booking/booking.interface";
+import { MAX_BOOKING, Price, STANDARD_BOOKING } from "reservation/service/booking/booking.interface";
+import { HolidayService } from "reservation/service/holiday/holiday.service";
+import { CalendarService } from "reservation/service/calendar/calendar.service";
+import { MatBottomSheet } from "@angular/material/bottom-sheet";
+import { DateAndFlatTable } from "reservation/booking/booking.interface";
 
 @Component({
     selector: "booking-date-for-flat-table",
     templateUrl: "./booking-date-for-flat-table.component.html",
     styleUrls: ["./booking-date-for-flat-table.component.scss"],
 })
-export class BookingDateForFlatTableComponent extends BookingDateComponent {
+export class BookingDateForFlatTableComponent extends BookingDateComponent implements AfterViewInit {
+    @ViewChild("notice") notice: TemplateRef<any>;
+    @ViewChild("addFoodBooking") addFoodBooking: TemplateRef<any>;
+    @Output() noNeedFood = new EventEmitter<DateAndFlatTable>();
+    STANDARD_BOOKING = STANDARD_BOOKING;
+    Price = Price;
+
+    constructor(holidayService: HolidayService, calendarService: CalendarService, private dialog: MatBottomSheet) {
+        super(holidayService, calendarService);
+    }
+
+    ngAfterViewInit() {
+        this.dialog.open(this.notice);
+    }
+
     override setSelectedDate(date: ICalendar) {
         super.setSelectedDate(date);
         this._adjustselectedTableNumber();
@@ -71,5 +89,27 @@ export class BookingDateForFlatTableComponent extends BookingDateComponent {
         } catch {
             return type === "flatTable" ? this.flatTable >= MAX_BOOKING.flatTable : this.dechTable >= MAX_BOOKING.dechTable;
         }
+    }
+
+    override onNextButton() {
+        this.dialog.dismiss();
+        super.onNextButton();
+    }
+
+    price(v: number) {
+        return v / 10000;
+    }
+
+    openAddFoodBookingDialog() {
+        this.dialog.open(this.addFoodBooking);
+    }
+
+    noNeedFoodBooking() {
+        this.dialog.dismiss();
+        this.noNeedFood.emit(this.dateAndTable);
+    }
+
+    onNoticeButton() {
+        this.dialog.dismiss();
     }
 }

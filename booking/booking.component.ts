@@ -41,6 +41,16 @@ export class BookingComponent {
         this.bookingStep = BookingStep.DateAndTime;
     }
 
+    completeDateAndTable(v: DateAndFlatTable) {
+        this.dateAndTable = v;
+        this.bookingStep = BookingStep.SelectFood;
+    }
+
+    completeSelectFoods(v: Foods) {
+        this.foods = v;
+        this.bookingStep = BookingStep.ExtraInfo;
+    }
+
     completeExtraInfo(v: ExtraInfo) {
         this.extraInfo = v;
         this.bookingStep = BookingStep.Confirmed;

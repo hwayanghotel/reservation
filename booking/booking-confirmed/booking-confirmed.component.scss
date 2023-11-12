@@ -60,20 +60,3 @@ p {
     font-weight: 600;
     color: gray;
 }
-
-.half-button {
-    display: flex;
-    flex-direction: row;
-
-    button {
-        width: -webkit-fill-available;
-    }
-
-    button:first-child {
-        margin-right: 0.3rem;
-    }
-
-    button:last-child {
-        margin-left: 0.3rem;
-    }
-}

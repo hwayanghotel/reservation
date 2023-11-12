@@ -118,6 +118,23 @@
     margin-top: 2rem !important;
 }
 
+.half-button {
+    display: flex;
+    flex-direction: row;
+
+    button {
+        width: -webkit-fill-available;
+    }
+
+    button:first-child {
+        margin-right: 0.3rem;
+    }
+
+    button:last-child {
+        margin-left: 0.3rem;
+    }
+}
+
 div,
 button,
 h1,
