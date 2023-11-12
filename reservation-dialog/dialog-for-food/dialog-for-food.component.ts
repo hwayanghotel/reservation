@@ -3,7 +3,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { ManagerService } from "manager/manager.service";
 import { IUserDB } from "reservation/service/DB.service";
 import { MAX_RESERVATION, ReservationService, StandardNumberOfPeople } from "reservation/service/reservation.service";
-import { Price } from "src/assets/price";
+import { Price } from "reservation/service/booking/booking.interface";
 
 @Component({
     selector: "dialog-for-food",

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
-import { Price } from "src/assets/price";
+import { Price } from "reservation/service/booking/booking.interface";
 import { StandardNumberOfPeople } from "reservation/service/reservation.service";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
