@@ -17,13 +17,13 @@ export class BookingSelectFoodComponent implements AfterViewInit {
     constructor(private dialog: MatBottomSheet) {}
 
     ngAfterViewInit() {
-        this.dialog.open(this.notice);
+        if (this.type === "food") {
+            this.dialog.open(this.notice);
+        }
     }
 
     get disabled(): boolean {
-        return (
-            this.type === "food" && !Boolean(this.foods.neungiBaeksuk || this.foods.baeksuk || this.foods.mushroomStew || this.foods.mushroomStewForTwoPeople)
-        );
+        return !Boolean(this.foods.neungiBaeksuk || this.foods.baeksuk || this.foods.mushroomStew || this.foods.mushroomStewForTwoPeople);
     }
 
     onBackButton() {
