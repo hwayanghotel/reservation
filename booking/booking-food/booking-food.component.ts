@@ -8,7 +8,7 @@ import { DateAndFlatTable, Foods } from "../booking.interface";
     styleUrls: ["./booking-food.component.scss"],
 })
 export class BookingFoodComponent extends BookingComponent {
-    override completeDateAndTable(v: DateAndFlatTable) {
+    completeDateAndTable(v: DateAndFlatTable) {
         this.dateAndTable = v;
         this.bookingStep = BookingStep.SelectFood;
     }

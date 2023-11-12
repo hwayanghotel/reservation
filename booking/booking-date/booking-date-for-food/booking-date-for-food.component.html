@@ -21,31 +21,12 @@
 			</div>
 		</div>
 	</div>
-	<p *ngIf="type === 'food'">시간 선택</p>
-	<div class="time-container" *ngIf="type === 'food'">
+	<p>시간 선택</p>
+	<div class="time-container">
 		<p class="time" *ngIf="isToday()">당일은 전화로 도와드릴게요.<br>(043-832-4281)</p>
 		<p class="time" *ngFor="let time of timeList" (click)="setSelectedTime(time)"
 		   [class.hide]="isToday()" [class.selected]="isSelectedTime(time)" [class.notSupport]="isTimeNotSupported(time)">{{time}}
 		</p>
-	</div>
-	<p *ngIf="isToday() && type === 'flat-table'">당일은 전화로 도와드릴게요.<br>(043-832-4281)</p>
-	<div *ngIf="!isToday() && type === 'flat-table'" class="select-table-container">
-		<div class="answer-box">
-			<p>평상 대여</p>
-			<div class="select-number">
-				<mat-icon matRipple [class.disabled]="!flatTable" (click)="setFlatTable(-1)">keyboard_arrow_down</mat-icon>
-				<p>{{flatTable}}</p>
-				<mat-icon matRipple (click)="setFlatTable(1)">keyboard_arrow_up</mat-icon>
-			</div>
-		</div>
-		<div class="answer-box">
-			<p>데크 대여</p>
-			<div class="select-number">
-				<mat-icon matRipple [class.disabled]="!dechTable" (click)="setDechTable(-1)">keyboard_arrow_down</mat-icon>
-				<p>{{dechTable}}</p>
-				<mat-icon matRipple (click)="setDechTable(1)">keyboard_arrow_up</mat-icon>
-			</div>
-		</div>
 	</div>
 </div>
 

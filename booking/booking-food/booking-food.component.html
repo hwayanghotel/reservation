@@ -4,11 +4,10 @@
                       (completeNumberOfGuests)="completeNumberOfGuests($event)">
 </booking-number-guest>
 
-<booking-date *ngIf="bookingStep === BookingStep.DateAndTime" (back)="backStep()"
-              type="food"
-              [dateAndTable]="dateAndTable"
-              (completeDateAndTable)="completeDateAndTable($event)">
-</booking-date>
+<booking-date-for-food *ngIf="bookingStep === BookingStep.DateAndTime" (back)="backStep()"
+                       [dateAndTable]="dateAndTable"
+                       (completeDateAndTable)="completeDateAndTable($event)">
+</booking-date-for-food>
 
 <booking-select-food *ngIf="bookingStep === BookingStep.SelectFood" (back)="backStep()"
                      [foods]="foods" type="food"

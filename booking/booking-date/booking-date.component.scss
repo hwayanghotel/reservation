@@ -71,48 +71,9 @@
         }
     }
 
-    .time-container {
-        margin-top: 0.5rem;
-        display: flex;
-        white-space: nowrap;
-        overflow-x: auto;
-
-        scrollbar-width: none;
-        /* Firefox에서만 동작 */
-        -ms-overflow-style: none;
-        /* Internet Explorer 11용 */
-
-        // &::-webkit-scrollbar {
-        //     width: 0px;
-        //     /* 스크롤바 너비를 0으로 설정하여 숨김 */
-        //     /* PC edge에서 스크롤 정상동작 실패하여 주석 처리 */ 
-        // }
-
-        &::-webkit-scrollbar-thumb {
-            background-color: white;
-            /* 스크롤바 색상 */
-        }
-
-        .time {
-            padding: 0.4rem 0.6rem;
-            font-size: 1rem;
-            font-weight: 600;
-
-            &.selected {
-                border-radius: 1rem;
-                background-color: black;
-                color: white;
-            }
-
-            &.hide {
-                display: none;
-            }
-
-            &.notSupport {
-                pointer-events: none;
-                text-decoration: line-through;
-                opacity: 0.2;
-            }
-        }
+    .notSupport {
+        pointer-events: none;
+        text-decoration: line-through;
+        opacity: 0.2;
     }
 }
