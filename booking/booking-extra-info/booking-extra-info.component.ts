@@ -7,10 +7,10 @@ import { ExtraInfo } from "../booking.interface";
     styleUrls: ["./booking-extra-info.component.scss"],
 })
 export class BookingExtraInfoComponent {
-    @Input("extraInfo") extraInfo: ExtraInfo = { name: "", tel: "", carNumbers: [] };
+    @Input("extraInfo") extraInfo: ExtraInfo = { name: "", tel: "", cars: [] };
     @Output() completeExtraInfo = new EventEmitter<ExtraInfo>();
     @Output() back = new EventEmitter<void>();
-    private _inputCarNumber: string[] = this.extraInfo.carNumbers;
+    private _inputCarNumber: string[] = this.extraInfo.cars;
 
     constructor() {}
 
@@ -18,20 +18,20 @@ export class BookingExtraInfoComponent {
         this.back.emit();
     }
 
-    get carNumbers(): number {
-        return this.extraInfo.carNumbers.length;
+    get cars(): number {
+        return this.extraInfo.cars.length;
     }
 
     inputCarNumber(index: number, event: any) {
         this._inputCarNumber[index] = event.target.value;
     }
 
-    set carNumbers(v: number) {
+    set cars(v: number) {
         if (v > 0) {
-            this.extraInfo.carNumbers.push("");
+            this.extraInfo.cars.push("");
             this._inputCarNumber.push("");
         } else {
-            this.extraInfo.carNumbers.pop();
+            this.extraInfo.cars.pop();
         }
     }
 
@@ -42,7 +42,7 @@ export class BookingExtraInfoComponent {
     }
 
     onNextButton() {
-        this.extraInfo.carNumbers = this._inputCarNumber;
+        this.extraInfo.cars = this._inputCarNumber;
         this.completeExtraInfo.emit(this.extraInfo);
     }
 }

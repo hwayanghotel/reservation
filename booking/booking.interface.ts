@@ -9,7 +9,7 @@ export interface CustomerInfo extends DateAndFlatTable, ExtraInfo, NumberOfGuest
 export interface ExtraInfo {
     name: string;
     tel: string;
-    carNumbers: string[];
+    cars: string[];
 }
 
 export interface NumberOfGuests {

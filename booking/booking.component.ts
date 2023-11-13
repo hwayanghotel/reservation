@@ -19,7 +19,7 @@ export class BookingComponent {
     numberOfGuests: { person: number; kids: number } = { person: 4, kids: 0 };
     dateAndTable: DateAndFlatTable = { date: Moment().add(1, "d").set("hour", 10).set("minute", 0), flatTable: 0, dechTable: 0 };
     foods: Foods = { neungiBaeksuk: 0, baeksuk: 0, mushroomStew: 0, mushroomStewForTwoPeople: 0 };
-    extraInfo: ExtraInfo = { name: "", tel: "", carNumbers: [] };
+    extraInfo: ExtraInfo = { name: "", tel: "", cars: [] };
     BookingStep = BookingStep;
     bookingStep: BookingStep = BookingStep.NumberOfGuests;
     id: string = Moment().format("YYMMDDHHmmss");

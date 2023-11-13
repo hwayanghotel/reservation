@@ -77,12 +77,12 @@ export class BookingConfirmedComponent implements OnInit {
     }
 
     get totalOfCars(): number {
-        return this.customerInfo.carNumbers.length;
+        return this.customerInfo.cars.length;
     }
 
     get carList(): string {
         let description = "";
-        this.customerInfo.carNumbers
+        this.customerInfo.cars
             .filter((v) => v.length)
             .forEach((car) => {
                 if (description !== "") {

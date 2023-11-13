@@ -19,14 +19,14 @@
 		<p>차량등록</p>
 		<div class="answer">
 			<div class="select-number">
-				<mat-icon matRipple [class.disabled]="carNumbers === 0" (click)="carNumbers = -1">keyboard_arrow_down</mat-icon>
-				<p>{{carNumbers}}</p>
-				<mat-icon matRipple (click)="carNumbers = 1">keyboard_arrow_up</mat-icon>
+				<mat-icon matRipple [class.disabled]="cars === 0" (click)="cars = -1">keyboard_arrow_down</mat-icon>
+				<p>{{cars}}</p>
+				<mat-icon matRipple (click)="cars = 1">keyboard_arrow_up</mat-icon>
 			</div>
 			<div class="input-list">
-				<ng-container *ngFor="let car of extraInfo.carNumbers; let index = index">
+				<ng-container *ngFor="let car of extraInfo.cars; let index = index">
 					<input type="text" placeholder="ex) 뒷4자리(0123)"
-						   [value]="extraInfo.carNumbers[index]"
+						   [value]="extraInfo.cars[index]"
 						   (input)="inputCarNumber(index, $event)">
 				</ng-container>
 			</div>
