@@ -51,7 +51,7 @@ export class BookingComponent {
         this.bookingStep = BookingStep.ExtraInfo;
     }
 
-    completeExtraInfo(v: UserInfo) {
+    completeUserInfo(v: UserInfo) {
         this.userInfo = v;
         this.bookingStep = BookingStep.Confirmed;
     }
