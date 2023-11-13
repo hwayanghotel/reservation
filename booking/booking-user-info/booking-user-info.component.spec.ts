@@ -3,20 +3,20 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
 
-import { BookingExtraInfoComponent } from "./booking-extra-info.component";
+import { BookingUserInfoComponent } from "./booking-user-info.component";
 
 describe("BookingCustomerInfoComponent", () => {
-    let component: BookingExtraInfoComponent;
-    let fixture: ComponentFixture<BookingExtraInfoComponent>;
+    let component: BookingUserInfoComponent;
+    let fixture: ComponentFixture<BookingUserInfoComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BookingExtraInfoComponent],
+            declarations: [BookingUserInfoComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(BookingExtraInfoComponent);
+        fixture = TestBed.createComponent(BookingUserInfoComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

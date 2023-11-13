@@ -1,12 +1,12 @@
 import * as Moment from "moment";
 
-export interface CustomerInfo extends DateAndFlatTable, ExtraInfo, NumberOfGuests, Foods, FlatTables {
+export interface CustomerInfo extends DateAndFlatTable, UserInfo, NumberOfGuests, Foods, FlatTables {
     customerMemo: string;
     id: string;
     status: "ready" | "paymentReady" | "bookingComplete" | "cancel";
 }
 
-export interface ExtraInfo {
+export interface UserInfo {
     name: string;
     tel: string;
     cars: string[];

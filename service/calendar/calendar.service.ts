@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { CALENDAR_COLLECTION, ICalendarService, ICalenderDB } from "./calendar.interface";
 import { BehaviorSubject } from "rxjs";
-import { CustomerInfo } from "reservation/booking/booking.interface";
+import { CustomerInfo } from "reservation/booking/booking.component.interface";
 
 @Injectable({
     providedIn: "root",

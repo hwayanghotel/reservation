@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { BookingDateComponent, ICalendar } from "../booking-date.component";
-import { MAX_BOOKING } from "reservation/service/booking/booking.interface";
+import { MAX_BOOKING } from "reservation/service/booking/booking.service.interface";
 import { HolidayService } from "reservation/service/holiday/holiday.service";
 import { CalendarService } from "reservation/service/calendar/calendar.service";
 import * as Moment from "moment";

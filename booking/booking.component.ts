@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import * as Moment from "moment";
-import { CustomerInfo, DateAndFlatTable, ExtraInfo, Foods } from "./booking.interface";
+import { CustomerInfo, DateAndFlatTable, UserInfo, Foods } from "./booking.component.interface";
 
 export enum BookingStep {
     NumberOfGuests,
@@ -19,7 +19,7 @@ export class BookingComponent {
     numberOfGuests: { person: number; kids: number } = { person: 4, kids: 0 };
     dateAndTable: DateAndFlatTable = { date: Moment().add(1, "d").set("hour", 10).set("minute", 0), flatTable: 0, dechTable: 0 };
     foods: Foods = { neungiBaeksuk: 0, baeksuk: 0, mushroomStew: 0, mushroomStewForTwoPeople: 0 };
-    extraInfo: ExtraInfo = { name: "", tel: "", cars: [] };
+    userInfo: UserInfo = { name: "", tel: "", cars: [] };
     BookingStep = BookingStep;
     bookingStep: BookingStep = BookingStep.NumberOfGuests;
     id: string = Moment().format("YYMMDDHHmmss");
@@ -31,7 +31,7 @@ export class BookingComponent {
             status: "ready",
             ...this.numberOfGuests,
             ...this.dateAndTable,
-            ...this.extraInfo,
+            ...this.userInfo,
             ...this.foods,
         };
     }
@@ -51,8 +51,8 @@ export class BookingComponent {
         this.bookingStep = BookingStep.ExtraInfo;
     }
 
-    completeExtraInfo(v: ExtraInfo) {
-        this.extraInfo = v;
+    completeExtraInfo(v: UserInfo) {
+        this.userInfo = v;
         this.bookingStep = BookingStep.Confirmed;
     }
 

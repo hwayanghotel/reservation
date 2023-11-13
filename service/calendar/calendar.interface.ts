@@ -1,4 +1,4 @@
-import { CustomerInfo } from "reservation/booking/booking.interface";
+import { CustomerInfo } from "reservation/booking/booking.component.interface";
 import { BehaviorSubject } from "rxjs";
 
 export interface ICalenderDB {

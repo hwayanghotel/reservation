@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
-import { Foods } from "../booking.interface";
+import { Foods } from "../booking.component.interface";
 
 @Component({
     selector: "booking-select-food",

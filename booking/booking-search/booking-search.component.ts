@@ -3,7 +3,7 @@ import { BookingDateComponent } from "../booking-date/booking-date.component";
 import { HolidayService } from "reservation/service/holiday/holiday.service";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { CustomerInfo } from "../booking.interface";
+import { CustomerInfo } from "../booking.component.interface";
 import { CalendarService } from "reservation/service/calendar/calendar.service";
 
 interface SearchInfo {

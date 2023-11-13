@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { NumberOfGuests } from "../booking.interface";
+import { NumberOfGuests } from "../booking.component.interface";
 
 @Component({
     selector: "booking-number-guest",

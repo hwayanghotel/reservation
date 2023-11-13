@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { HolidayService } from "reservation/service/holiday/holiday.service";
 import * as Moment from "moment";
-import { DateAndFlatTable } from "../booking.interface";
+import { DateAndFlatTable } from "../booking.component.interface";
 import { CalendarService } from "reservation/service/calendar/calendar.service";
 import { ICalenderDB } from "reservation/service/calendar/calendar.interface";
 

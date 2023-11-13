@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { BookingComponent, BookingStep } from "../booking.component";
-import { DateAndFlatTable } from "../booking.interface";
+import { DateAndFlatTable } from "../booking.component.interface";
 
 @Component({
     selector: "booking-flat-table",

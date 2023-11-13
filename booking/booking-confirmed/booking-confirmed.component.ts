@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
-import { Price } from "reservation/service/booking/booking.interface";
+import { Price } from "reservation/service/booking/booking.service.interface";
 import { StandardNumberOfPeople } from "reservation/service/reservation.service";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
-import { CustomerInfo } from "../booking.interface";
+import { CustomerInfo } from "../booking.component.interface";
 
 @Component({
     selector: "booking-confirmed",

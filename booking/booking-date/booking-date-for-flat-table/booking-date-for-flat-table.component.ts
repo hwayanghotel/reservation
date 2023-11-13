@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, EventEmitter, Output, TemplateRef, ViewChild } from "@angular/core";
 import { BookingDateComponent, ICalendar } from "../booking-date.component";
-import { MAX_BOOKING, Price, STANDARD_BOOKING } from "reservation/service/booking/booking.interface";
+import { MAX_BOOKING, Price, STANDARD_BOOKING } from "reservation/service/booking/booking.service.interface";
 import { HolidayService } from "reservation/service/holiday/holiday.service";
 import { CalendarService } from "reservation/service/calendar/calendar.service";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
-import { DateAndFlatTable } from "reservation/booking/booking.interface";
+import { DateAndFlatTable } from "reservation/booking/booking.component.interface";
 
 @Component({
     selector: "booking-date-for-flat-table",

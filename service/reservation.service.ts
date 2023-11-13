@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { IUserDB } from "./DB.service";
-import { Price } from "reservation/service/booking/booking.interface";
+import { Price } from "reservation/service/booking/booking.service.interface";
 
 export const MAX_RESERVATION = {
     식사자리: 16,

@@ -7,12 +7,12 @@
 <div class="content-container">
 	<div class="answer-box">
 		<p>성함</p>
-		<input type="text" placeholder="ex) 홍길동" [(ngModel)]="extraInfo.name">
+		<input type="text" placeholder="ex) 홍길동" [(ngModel)]="userInfo.name">
 	</div>
 
 	<div class="answer-box">
 		<p>전화번호</p>
-		<input type="tel" placeholder="ex) 010-0000-0000" [(ngModel)]="extraInfo.tel">
+		<input type="tel" placeholder="ex) 010-0000-0000" [(ngModel)]="userInfo.tel">
 	</div>
 
 	<div class="answer-box">
@@ -24,9 +24,9 @@
 				<mat-icon matRipple (click)="cars = 1">keyboard_arrow_up</mat-icon>
 			</div>
 			<div class="input-list">
-				<ng-container *ngFor="let car of extraInfo.cars; let index = index">
+				<ng-container *ngFor="let car of userInfo.cars; let index = index">
 					<input type="text" placeholder="ex) 뒷4자리(0123)"
-						   [value]="extraInfo.cars[index]"
+						   [value]="userInfo.cars[index]"
 						   (input)="inputCarNumber(index, $event)">
 				</ng-container>
 			</div>

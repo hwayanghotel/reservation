@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { BOOKING_COLLECTION, IBookingService } from "./booking.interface";
+import { BOOKING_COLLECTION, IBookingService } from "./booking.service.interface";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { CustomerInfo } from "reservation/booking/booking.interface";
+import { CustomerInfo } from "reservation/booking/booking.component.interface";
 import { CalendarService } from "../calendar/calendar.service";
 import * as Moment from "moment";
 
