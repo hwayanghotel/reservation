@@ -8,7 +8,7 @@ import { UserInfo } from "../booking.component.interface";
 })
 export class BookingUserInfoComponent {
     @Input("userInfo") userInfo: UserInfo = { name: "", tel: "", cars: [] };
-    @Output() completeExtraInfo = new EventEmitter<UserInfo>();
+    @Output() completeUserInfo = new EventEmitter<UserInfo>();
     @Output() back = new EventEmitter<void>();
     private _inputCarNumber: string[] = this.userInfo.cars;
 
@@ -43,6 +43,6 @@ export class BookingUserInfoComponent {
 
     onNextButton() {
         this.userInfo.cars = this._inputCarNumber;
-        this.completeExtraInfo.emit(this.userInfo);
+        this.completeUserInfo.emit(this.userInfo);
     }
 }
