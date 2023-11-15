@@ -5,6 +5,8 @@ import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { CustomerInfo } from "../booking.component.interface";
+import { ActivatedRoute } from "@angular/router";
+import * as Moment from "moment";
 
 @Component({
     selector: "booking-confirmed",
@@ -18,10 +20,31 @@ export class BookingConfirmedComponent implements OnInit {
     memo: string;
     status: "ready" | "paymentReady" | "bookingComplete" | "cancel" = "ready";
 
-    constructor(private bookingService: BookingService, private snackBar: MatSnackBar, private dialog: MatBottomSheet) {}
+    constructor(private bookingService: BookingService, private snackBar: MatSnackBar, private dialog: MatBottomSheet, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.status = this.customerInfo.status;
+        this.route.queryParams.subscribe((customerInfo) => {
+            if (customerInfo["id"]) {
+                this.customerInfo = {
+                    ...(customerInfo as CustomerInfo),
+                    baeksuk: Number(customerInfo["baeksuk"]),
+                    neungiBaeksuk: Number(customerInfo["neungiBaeksuk"]),
+                    mushroomStew: Number(customerInfo["mushroomStew"]),
+                    mushroomStewForTwoPeople: Number(customerInfo["mushroomStewForTwoPeople"]),
+                    flatTable: Number(customerInfo["flatTable"]),
+                    dechTable: Number(customerInfo["dechTable"]),
+                    person: Number(customerInfo["person"]),
+                    kids: Number(customerInfo["kids"]),
+                    date: Moment(new Date(customerInfo["date"])),
+                };
+                this.status = this.customerInfo.status;
+                this.memo = this.customerInfo.customerMemo;
+            }
+        });
+        if (this.customerInfo) {
+            this.status = this.customerInfo.status;
+            this.memo = this.customerInfo.customerMemo;
+        }
     }
 
     get id(): string {
@@ -52,7 +75,13 @@ export class BookingConfirmedComponent implements OnInit {
         if (flat && dech) {
             return `평상 ${flat}대, 데크 ${dech}대`;
         }
-        return flat ? `평상 ${flat}대` : `데크 ${dech}대`;
+        if (flat) {
+            return `평상 ${flat}대`;
+        }
+        if (dech) {
+            return `데크 ${dech}대`;
+        }
+        return "";
     }
 
     get bookingFoods(): string {
@@ -90,6 +119,15 @@ export class BookingConfirmedComponent implements OnInit {
                 }
                 description += car;
             });
+
+        const noInputs = this.customerInfo.cars.filter((v) => !v.length).length;
+        if (noInputs) {
+            if (description !== "") {
+                description += ", ";
+            }
+            description += `미입력 ${noInputs}대`;
+        }
+
         return description;
     }
 
@@ -110,6 +148,7 @@ export class BookingConfirmedComponent implements OnInit {
                 customerMemo: this.memo || null,
             })
             .then((user) => {
+                this.customerInfo = user;
                 this.status = user.status;
             })
             .catch((e) => {
@@ -124,10 +163,6 @@ export class BookingConfirmedComponent implements OnInit {
 
     onOkayButton() {
         window.history.back();
-    }
-
-    onCarRegister() {
-        console.warn("주차등록");
     }
 
     onCancelButton() {

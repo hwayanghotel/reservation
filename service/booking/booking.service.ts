@@ -64,9 +64,9 @@ export class BookingService implements IBookingService {
     }
 
     //Only Manager Use
-    update(bookingInfo: CustomerInfo): Promise<CustomerInfo> {
-        const asIs = bookingInfo; //이걸 원래 제대로 값을 받아서 해야 하는데..
+    update(bookingInfo: CustomerInfo, asIs?: CustomerInfo): Promise<CustomerInfo> {
         //매니저 서비스가 따로 필요하고, 업데이트 api는 거기에 구현하면 될 듯. 아래 delete랑 같이.
+        console.log("update", bookingInfo);
         return this.store
             .collection(BOOKING_COLLECTION)
             .doc(bookingInfo.id)

@@ -1,0 +1,38 @@
+@import "../booking.component.scss";
+
+.select-number {
+    display: flex;
+    justify-content: space-around;
+
+    p,
+    mat-icon {
+        width: 6rem;
+        height: 3rem;
+        line-height: 3rem;
+        font-size: 3rem;
+        text-align: center;
+    }
+}
+
+.input-list {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+
+    input {
+        height: 2rem;
+        margin-bottom: 1rem;
+
+        font-size: 1.2rem;
+    }
+
+    ::placeholder {
+        color: gray;
+        font-size: 1.2rem;
+    }
+}
+
+h3 {
+    margin-top: 0.3rem !important;
+    text-align: center;
+}

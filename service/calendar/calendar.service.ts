@@ -31,15 +31,18 @@ export class CalendarService implements ICalendarService {
         const month = toBe.date.format("YYMM");
         const date = toBe.date.format("YYMMDD");
         let target = this._getTarget(month, date);
+        let cars = toBe.cars.length;
         let flatTable = toBe.status === "cancel" ? 0 : toBe.flatTable;
         let dechTable = toBe.status === "cancel" ? 0 : toBe.dechTable;
         let foods = this._getFoods(toBe);
 
         if (asIs && asIs.status !== "cancel") {
+            cars -= asIs.cars.length;
             flatTable -= asIs.flatTable;
             dechTable -= asIs.dechTable;
             foods = foods.map((item, index) => item - (this._getFoods(asIs)[index] || 0));
         }
+        target[month][date].cars += cars;
         target[month][date].flatTable += flatTable;
         target[month][date].dechTable += dechTable;
         target[month][date].foods = target[month][date].foods.map((item, index) => item + (foods[index] || 0));
@@ -56,6 +59,7 @@ export class CalendarService implements ICalendarService {
         }
         if (!target[month][date]) {
             target[month][date] = {
+                cars: 0,
                 flatTable: 0,
                 dechTable: 0,
                 foods: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

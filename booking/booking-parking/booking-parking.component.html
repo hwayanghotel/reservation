@@ -1,0 +1,32 @@
+<mat-icon class="back" matRipple routerLink="/booking-confirmed" [queryParams]="customerInfo">keyboard_backspace</mat-icon>
+<div class="title-container">
+	<h2>주차를 몇 대<br>도와드릴까요?</h2>
+</div>
+
+<div class="content-container">
+	<div class="select-number">
+		<mat-icon matRipple [class.disabled]="totalOfCars === 0" (click)="totalOfCars = -1">keyboard_arrow_down</mat-icon>
+		<p>{{totalOfCars}}</p>
+		<mat-icon matRipple (click)="totalOfCars = 1">keyboard_arrow_up</mat-icon>
+	</div>
+</div>
+<div class="button-container">
+	<button mat-raised-button [class.disabled]="totalOfCars === 0" (click)="onNext()">다음</button>
+</div>
+
+<ng-template #InputCars>
+	<div class="notice">
+		<h2>주차 {{totalOfCars}}대를 등록할게요.</h2>
+		<h3>번호를 모를 경우, 다음에 적어주세요.</h3>
+		<div class="input-list">
+			<ng-container *ngFor="let car of dialogCars; let index = index">
+				<input type="number" placeholder="ex) 뒷 4자리(0123)"
+					   [value]="dialogCars[index]"
+					   (input)="inputCars(index, $event)">
+			</ng-container>
+		</div>
+	</div>
+	<div class="notice-button-container" [style.margin]="'0rem'">
+		<button mat-raised-button (click)="onComplete()">등록하기</button>
+	</div>
+</ng-template>

@@ -44,7 +44,7 @@
 		<p>날짜</p>
 		<p class="answer">{{date}}</p>
 	</div>
-	<div class="answer-box">
+	<div class="answer-box" *ngIf="bookingFlatTable">
 		<p>평상 대여</p>
 		<p class="answer">{{bookingFlatTable}}</p>
 	</div>
@@ -56,8 +56,8 @@
 		<p>차량등록</p>
 		<p>{{totalOfCars}}대<br>{{carList}}</p>
 	</div>
-	<div class="answer-box">
-		<p>예약금</p>
+	<div class="answer-box" *ngIf="bookingFlatTable">
+		<p>평상 예약금</p>
 		<p>{{cost | number}}원</p>
 	</div>
 	<div class="answer-box memo-box">
@@ -66,8 +66,9 @@
 	</div>
 </div>
 <div class="button-container" [class.half-button]="status !== 'ready'">
-	<button mat-raised-button *ngIf="status === 'paymentReady' || status === 'bookingComplete'" (click)="onCarRegister()">주차등록</button>
-	<button mat-raised-button *ngIf="status !== 'ready'" (click)="onOkayButton()">확인</button>
+	<button mat-raised-button *ngIf="status === 'paymentReady' || status === 'bookingComplete'"
+			routerLink="/booking-parking" [queryParams]="customerInfo">주차등록</button>
+	<button mat-raised-button *ngIf="status !== 'ready'" routerLink="/home">확인</button>
 	<button mat-raised-button *ngIf="status === 'ready'" (click)="onAddButton()">예약하기</button>
 </div>
 

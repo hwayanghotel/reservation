@@ -12,27 +12,8 @@
 
 	<div class="answer-box">
 		<p>전화번호</p>
-		<input type="tel" placeholder="ex) 010-0000-0000" [(ngModel)]="userInfo.tel">
+		<input type="tel" placeholder="ex) 010-0000-0000" [(ngModel)]="tel">
 	</div>
-
-	<div class="answer-box">
-		<p>차량등록</p>
-		<div class="answer">
-			<div class="select-number">
-				<mat-icon matRipple [class.disabled]="cars === 0" (click)="cars = -1">keyboard_arrow_down</mat-icon>
-				<p>{{cars}}</p>
-				<mat-icon matRipple (click)="cars = 1">keyboard_arrow_up</mat-icon>
-			</div>
-			<div class="input-list">
-				<ng-container *ngFor="let car of userInfo.cars; let index = index">
-					<input type="text" placeholder="ex) 뒷4자리(0123)"
-						   [value]="userInfo.cars[index]"
-						   (input)="inputCarNumber(index, $event)">
-				</ng-container>
-			</div>
-		</div>
-	</div>
-	<p class="info">※ 차량번호를 모를 경우, 등록 대수만 적어주세요. (추후 입력 가능)</p>
 </div>
 <div class="button-container">
 	<button mat-raised-button [class.disabled]="disabled" (click)="onNextButton()">다음</button>

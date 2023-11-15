@@ -4,12 +4,12 @@ export interface CustomerInfo extends DateAndFlatTable, UserInfo, NumberOfGuests
     customerMemo: string;
     id: string;
     status: "ready" | "paymentReady" | "bookingComplete" | "cancel";
+    cars: string[];
 }
 
 export interface UserInfo {
     name: string;
     tel: string;
-    cars: string[];
 }
 
 export interface NumberOfGuests {

@@ -7,42 +7,36 @@ import { UserInfo } from "../booking.component.interface";
     styleUrls: ["./booking-user-info.component.scss"],
 })
 export class BookingUserInfoComponent {
-    @Input("userInfo") userInfo: UserInfo = { name: "", tel: "", cars: [] };
+    @Input("userInfo") userInfo: UserInfo = { name: "", tel: "" };
     @Output() completeUserInfo = new EventEmitter<UserInfo>();
     @Output() back = new EventEmitter<void>();
-    private _inputCarNumber: string[] = this.userInfo.cars;
 
-    constructor() {}
+    get tel(): string {
+        return this.userInfo.tel;
+    }
+
+    set tel(v: string) {
+        if (v.length > 13) v = "hello";
+        let input: string = v;
+        if (this.userInfo.tel.length < input.length && input.length === 8) {
+            input += "-";
+        }
+        if (!input.includes("010-")) {
+            input = "010-";
+        }
+        this.userInfo.tel = input;
+    }
 
     onBackButton() {
         this.back.emit();
     }
 
-    get cars(): number {
-        return this.userInfo.cars.length;
-    }
-
-    inputCarNumber(index: number, event: any) {
-        this._inputCarNumber[index] = event.target.value;
-    }
-
-    set cars(v: number) {
-        if (v > 0) {
-            this.userInfo.cars.push("");
-            this._inputCarNumber.push("");
-        } else {
-            this.userInfo.cars.pop();
-        }
-    }
-
     get disabled(): boolean {
         const telPattern = /^[0-9-]+$/;
-
-        return !this.userInfo.name || !telPattern.test(this.userInfo.tel);
+        return !this.userInfo.name || !telPattern.test(this.userInfo.tel) || this.userInfo.tel.length < 12;
     }
 
     onNextButton() {
-        this.userInfo.cars = this._inputCarNumber;
         this.completeUserInfo.emit(this.userInfo);
     }
 }
