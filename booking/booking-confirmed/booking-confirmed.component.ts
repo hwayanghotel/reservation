@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
-import { Price } from "reservation/service/booking/booking.service.interface";
-import { StandardNumberOfPeople } from "reservation/service/reservation.service";
+import { Price, STANDARD_BOOKING } from "reservation/service/booking/booking.service.interface";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
@@ -135,7 +134,7 @@ export class BookingConfirmedComponent implements OnInit {
         const flat = this.customerInfo.flatTable;
         const dech = this.customerInfo.dechTable;
         const guests = this.customerInfo.person + this.customerInfo.kids;
-        const additionalGuests = guests - StandardNumberOfPeople["평상"]["적정인원"] * (flat + dech);
+        const additionalGuests = guests - STANDARD_BOOKING.flatTableGuests.std * (flat + dech);
         return flat * Price["평상"] + dech * Price["데크"] + (additionalGuests > 0 ? additionalGuests * Price["평상추가인원"] : 0);
     }
 
