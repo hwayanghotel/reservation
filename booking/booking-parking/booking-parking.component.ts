@@ -1,47 +1,31 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { Component, TemplateRef, ViewChild } from "@angular/core";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
-import { ActivatedRoute, Router } from "@angular/router";
 import { CustomerInfo } from "../booking.component.interface";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import * as Moment from "moment";
+import { MediatorService } from "reservation/service/mediator/mediator.service";
 
 @Component({
     selector: "booking-parking",
     templateUrl: "./booking-parking.component.html",
     styleUrls: ["./booking-parking.component.scss"],
 })
-export class BookingParkingComponent implements OnInit {
+export class BookingParkingComponent {
     @ViewChild("InputCars") InputCars: TemplateRef<any>;
     cars: string[] = [];
     dialogCars: string[] = [];
     customerInfo: CustomerInfo;
+    previousPage: string;
 
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
         private dialog: MatBottomSheet,
         private snackBar: MatSnackBar,
-        private boookingService: BookingService
-    ) {}
-
-    ngOnInit(): void {
-        this.route.queryParams.subscribe((customerInfo) => {
-            this.customerInfo = {
-                ...(customerInfo as CustomerInfo),
-                baeksuk: Number(customerInfo["baeksuk"]),
-                neungiBaeksuk: Number(customerInfo["neungiBaeksuk"]),
-                mushroomStew: Number(customerInfo["mushroomStew"]),
-                mushroomStewForTwoPeople: Number(customerInfo["mushroomStewForTwoPeople"]),
-                flatTable: Number(customerInfo["flatTable"]),
-                dechTable: Number(customerInfo["dechTable"]),
-                person: Number(customerInfo["person"]),
-                kids: Number(customerInfo["kids"]),
-                date: Moment(new Date(customerInfo["date"])),
-            };
-            this.cars = [...customerInfo["cars"]];
-            this.dialogCars = [...customerInfo["cars"]];
-        });
+        private boookingService: BookingService,
+        private mediatorService: MediatorService
+    ) {
+        this.customerInfo = this.mediatorService.customerInfo;
+        this.cars = [...this.customerInfo["cars"]];
+        this.dialogCars = [...this.customerInfo["cars"]];
     }
 
     get totalOfCars(): number {
@@ -68,7 +52,8 @@ export class BookingParkingComponent implements OnInit {
                         this.boookingService
                             .update({ ...this.customerInfo, cars: this.cars }, this.customerInfo)
                             .then((user) => {
-                                this.router.navigate(["/booking-confirmed"], { queryParams: user });
+                                this.mediatorService.customerInfo = user;
+                                this.moveBackPage();
                             })
                             .catch((e) => {
                                 console.error("주차 업데이트 실패", e);
@@ -96,5 +81,10 @@ export class BookingParkingComponent implements OnInit {
 
     inputCars(index: number, event: any) {
         this.cars[index] = event.target.value;
+    }
+
+    moveBackPage() {
+        this.mediatorService.customerInfo = this.customerInfo;
+        window.history.back();
     }
 }

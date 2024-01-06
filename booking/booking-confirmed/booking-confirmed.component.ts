@@ -4,8 +4,9 @@ import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { CustomerInfo } from "../booking.component.interface";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import * as Moment from "moment";
+import { MediatorService } from "reservation/service/mediator/mediator.service";
 
 @Component({
     selector: "booking-confirmed",
@@ -19,7 +20,14 @@ export class BookingConfirmedComponent implements OnInit {
     memo: string;
     status: "ready" | "paymentReady" | "bookingComplete" | "cancel" = "ready";
 
-    constructor(private bookingService: BookingService, private snackBar: MatSnackBar, private dialog: MatBottomSheet, private route: ActivatedRoute) {}
+    constructor(
+        private bookingService: BookingService,
+        private snackBar: MatSnackBar,
+        private dialog: MatBottomSheet,
+        private route: ActivatedRoute,
+        private router: Router,
+        private mediatorService: MediatorService
+    ) {}
 
     ngOnInit() {
         this.route.queryParams.subscribe((customerInfo) => {
@@ -181,5 +189,10 @@ export class BookingConfirmedComponent implements OnInit {
                 this.customerInfo = user;
             })
             .catch((e) => this.snackBar.open("예약이 취소되지 않았습니다. 다시 시도해주세요.", null, { duration: 2000 }));
+    }
+
+    moveBookingParkingPage() {
+        this.mediatorService.customerInfo = this.customerInfo;
+        this.router.navigate(["/booking-parking"]);
     }
 }
