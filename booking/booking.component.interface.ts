@@ -5,6 +5,7 @@ export interface CustomerInfo extends DateAndFlatTable, UserInfo, NumberOfGuests
     id: string;
     status: "ready" | "paymentReady" | "bookingComplete" | "cancel";
     cars: string[];
+    deposit?: number;
 }
 
 export interface UserInfo {
