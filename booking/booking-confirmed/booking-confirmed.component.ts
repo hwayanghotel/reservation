@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { Price, STANDARD_BOOKING } from "reservation/service/booking/booking.service.interface";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { CustomerInfo } from "../booking.component.interface";
-import { ActivatedRoute, Router } from "@angular/router";
-import * as Moment from "moment";
+import { Router } from "@angular/router";
 import { MediatorService } from "reservation/service/mediator/mediator.service";
 
 @Component({
@@ -13,7 +12,7 @@ import { MediatorService } from "reservation/service/mediator/mediator.service";
     templateUrl: "./booking-confirmed.component.html",
     styleUrls: ["./booking-confirmed.component.scss"],
 })
-export class BookingConfirmedComponent implements OnInit {
+export class BookingConfirmedComponent {
     @ViewChild("CancelPopup") cancelPopup: TemplateRef<any>;
     @Output() back = new EventEmitter<void>();
     @Input("customerInfo") customerInfo: CustomerInfo;
@@ -24,34 +23,12 @@ export class BookingConfirmedComponent implements OnInit {
         private bookingService: BookingService,
         private snackBar: MatSnackBar,
         private dialog: MatBottomSheet,
-        private route: ActivatedRoute,
         private router: Router,
         private mediatorService: MediatorService
-    ) {}
-
-    ngOnInit() {
-        this.route.queryParams.subscribe((customerInfo) => {
-            if (customerInfo["id"]) {
-                this.customerInfo = {
-                    ...(customerInfo as CustomerInfo),
-                    baeksuk: Number(customerInfo["baeksuk"]),
-                    neungiBaeksuk: Number(customerInfo["neungiBaeksuk"]),
-                    mushroomStew: Number(customerInfo["mushroomStew"]),
-                    mushroomStewForTwoPeople: Number(customerInfo["mushroomStewForTwoPeople"]),
-                    flatTable: Number(customerInfo["flatTable"]),
-                    dechTable: Number(customerInfo["dechTable"]),
-                    person: Number(customerInfo["person"]),
-                    kids: Number(customerInfo["kids"]),
-                    date: Moment(new Date(customerInfo["date"])),
-                };
-                this.status = this.customerInfo.status;
-                this.memo = this.customerInfo.customerMemo;
-            }
-        });
-        if (this.customerInfo) {
-            this.status = this.customerInfo.status;
-            this.memo = this.customerInfo.customerMemo;
-        }
+    ) {
+        this.customerInfo = this.mediatorService.customerInfo;
+        this.status = this.customerInfo.status;
+        this.memo = this.customerInfo.customerMemo;
     }
 
     get id(): string {
@@ -151,7 +128,7 @@ export class BookingConfirmedComponent implements OnInit {
             .add({
                 ...this.customerInfo,
                 id: this.id,
-                status: this.customerInfo.flatTable || this.customerInfo.dechTable ? "paymentReady" : "bookingComplete",
+                status: this.customerInfo.flatTable || this.customerInfo.dechTable ? "paymentReady" : "ready",
                 customerMemo: this.memo || null,
             })
             .then((user) => {
@@ -162,10 +139,6 @@ export class BookingConfirmedComponent implements OnInit {
                 console.error("신규 예약 등록 실패", e);
                 this.snackBar.open("예약을 실패했습니다. 다시 시도해주세요.", null, { duration: 2000 });
             });
-    }
-
-    onBackButton() {
-        this.back.emit();
     }
 
     onOkayButton() {

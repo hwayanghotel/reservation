@@ -1,4 +1,3 @@
-<mat-icon *ngIf="status === 'ready'" class="back" matRipple (click)="onBackButton()">keyboard_backspace</mat-icon>
 <mat-icon *ngIf="status === 'paymentReady' || status === 'bookingComplete'" class="more" matRipple [matMenuTriggerFor]="menu">more_vert</mat-icon>
 
 <mat-menu #menu="matMenu">
