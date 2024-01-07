@@ -17,7 +17,7 @@ export class BookingConfirmedComponent {
     @Output() back = new EventEmitter<void>();
     @Input("customerInfo") customerInfo: CustomerInfo;
     memo: string;
-    status: "ready" | "paymentReady" | "bookingComplete" | "cancel" = "ready";
+    status: "ready" | "paymentReady" | "confirming" | "bookingComplete" | "cancel" = "ready";
 
     constructor(
         private bookingService: BookingService,
@@ -128,7 +128,7 @@ export class BookingConfirmedComponent {
             .add({
                 ...this.customerInfo,
                 id: this.id,
-                status: this.customerInfo.flatTable || this.customerInfo.dechTable ? "paymentReady" : "ready",
+                status: this.customerInfo.flatTable || this.customerInfo.dechTable ? "paymentReady" : "confirming",
                 customerMemo: this.memo || null,
             })
             .then((user) => {

@@ -3,7 +3,7 @@ import * as Moment from "moment";
 export interface CustomerInfo extends DateAndFlatTable, UserInfo, NumberOfGuests, Foods, FlatTables {
     customerMemo: string;
     id: string;
-    status: "ready" | "paymentReady" | "bookingComplete" | "cancel";
+    status: "ready" | "paymentReady" | "confirming" | "bookingComplete" | "cancel";
     cars: string[];
     deposit?: number;
 }
