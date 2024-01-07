@@ -11,12 +11,11 @@ import * as Moment from "moment";
 export class BookingService implements IBookingService {
     constructor(private store: AngularFirestore, private calendarService: CalendarService) {}
 
-    search(id: string, name: string): Promise<CustomerInfo> {
+    search(id: string): Promise<CustomerInfo> {
         console.log("search", id, name);
         return this.store
             .collection(BOOKING_COLLECTION)
             .ref.where("id", "==", id)
-            .where("name", "==", name)
             .get()
             .then((snapshot) => {
                 let data: any;

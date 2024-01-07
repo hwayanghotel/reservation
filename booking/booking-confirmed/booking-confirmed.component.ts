@@ -1,50 +1,34 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
-import { Price } from "reservation/service/booking/booking.service.interface";
-import { StandardNumberOfPeople } from "reservation/service/reservation.service";
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
+import { Price, STANDARD_BOOKING } from "reservation/service/booking/booking.service.interface";
 import { BookingService } from "reservation/service/booking/booking.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { CustomerInfo } from "../booking.component.interface";
-import { ActivatedRoute } from "@angular/router";
-import * as Moment from "moment";
+import { Router } from "@angular/router";
+import { MediatorService } from "reservation/service/mediator/mediator.service";
 
 @Component({
     selector: "booking-confirmed",
     templateUrl: "./booking-confirmed.component.html",
     styleUrls: ["./booking-confirmed.component.scss"],
 })
-export class BookingConfirmedComponent implements OnInit {
+export class BookingConfirmedComponent {
     @ViewChild("CancelPopup") cancelPopup: TemplateRef<any>;
     @Output() back = new EventEmitter<void>();
     @Input("customerInfo") customerInfo: CustomerInfo;
     memo: string;
     status: "ready" | "paymentReady" | "bookingComplete" | "cancel" = "ready";
 
-    constructor(private bookingService: BookingService, private snackBar: MatSnackBar, private dialog: MatBottomSheet, private route: ActivatedRoute) {}
-
-    ngOnInit() {
-        this.route.queryParams.subscribe((customerInfo) => {
-            if (customerInfo["id"]) {
-                this.customerInfo = {
-                    ...(customerInfo as CustomerInfo),
-                    baeksuk: Number(customerInfo["baeksuk"]),
-                    neungiBaeksuk: Number(customerInfo["neungiBaeksuk"]),
-                    mushroomStew: Number(customerInfo["mushroomStew"]),
-                    mushroomStewForTwoPeople: Number(customerInfo["mushroomStewForTwoPeople"]),
-                    flatTable: Number(customerInfo["flatTable"]),
-                    dechTable: Number(customerInfo["dechTable"]),
-                    person: Number(customerInfo["person"]),
-                    kids: Number(customerInfo["kids"]),
-                    date: Moment(new Date(customerInfo["date"])),
-                };
-                this.status = this.customerInfo.status;
-                this.memo = this.customerInfo.customerMemo;
-            }
-        });
-        if (this.customerInfo) {
-            this.status = this.customerInfo.status;
-            this.memo = this.customerInfo.customerMemo;
-        }
+    constructor(
+        private bookingService: BookingService,
+        private snackBar: MatSnackBar,
+        private dialog: MatBottomSheet,
+        private router: Router,
+        private mediatorService: MediatorService
+    ) {
+        this.customerInfo = this.mediatorService.customerInfo;
+        this.status = this.customerInfo.status;
+        this.memo = this.customerInfo.customerMemo;
     }
 
     get id(): string {
@@ -135,7 +119,7 @@ export class BookingConfirmedComponent implements OnInit {
         const flat = this.customerInfo.flatTable;
         const dech = this.customerInfo.dechTable;
         const guests = this.customerInfo.person + this.customerInfo.kids;
-        const additionalGuests = guests - StandardNumberOfPeople["평상"]["적정인원"] * (flat + dech);
+        const additionalGuests = guests - STANDARD_BOOKING.flatTableGuests.std * (flat + dech);
         return flat * Price["평상"] + dech * Price["데크"] + (additionalGuests > 0 ? additionalGuests * Price["평상추가인원"] : 0);
     }
 
@@ -144,7 +128,7 @@ export class BookingConfirmedComponent implements OnInit {
             .add({
                 ...this.customerInfo,
                 id: this.id,
-                status: this.customerInfo.flatTable || this.customerInfo.dechTable ? "paymentReady" : "bookingComplete",
+                status: this.customerInfo.flatTable || this.customerInfo.dechTable ? "paymentReady" : "ready",
                 customerMemo: this.memo || null,
             })
             .then((user) => {
@@ -155,10 +139,6 @@ export class BookingConfirmedComponent implements OnInit {
                 console.error("신규 예약 등록 실패", e);
                 this.snackBar.open("예약을 실패했습니다. 다시 시도해주세요.", null, { duration: 2000 });
             });
-    }
-
-    onBackButton() {
-        this.back.emit();
     }
 
     onOkayButton() {
@@ -182,5 +162,10 @@ export class BookingConfirmedComponent implements OnInit {
                 this.customerInfo = user;
             })
             .catch((e) => this.snackBar.open("예약이 취소되지 않았습니다. 다시 시도해주세요.", null, { duration: 2000 }));
+    }
+
+    moveBookingParkingPage() {
+        this.mediatorService.customerInfo = this.customerInfo;
+        this.router.navigate(["/booking-parking"]);
     }
 }

@@ -16,7 +16,6 @@ export class BookingUserInfoComponent {
     }
 
     set tel(v: string) {
-        if (v.length > 13) v = "hello";
         let input: string = v;
         if (this.userInfo.tel.length < input.length && input.length === 8) {
             input += "-";

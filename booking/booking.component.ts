@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
 import * as Moment from "moment";
 import { CustomerInfo, DateAndFlatTable, UserInfo, Foods } from "./booking.component.interface";
+import { Router } from "@angular/router";
+import { MediatorService } from "reservation/service/mediator/mediator.service";
 
 export enum BookingStep {
     NumberOfGuests,
@@ -23,6 +25,8 @@ export class BookingComponent {
     BookingStep = BookingStep;
     bookingStep: BookingStep = BookingStep.NumberOfGuests;
     id: string = Moment().format("YYMMDDHHmmss");
+
+    constructor(private router: Router, private mediatorService: MediatorService) {}
 
     get customerInfo(): CustomerInfo {
         return {
@@ -55,6 +59,8 @@ export class BookingComponent {
     completeUserInfo(v: UserInfo) {
         this.userInfo = v;
         this.bookingStep = BookingStep.Confirmed;
+        this.mediatorService.customerInfo = this.customerInfo;
+        this.router.navigate(["/booking-confirmed"]);
     }
 
     backStep() {
