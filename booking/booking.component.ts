@@ -60,7 +60,6 @@ export class BookingComponent {
         this.userInfo = v;
         this.bookingStep = BookingStep.Confirmed;
         this.mediatorService.customerInfo = this.customerInfo;
-        console.warn("넘겼는데..", this.mediatorService.customerInfo);
         this.router.navigate(["/booking-confirmed"]);
     }
 

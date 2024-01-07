@@ -1,24 +1,20 @@
-<ng-container *ngIf="status === BookingSearchStatus.search">
-	<mat-icon class="back" matRipple (click)="onBackButton()">keyboard_backspace</mat-icon>
+<mat-icon class="back" matRipple (click)="onBackButton()">keyboard_backspace</mat-icon>
 
-	<div class="title-container">
-		<h2>예약 정보를<br>입력하세요.</h2>
+<div class="title-container">
+	<h2>예약 정보를<br>입력하세요.</h2>
+</div>
+
+<div class="content-container">
+	<div class="answer-box">
+		<p>예약번호</p>
+		<input type="number" placeholder="ex) 230101010101" [(ngModel)]="searchInfo.id">
 	</div>
-
-	<div class="content-container">
-		<div class="answer-box">
-			<p>예약번호</p>
-			<input type="number" placeholder="ex) 230101010101" [(ngModel)]="searchInfo.id">
-		</div>
-		<div class="answer-box">
-			<p>성함</p>
-			<input type="text" placeholder="ex) 홍길동" [(ngModel)]="searchInfo.name">
-		</div>
+	<div class="answer-box">
+		<p>성함</p>
+		<input type="text" placeholder="ex) 홍길동" [(ngModel)]="searchInfo.name">
 	</div>
+</div>
 
-	<div class="button-container">
-		<button mat-raised-button (click)="onNextButton()">예약 검색</button>
-	</div>
-</ng-container>
-
-<booking-confirmed *ngIf="status === BookingSearchStatus.confirmation" (back)="backStep()" [customerInfo]="customerInfo"></booking-confirmed>
+<div class="button-container">
+	<button mat-raised-button (click)="onNextButton()">예약 검색</button>
+</div>
