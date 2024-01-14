@@ -9,7 +9,7 @@
 		<div class="month-container">
 			<mat-icon matRipple (click)="moveMonth(-1)" [class.disabled]="disabledPreviousMonth">keyboard_arrow_left</mat-icon>
 			<p>{{selectedMonth}}</p>
-			<mat-icon matRipple (click)="moveMonth(1)">keyboard_arrow_right</mat-icon>
+			<mat-icon matRipple (click)="moveMonth(1)" [class.disabled]="disabledNextMonth">keyboard_arrow_right</mat-icon>
 		</div>
 		<div class="weekdays-list">
 			<p *ngFor="let day of week">{{day}}</p>
