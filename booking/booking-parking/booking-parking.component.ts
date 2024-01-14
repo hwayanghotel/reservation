@@ -49,16 +49,21 @@ export class BookingParkingComponent {
                 .afterDismissed()
                 .subscribe((needToUpdate: boolean) => {
                     if (needToUpdate) {
-                        this.boookingService
-                            .update({ ...this.customerInfo, cars: this.cars }, this.customerInfo)
-                            .then((user) => {
-                                this.mediatorService.customerInfo = user;
-                                this.moveBackPage();
-                            })
-                            .catch((e) => {
-                                console.error("주차 업데이트 실패", e);
-                                this.snackBar.open("주차 등록을 실패했습니다. 다시 시도해주세요.", null, { duration: 2000 });
-                            });
+                        if (this.customerInfo.status === "ready") {
+                            this.mediatorService.customerInfo.cars = this.cars;
+                            this.moveBackPage();
+                        } else {
+                            this.boookingService
+                                .update({ ...this.customerInfo, cars: this.cars }, this.customerInfo)
+                                .then((user) => {
+                                    this.mediatorService.customerInfo = user;
+                                    this.moveBackPage();
+                                })
+                                .catch((e) => {
+                                    console.error("주차 업데이트 실패", e);
+                                    this.snackBar.open("주차 등록을 실패했습니다. 다시 시도해주세요.", null, { duration: 2000 });
+                                });
+                        }
                     }
                 });
         } else {
