@@ -72,6 +72,10 @@ export class BookingDateComponent {
         this._setCalendar();
     }
 
+    get disabledNextMonth(): boolean {
+        return this.dateAndTable.date.year() > Moment().year();
+    }
+
     private async _setCalendar() {
         let calendar: ICalendar[][] = this._initCalendar();
         const holidays = await this.holidayService.getHolidays(this.dateAndTable.date);
