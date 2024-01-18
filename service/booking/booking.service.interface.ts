@@ -8,6 +8,8 @@ export interface IBookingService {
     search(id: string, name: string): Promise<CustomerInfo>;
 }
 
+export const VacationMonths = [12, 1, 2];
+
 export const BOOKING_COLLECTION = "BOOKING";
 
 export const MAX_BOOKING = {
