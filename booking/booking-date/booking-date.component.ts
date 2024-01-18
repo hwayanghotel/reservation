@@ -4,6 +4,7 @@ import * as Moment from "moment";
 import { DateAndFlatTable } from "../booking.component.interface";
 import { CalendarService } from "reservation/service/calendar/calendar.service";
 import { ICalenderDB } from "reservation/service/calendar/calendar.interface";
+import { VacationMonths } from "reservation/service/booking/booking.service.interface";
 
 export interface ICalendar {
     date: number;
@@ -58,6 +59,10 @@ export class BookingDateComponent {
 
     setSelectedDate(date: ICalendar) {
         this.dateAndTable.date.set("date", date.date);
+    }
+
+    isVacation(): boolean {
+        return VacationMonths.includes(this.dateAndTable.date.month() + 1);
     }
 
     moveMonth(direction: -1 | 1) {
