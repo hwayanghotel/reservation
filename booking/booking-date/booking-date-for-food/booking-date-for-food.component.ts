@@ -12,7 +12,7 @@ import * as Moment from "moment";
 })
 export class BookingDateForFoodComponent extends BookingDateComponent {
     get disabled(): boolean {
-        return this.isToday();
+        return this.isToday() || this.isVacation();
     }
 
     constructor(holidayService: HolidayService, calendarService: CalendarService) {

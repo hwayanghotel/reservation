@@ -55,7 +55,7 @@ export class BookingDateForFlatTableComponent extends BookingDateComponent imple
     }
 
     get disabled(): boolean {
-        return this.isToday() || this.flatTable + this.dechTable === 0;
+        return this.isToday() || this.flatTable + this.dechTable === 0 || this.isVacation();
     }
 
     setFlatTable(v: number) {

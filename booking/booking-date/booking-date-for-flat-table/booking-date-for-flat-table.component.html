@@ -14,7 +14,7 @@
 		<div class="weekdays-list">
 			<p *ngFor="let day of week">{{day}}</p>
 		</div>
-		<div class="weekday" *ngFor="let weekday of calendar">
+		<div class="weekday" *ngFor="let weekday of calendar" [class.disabled]="isVacation()">
 			<div class="date" *ngFor="let date of weekday" matRipple [class.disabled]="isPassed(date)" [class.selected]="isSelected(date)"
 				 (click)="setSelectedDate(date)" [class.today]="isToday(date)" [class.notSupport]="isBookingClosed(date.date)">
 				<p *ngIf="date.date !== 0" [class.holiday]="date.isHoliday && !isSelected(date)">
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<p *ngIf="isToday()">당일은 전화로 도와드릴게요.<br>(043-832-4281)</p>
-	<div *ngIf="!isToday()" class="select-table-container">
+	<div *ngIf="!isToday()" class="select-table-container" [class.disabled]="isVacation()">
 		<div class="answer-box">
 			<p [class.notSupport]="!flatTable && isMaxLimitExceeded('flatTable')">평상 대여
 				<span *ngIf="!flatTable && isMaxLimitExceeded('flatTable')">(예약마감)</span>

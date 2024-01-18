@@ -24,7 +24,7 @@
 	<p>시간 선택</p>
 	<div class="time-container">
 		<p class="time" *ngIf="isToday()">당일은 전화로 도와드릴게요.<br>(043-832-4281)</p>
-		<p class="time" *ngFor="let time of timeList" (click)="setSelectedTime(time)"
+		<p class="time" *ngFor="let time of timeList" (click)="setSelectedTime(time)" [class.disabled]="isVacation()"
 		   [class.hide]="isToday()" [class.selected]="isSelectedTime(time)" [class.notSupport]="isTimeNotSupported(time)">{{time}}
 		</p>
 	</div>
